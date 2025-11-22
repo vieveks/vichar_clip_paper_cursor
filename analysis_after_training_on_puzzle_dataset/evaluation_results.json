@@ -1,0 +1,23 @@
+{
+  "base_model": {
+    "loss": 6.049330497274593,
+    "top1_accuracy": 0.384,
+    "top5_accuracy": 2.096,
+    "top10_accuracy": 4.176
+  },
+  "trained_model": {
+    "loss": 0.0008781693985077495,
+    "top1_accuracy": 99.976,
+    "top5_accuracy": 100.0,
+    "top10_accuracy": 100.0
+  },
+  "improvements": {
+    "loss_reduction": 6.0484523278760856,
+    "loss_reduction_percent": 99.98548319687768,
+    "top1_improvement": 99.592,
+    "top5_improvement": 97.904,
+    "top10_improvement": 95.824
+  },
+  "best_epoch": 15,
+  "best_val_loss": 0.00047962582631526504
+}
