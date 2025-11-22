@@ -132,6 +132,8 @@ dmypy.json
 *.jpeg
 !README*.png
 !LICENSE
+# Exceptions for analysis visualizations
+!analysis_after_training_on_puzzle_dataset/*.png
 
 # Sample/test files
 sample_chess_board.png
