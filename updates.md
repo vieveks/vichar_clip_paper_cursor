@@ -87,5 +87,21 @@ This file tracks all updates and changes made to the project on a date-wise basi
   - Model shows learning (training loss decreasing from 5.54 to 5.48)
   - Ready for evaluation and potential scaling to full dataset
 
+### Scaled Training (50k samples, 10 epochs) Completed
+- Successfully completed scaled training run:
+  - Training time: ~19 minutes (21:57 - 22:15)
+  - Dataset: 50k train samples, 5k validation samples
+  - Epochs: 10
+  - Batch size: 256
+  - Results:
+    - Training loss: Decreased from 5.59 (epoch 1) to 5.54 (epoch 10)
+    - Validation loss: Stable around 5.51-5.52 throughout training
+    - Best validation loss: 5.51 (epoch 10) - model saved
+  - Best model saved: `runs/clip_hf_chess_50k/best_model.pt` (1.7 GB)
+  - Training history and metadata saved
+  - Model shows consistent learning with stable validation performance
+  - No overfitting observed (train/val loss gap remains consistent)
+  - Ready for comprehensive evaluation on test set
+
 ---
 
