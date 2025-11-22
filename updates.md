@@ -49,5 +49,21 @@ This file tracks all updates and changes made to the project on a date-wise basi
   - Session start/end checklists
   - Common mistakes to avoid
 
+### Data Discovery and Training Initiation
+- Activated conda environment (pytorch_5070ti) with PyTorch 2.9.0 and CUDA support
+- Successfully downloaded Hugging Face chess-puzzles-images-mini dataset:
+  - Train: 99,999 samples
+  - Validation: 12,500 samples  
+  - Test: 12,500 samples
+  - Total: 124,999 samples
+- Verified dataset structure and CSV files created correctly
+- Fixed Unicode encoding issue in download script (Windows compatibility)
+- Started training with native dataset splits:
+  - Model: ViT-B-32 with LAION-2B pretrained weights
+  - Batch size: 128, Learning rate: 1e-4
+  - Mixed precision (FP16) enabled
+  - Training output: `runs/clip_hf_chess/`
+- Created `requirements.txt` for dependency management
+
 ---
 
