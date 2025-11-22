@@ -1,0 +1,1 @@
+Dataset for training - https://huggingface.co/datasets/bingbangboom/chess-puzzles-images-mini - Board image to puzzles, FEN

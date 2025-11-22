@@ -1,0 +1,149 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+env/
+ENV/
+.venv
+conda_env/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb_checkpoints
+
+# PyTorch / Model Checkpoints
+*.pt
+*.pth
+*.ckpt
+*.pkl
+checkpoints/
+runs/
+*.h5
+*.hdf5
+
+# Datasets (large files)
+large_datasets/
+datasets/
+data/pgn_files/*.pgn
+data/pgn_files/*.zst
+*.pgn
+*.zst
+
+# Test files and results
+testing_files/*.png
+testing_files/*.jpg
+testing_files/*.jpeg
+testing_files/*.csv
+testing_files/*.json
+testing_files/*.pdf
+testing_files/fresh_test_images/
+testing_files/random_test_images/
+testing_files/independent_test_set/
+testing_files/*_results.csv
+testing_files/*_comparison.csv
+testing_files/comprehensive_evaluation_results.json
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+logs/
+wandb/
+tensorboard_logs/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# Archives (unless needed)
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# MyPy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Profiling
+.prof
+
+# Large image files in root
+*.png
+*.jpg
+*.jpeg
+!README*.png
+!LICENSE
+
+# Sample/test files
+sample_chess_board.png
+test_*.png
+improved_*.png
+
+# CSV files (data files)
+*.csv
+!requirements*.csv
+
+# Keep structure but ignore large content
+Notebooks/checkpoints/
+Notebooks/large_datasets/
+Notebooks/__pycache__/
+
