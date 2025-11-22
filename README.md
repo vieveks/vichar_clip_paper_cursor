@@ -1,0 +1,1 @@
+# vichar_clip_paper_cursor
