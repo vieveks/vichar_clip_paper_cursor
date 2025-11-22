@@ -132,7 +132,7 @@ def download_and_prepare_dataset(output_dir: str, save_format: str = "csv"):
     with open(metadata_path, 'w') as f:
         json.dump(metadata, f, indent=2)
     
-    print(f"\n✅ Dataset preparation complete!")
+    print(f"\n[SUCCESS] Dataset preparation complete!")
     print(f"Metadata saved to: {metadata_path}")
     print(f"\nDataset Statistics:")
     print(f"  Total samples: {metadata['total_samples']}")
