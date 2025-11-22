@@ -103,5 +103,22 @@ This file tracks all updates and changes made to the project on a date-wise basi
   - No overfitting observed (train/val loss gap remains consistent)
   - Ready for comprehensive evaluation on test set
 
+### Full Dataset Training (100k samples, 20 epochs) - Training Divergence Issue
+- Attempted full dataset training with 20 epochs:
+  - Dataset: 99,999 train samples, 12,500 validation samples
+  - Epochs: 20, Batch size: 256
+  - Issue encountered:
+    - Epochs 1-7: Normal training (loss ~5.54)
+    - Epoch 8: Training loss spiked to 6.55 (divergence started)
+    - Epochs 9-20: Loss became NaN (training failed)
+  - Best model saved: Epoch 3 with validation loss 5.5406
+  - Root cause: Gradient explosion due to high learning rate (1e-4) and no gradient clipping
+  - Fixes applied to training script:
+    - Added gradient clipping (max_grad_norm=1.0)
+    - Reduced default learning rate to 5e-5 (from 1e-4)
+    - Added NaN/Inf loss detection and skipping
+    - Improved numerical stability for FP16 training
+  - Ready to retrain with stabilized training script
+
 ---
 

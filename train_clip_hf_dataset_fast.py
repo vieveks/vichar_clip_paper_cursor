@@ -46,7 +46,7 @@ def create_transforms():
     ])
 
 
-def train_epoch(model, train_loader, optimizer, scaler, device, fp16, tokenizer, loss_fn):
+def train_epoch(model, train_loader, optimizer, scaler, device, fp16, tokenizer, loss_fn, max_grad_norm=1.0):
     """Train for one epoch."""
     model.train()
     total_loss = 0.0
@@ -63,7 +63,17 @@ def train_epoch(model, train_loader, optimizer, scaler, device, fp16, tokenizer,
             image_features, text_features, logit_scale = model(images, texts)
             loss = loss_fn(image_features, text_features, logit_scale)
         
+        # Check for NaN loss
+        if torch.isnan(loss) or torch.isinf(loss):
+            logging.warning(f"NaN/Inf loss detected! Skipping batch.")
+            continue
+        
         scaler.scale(loss).backward()
+        
+        # Gradient clipping to prevent explosion
+        scaler.unscale_(optimizer)
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_grad_norm)
+        
         scaler.step(optimizer)
         scaler.update()
         
@@ -72,7 +82,7 @@ def train_epoch(model, train_loader, optimizer, scaler, device, fp16, tokenizer,
         
         pbar.set_postfix({'loss': f'{loss.item():.4f}'})
     
-    return total_loss / num_batches
+    return total_loss / num_batches if num_batches > 0 else float('inf')
 
 
 def validate(model, val_loader, device, fp16, tokenizer, loss_fn):
@@ -157,8 +167,14 @@ def main():
     parser.add_argument(
         "--lr",
         type=float,
-        default=1e-4,
-        help="Learning rate"
+        default=5e-5,
+        help="Learning rate (default: 5e-5, lower for stability)"
+    )
+    parser.add_argument(
+        "--max_grad_norm",
+        type=float,
+        default=1.0,
+        help="Maximum gradient norm for clipping (default: 1.0)"
     )
     parser.add_argument(
         "--fp16",
@@ -253,7 +269,8 @@ def main():
             'batch_size': args.batch_size,
             'learning_rate': args.lr,
             'fp16': args.fp16,
-            'optimizer': 'AdamW'
+            'optimizer': 'AdamW',
+            'max_grad_norm': args.max_grad_norm
         },
         'hardware': {
             'device': str(device),
@@ -286,7 +303,7 @@ def main():
         
         # Train
         train_loss = train_epoch(
-            model, train_loader, optimizer, scaler, device, args.fp16, tokenizer, loss_fn
+            model, train_loader, optimizer, scaler, device, args.fp16, tokenizer, loss_fn, args.max_grad_norm
         )
         
         # Validate
