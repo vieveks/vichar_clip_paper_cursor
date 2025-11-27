@@ -11,12 +11,16 @@ from typing import Dict, List, Optional, Any
 import time
 from datetime import datetime
 import torch
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 from questions import QUESTIONS, get_scoring_questions
 from clip_fen_extractor import CLIPFENExtractor
 from ground_truth import GroundTruthExtractor
-from vlm_integration import VLMInterface, MockVLMInterface
-from scoring import ResponseScorer
+from vlm_integration import VLMInterface, MockVLMInterface, OpenAIVLMInterface
+from llm_judge_scorer import LLMJudgeScorer
 
 
 class ChessVLMBenchmark:
@@ -62,6 +66,14 @@ class ChessVLMBenchmark:
         if use_mock_vlm:
             self.vlm = MockVLMInterface()
             print("Using mock VLM for testing")
+        elif vlm_model_name.startswith("gpt-"):
+            # Use OpenAI Interface
+            from vlm_integration import OpenAIVLMInterface
+            try:
+                self.vlm = OpenAIVLMInterface(model_name=vlm_model_name)
+            except Exception as e:
+                print(f"Warning: Could not load OpenAI VLM: {e}")
+                self.vlm = MockVLMInterface()
         else:
             try:
                 self.vlm = VLMInterface(vlm_model_name, self.device, local_model_path=local_vlm_path)
@@ -69,7 +81,7 @@ class ChessVLMBenchmark:
                 print(f"Warning: Could not load VLM, using mock: {e}")
                 self.vlm = MockVLMInterface()
         
-        self.scorer = ResponseScorer()
+        self.scorer = LLMJudgeScorer()  # Use LLM judge for scoring
         
         # Results storage
         self.results = []
@@ -97,7 +109,7 @@ class ChessVLMBenchmark:
                     if 'test' in normalized_path.lower():
                         self.image_to_gt_fen[f"test/images/{filename}"] = fen
                         self.image_to_gt_fen[f"test\\images\\{filename}"] = fen
-            print(f"✅ Loaded {len(df)} image-to-FEN mappings from dataset")
+            print(f"[OK] Loaded {len(df)} image-to-FEN mappings from dataset")
         except Exception as e:
             print(f"Warning: Could not load image-to-FEN mapping: {e}")
             import traceback
@@ -191,18 +203,24 @@ class ChessVLMBenchmark:
             gt_fen = self._get_ground_truth_fen(image_path)
             gt_fens[image_path] = gt_fen
         
-        print(f"\n✅ Extracted FENs from {len(predicted_fens)} images")
+        print(f"\n[OK] Extracted FENs from {len(predicted_fens)} images")
         
         # STEP 2: Batch extract ground truths for all images
         print("\n" + "="*60)
         print("STEP 2: Extracting ground truth for all positions...")
         print("="*60)
         all_ground_truths = {}
-        for image_path, gt_fen in gt_fens.items():
-            if gt_fen:
-                all_ground_truths[image_path] = self._get_ground_truths(gt_fen, questions)
+        for image_path in predicted_fens.keys():
+            # Use ground truth FEN if available, otherwise use predicted FEN
+            gt_fen = gt_fens.get(image_path)
+            fen_for_gt = gt_fen if gt_fen else predicted_fens.get(image_path)
+            
+            if fen_for_gt:
+                all_ground_truths[image_path] = self._get_ground_truths(fen_for_gt, questions)
+                if not gt_fen:
+                    print(f"  Note: Using predicted FEN as ground truth for {os.path.basename(image_path)}")
         
-        print(f"✅ Extracted ground truth for {len(all_ground_truths)} images")
+        print(f"[OK] Extracted ground truth for {len(all_ground_truths)} images")
         
         # STEP 3: Process all VLM questions
         print("\n" + "="*60)
@@ -290,23 +308,22 @@ class ChessVLMBenchmark:
             qtype = question['type']
             
             try:
-                if qtype == "piece_location":
-                    ground_truths[qid] = self.ground_truth_extractor.get_piece_locations(fen_string)
-                elif qtype == "best_move":
-                    ground_truths[qid] = self.ground_truth_extractor.get_best_move(fen_string)
-                elif qtype == "winning_assessment" or qtype == "position_strength":
-                    ground_truths[qid] = self.ground_truth_extractor.get_position_evaluation(fen_string)
-                elif qtype == "piece_attacks":
-                    ground_truths[qid] = self.ground_truth_extractor.get_knight_attacks(fen_string)
-                elif qtype == "material_count":
-                    ground_truths[qid] = self.ground_truth_extractor.get_material_count(fen_string)
+                if qtype == "fen_extraction":
+                    ground_truths[qid] = fen_string
+                elif qtype == "piece_count":
+                    ground_truths[qid] = self.ground_truth_extractor.get_piece_count(fen_string)
                 elif qtype == "check_status":
                     ground_truths[qid] = self.ground_truth_extractor.get_check_status(fen_string)
-                elif qtype == "castling_rights":
+                elif qtype == "material_balance":
+                    ground_truths[qid] = self.ground_truth_extractor.get_material_balance(fen_string)
+                elif qtype == "best_move":
+                    ground_truths[qid] = self.ground_truth_extractor.get_best_move(fen_string)
+                elif qtype == "tactical_pattern":
+                    ground_truths[qid] = self.ground_truth_extractor.get_tactical_patterns(fen_string)
+                elif qtype == "castling_available":
                     ground_truths[qid] = self.ground_truth_extractor.get_castling_rights(fen_string)
-                elif qtype == "threats":
-                    ground_truths[qid] = self.ground_truth_extractor.get_threats(fen_string)
-                # Note: previous_move_quality requires previous FEN, handled separately
+                elif qtype == "piece_on_square":
+                    ground_truths[qid] = self.ground_truth_extractor.get_piece_on_square(fen_string, "e4")
             except Exception as e:
                 print(f"    Warning: Could not get ground truth for question {qid}: {e}")
                 ground_truths[qid] = None
@@ -314,35 +331,20 @@ class ChessVLMBenchmark:
         return ground_truths
     
     def _score_response(self, response: str, question: Dict, ground_truth: Any) -> float:
-        """Score a VLM response against ground truth."""
+        """Score a VLM response against ground truth using LLM judge."""
         if ground_truth is None:
             return 0.0
         
         qtype = question['type']
         
         try:
-            if qtype == "piece_location":
-                return self.scorer.score_piece_locations(response, ground_truth)
-            elif qtype == "best_move":
-                return self.scorer.score_best_move(response, ground_truth)
-            elif qtype == "winning_assessment" or qtype == "position_strength":
-                return self.scorer.score_evaluation(response, ground_truth)
-            elif qtype == "piece_attacks":
-                return self.scorer.score_knight_attacks(response, ground_truth)
-            elif qtype == "material_count":
-                return self.scorer.score_material_count(response, ground_truth)
-            elif qtype == "check_status":
-                return self.scorer.score_check_status(response, ground_truth)
-            elif qtype == "castling_rights":
-                return self.scorer.score_castling_rights(response, ground_truth)
-            elif qtype == "threats":
-                # Threats scoring is more complex, use similarity
-                if isinstance(ground_truth, list):
-                    gt_text = " ".join(ground_truth)
-                    return self.scorer.similarity_score(response, gt_text)
-                return 0.0
-            else:
-                return 0.0
+            # Use LLM judge for all scoring
+            return self.scorer.score_response(
+                question=question['prompt'],
+                response=response,
+                ground_truth=ground_truth,
+                question_type=qtype
+            )
         except Exception as e:
             print(f"    Warning: Error scoring response: {e}")
             return 0.0
@@ -353,13 +355,13 @@ class ChessVLMBenchmark:
         json_path = os.path.join(output_dir, "detailed_results.json")
         with open(json_path, 'w') as f:
             json.dump(results, f, indent=2)
-        print(f"\n✅ Saved detailed results to {json_path}")
+        print(f"\n[OK] Saved detailed results to {json_path}")
         
         # Save CSV
         csv_path = os.path.join(output_dir, "results.csv")
         df = pd.DataFrame(results)
         df.to_csv(csv_path, index=False)
-        print(f"✅ Saved CSV results to {csv_path}")
+        print(f"[OK] Saved CSV results to {csv_path}")
     
     def _generate_summary(self, results: List[Dict]) -> Dict:
         """Generate summary statistics."""
@@ -428,7 +430,7 @@ class ChessVLMBenchmark:
             print(f"    Without FEN: Score={qsummary['average_score_without_fen']:.3f}, Accuracy={qsummary['accuracy_without_fen']:.2f}%")
             print(f"    With FEN: Score={qsummary['average_score_with_fen']:.3f}, Accuracy={qsummary['accuracy_with_fen']:.2f}%")
             print(f"    Improvement: {qsummary['average_improvement']:+.3f}")
-        print(f"\n✅ Summary saved to {summary_path}")
+        print(f"\n[OK] Summary saved to {summary_path}")
 
 
 def main():
@@ -551,7 +553,7 @@ def main():
         dataset_csv=dataset_csv
     )
     
-    print("\n✅ Benchmark completed!")
+    print("\n[OK] Benchmark completed!")
 
 
 if __name__ == "__main__":

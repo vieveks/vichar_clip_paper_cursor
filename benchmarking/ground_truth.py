@@ -366,3 +366,102 @@ class GroundTruthExtractor:
             "previous_eval": previous_eval.get("score", 0)
         }
 
+    def get_piece_count(self, fen_string: str) -> Dict[str, int]:
+        """
+        Get count of pieces (excluding kings) for both sides.
+        
+        Returns:
+            Dict with 'white' and 'black' piece counts
+        """
+        board = self.get_fen_from_image(fen_string)
+        
+        white_count = 0
+        black_count = 0
+        
+        for square in chess.SQUARES:
+            piece = board.piece_at(square)
+            if piece and piece.piece_type != chess.KING:
+                if piece.color == chess.WHITE:
+                    white_count += 1
+                else:
+                    black_count += 1
+        
+        return {
+            "white": white_count,
+            "black": black_count
+        }
+    
+    def get_material_balance(self, fen_string: str) -> str:
+        """
+        Get material balance (White/Black/Equal).
+        
+        Returns:
+            "White", "Black", or "Equal"
+        """
+        material = self.get_material_count(fen_string)
+        white_material = material["white"]
+        black_material = material["black"]
+        
+        if white_material > black_material:
+            return "White"
+        elif black_material > white_material:
+            return "Black"
+        else:
+            return "Equal"
+    
+    def get_tactical_patterns(self, fen_string: str) -> str:
+        """
+        Detect tactical patterns (simplified version).
+        
+        Returns:
+            Description of tactical patterns or "None"
+        """
+        board = self.get_fen_from_image(fen_string)
+        patterns = []
+        
+        # Simple pin detection: check if any piece is between attacker and higher value piece
+        # This is a simplified heuristic
+        
+        # Check for forks (knight attacking multiple pieces)
+        for square in chess.SQUARES:
+            piece = board.piece_at(square)
+            if piece and piece.piece_type == chess.KNIGHT:
+                attacked_squares = list(board.attacks(square))
+                valuable_targets = []
+                for attacked_sq in attacked_squares:
+                    target = board.piece_at(attacked_sq)
+                    if target and target.color != piece.color:
+                        if target.piece_type in [chess.QUEEN, chess.ROOK]:
+                            valuable_targets.append(chess.square_name(attacked_sq))
+                
+                if len(valuable_targets) >= 2:
+                    patterns.append(f"Fork: {piece.symbol()} on {chess.square_name(square)} attacks {', '.join(valuable_targets)}")
+        
+        return "; ".join(patterns) if patterns else "None detected"
+    
+    def get_piece_on_square(self, fen_string: str, square_name: str) -> str:
+        """
+        Get the piece on a specific square.
+        
+        Args:
+            fen_string: FEN representation
+            square_name: Square in algebraic notation (e.g., "e4")
+            
+        Returns:
+            Description like "White Knight", "Black Pawn", or "Empty"
+        """
+        board = self.get_fen_from_image(fen_string)
+        
+        try:
+            square = chess.parse_square(square_name)
+            piece = board.piece_at(square)
+            
+            if piece is None:
+                return "Empty"
+            
+            color = "White" if piece.color == chess.WHITE else "Black"
+            piece_name = chess.piece_name(piece.piece_type).capitalize()
+            
+            return f"{color} {piece_name}"
+        except:
+            return "Invalid square"

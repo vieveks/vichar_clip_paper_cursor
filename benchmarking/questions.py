@@ -6,75 +6,60 @@ Each question has a type, prompt template, and scoring method.
 QUESTIONS = [
     {
         "id": 1,
-        "type": "piece_location",
-        "prompt": "Describe which piece is where on this chess board.",
-        "scoring_type": "exact_match",  # Can be verified from FEN
+        "type": "fen_extraction",
+        "prompt": "What is the FEN (Forsyth-Edwards Notation) for this chess position? Provide only the FEN string.",
+        "scoring_type": "exact_match",
         "weight": 1.0
     },
     {
         "id": 2,
-        "type": "best_move",
-        "prompt": "What is the best move in this position?",
-        "scoring_type": "engine_analysis",  # From Lichess engine
+        "type": "piece_count",
+        "prompt": "How many total pieces (not including kings) does White have? How many does Black have? Answer in format: 'White: X, Black: Y'",
+        "scoring_type": "llm_judge",
         "weight": 1.0
     },
     {
         "id": 3,
-        "type": "winning_assessment",
-        "prompt": "Who seems to be winning in this position?",
-        "scoring_type": "evaluation_score",  # From engine evaluation
-        "weight": 0.0  # Subjective, hard to score objectively
+        "type": "check_status",
+        "prompt": "Is either king in check? Answer with 'Yes' or 'No', and if yes, specify which king (White or Black).",
+        "scoring_type": "llm_judge",
+        "weight": 1.0
     },
     {
         "id": 4,
-        "type": "position_strength",
-        "prompt": "How strong is the position for white?",
-        "scoring_type": "evaluation_score",  # From engine evaluation
-        "weight": 0.5
+        "type": "material_balance",
+        "prompt": "Who has more material (using standard piece values: Pawn=1, Knight=3, Bishop=3, Rook=5, Queen=9)? Answer: 'White', 'Black', or 'Equal'.",
+        "scoring_type": "llm_judge",
+        "weight": 1.0
     },
     {
         "id": 5,
-        "type": "previous_move_quality",
-        "prompt": "How good was the previous move?",
-        "scoring_type": "move_quality",  # Requires move history
+        "type": "best_move",
+        "prompt": "What is the best move in this position? Provide the move in algebraic notation (e.g., Nf3, e4, O-O).",
+        "scoring_type": "llm_judge",
         "weight": 1.0
     },
     {
         "id": 6,
-        "type": "piece_attacks",
-        "prompt": "Which piece is the knight attacking?",
-        "scoring_type": "attack_analysis",  # From pychess
-        "weight": 1.0
+        "type": "tactical_pattern",
+        "prompt": "Is there a tactical pattern (pin, fork, skewer, discovered attack) in this position? If yes, describe it briefly.",
+        "scoring_type": "llm_judge",
+        "weight": 0.8
     },
-    # Additional 4 questions
     {
         "id": 7,
-        "type": "material_count",
-        "prompt": "What is the material count for both sides?",
-        "scoring_type": "material_count",  # From FEN
+        "type": "castling_available",
+        "prompt": "Can White castle kingside? Can Black castle kingside? Answer for each: 'Yes' or 'No'.",
+        "scoring_type": "llm_judge",
         "weight": 1.0
     },
     {
         "id": 8,
-        "type": "check_status",
-        "prompt": "Is either king in check?",
-        "scoring_type": "check_status",  # From pychess
+        "type": "piece_on_square",
+        "prompt": "What piece is on square e4? Answer with the piece type and color (e.g., 'White Knight', 'Black Pawn', or 'Empty').",
+        "scoring_type": "llm_judge",
         "weight": 1.0
     },
-    {
-        "id": 9,
-        "type": "castling_rights",
-        "prompt": "What are the castling rights for both sides?",
-        "scoring_type": "castling_rights",  # From FEN
-        "weight": 1.0
-    },
-    {
-        "id": 10,
-        "type": "threats",
-        "prompt": "What are the main threats in this position?",
-        "scoring_type": "threat_analysis",  # From engine analysis
-        "weight": 1.0
-    }
 ]
 
 def get_question_by_id(question_id):

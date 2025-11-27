@@ -26,10 +26,19 @@ class VLMInterface:
         self.local_model_path = local_model_path
         self.model = None
         self.processor = None
+        self.use_imagetext_api = False  # Default to False
         self._load_model()
     
     def _load_model(self):
         """Load the VLM model and processor."""
+        # Check for OpenAI models
+        if self.model_name.startswith("gpt-"):
+            print(f"Initializing OpenAI model: {self.model_name}")
+            # We'll replace self with OpenAIVLMInterface instance logic or just delegate
+            # Since we can't easily swap 'self', we'll use a delegate pattern or just handle it here
+            # But a cleaner way for this codebase is to handle it in the __init__ or factory
+            return
+
         try:
             # Use local model path if provided
             model_path = self.local_model_path if self.local_model_path else self.model_name
@@ -50,7 +59,7 @@ class VLMInterface:
                     torch_dtype=torch.float16 if self.device == "cuda" else torch.float32,
                     device_map=self.device
                 )
-                print(f"✅ VLM model loaded on {self.device} (LLaVA Next API)")
+                print(f"[OK] VLM model loaded on {self.device} (LLaVA Next API)")
                 return
             except Exception as e1:
                 print(f"  LLaVA Next API failed: {e1}")
@@ -65,7 +74,7 @@ class VLMInterface:
                         torch_dtype=torch.float16 if self.device == "cuda" else torch.float32,
                         device_map=self.device
                     )
-                    print(f"✅ VLM model loaded on {self.device} (LLaVA 1.6 Vision2Seq API)")
+                    print(f"[OK] VLM model loaded on {self.device} (LLaVA 1.6 Vision2Seq API)")
                     return
                 except Exception as e2:
                     print(f"  LLaVA 1.6 Vision2Seq API failed: {e2}")
@@ -80,7 +89,7 @@ class VLMInterface:
                             torch_dtype=torch.float16 if self.device == "cuda" else torch.float32,
                             device_map=self.device
                         )
-                        print(f"✅ VLM model loaded on {self.device} (LLaVA 1.5 API)")
+                        print(f"[OK] VLM model loaded on {self.device} (LLaVA 1.5 API)")
                         return
                     except Exception as e3:
                         print(f"  LLaVA 1.5 API failed: {e3}")
@@ -90,7 +99,7 @@ class VLMInterface:
                 "transformers library not found. Install with: pip install transformers"
             )
         except Exception as e:
-            print(f"❌ Error: Could not load LLaVA model: {e}")
+            print(f"[ERROR] Could not load LLaVA model: {e}")
             print("Falling back to mock mode for testing.")
             self.model = None
             self.processor = None
@@ -116,10 +125,26 @@ class VLMInterface:
             image = Image.open(image_path).convert("RGB")
             
             # Construct prompt
+            content_text = question
             if fen_context:
-                prompt = f"{question}\n\nFEN representation: {fen_context}"
+                content_text = f"{question}\n\nFEN representation: {fen_context}"
+            
+            # Use chat template if available (Standard for LLaVA 1.6/Next)
+            if hasattr(self.processor, "apply_chat_template"):
+                conversation = [
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "image"},
+                            {"type": "text", "text": content_text},
+                        ],
+                    },
+                ]
+                prompt = self.processor.apply_chat_template(conversation, add_generation_prompt=True)
             else:
-                prompt = question
+                # Fallback manual prompt construction
+                # LLaVA 1.5 style
+                prompt = f"USER: <image>\n{content_text}\nASSISTANT:"
             
             # Process inputs - handle different LLaVA API versions
             if self.use_imagetext_api:
@@ -177,10 +202,28 @@ class VLMInterface:
                 response = str(outputs[0])
             
             # Extract answer (remove prompt from response)
-            if prompt in response:
-                answer = response.split(prompt)[-1].strip()
+            # With chat templates, the prompt might be complex, so we might need better cleaning
+            # But usually decode(skip_special_tokens=True) handles it if the model outputs only the answer
+            # However, LLaVA often includes the prompt in the output
+            
+            # Simple heuristic: if the prompt is in the response, split it
+            # Note: prompt variable contains the full formatted prompt
+            
+            # For now, just return the whole thing if we can't easily split, 
+            # or try to find the last "ASSISTANT:" or equivalent
+            
+            if "ASSISTANT:" in response:
+                answer = response.split("ASSISTANT:")[-1].strip()
+            elif "[/INST]" in response: # Mistral/Llama style
+                answer = response.split("[/INST]")[-1].strip()
             else:
+                # If we can't find a delimiter, just return the whole response
+                # It might contain the prompt, but it's better than nothing
                 answer = response.strip()
+                
+                # Try to remove the prompt if it's a direct prefix
+                # This is tricky with chat templates as the decoded prompt might differ slightly
+                pass
             
             return answer
             
@@ -209,6 +252,71 @@ class VLMInterface:
             answers.append(answer)
         
         return answers
+
+
+
+class OpenAIVLMInterface:
+    """Interface for OpenAI Vision Models (GPT-4o, etc)."""
+    
+    def __init__(self, model_name: str = "gpt-4o", api_key: str = None):
+        """
+        Initialize OpenAI VLM interface.
+        
+        Args:
+            model_name: OpenAI model identifier
+            api_key: OpenAI API key (optional, uses env var if None)
+        """
+        try:
+            from openai import OpenAI
+        except ImportError:
+            raise ImportError("openai library not found. Install with: pip install openai")
+            
+        self.client = OpenAI(api_key=api_key)
+        self.model_name = model_name
+        print(f"[OK] Initialized OpenAI VLM with model: {model_name}")
+
+    def answer_question(self, image_path: str, question: str, fen_context: Optional[str] = None) -> str:
+        """Answer question using OpenAI API."""
+        import base64
+        
+        # Encode image
+        with open(image_path, "rb") as image_file:
+            base64_image = base64.b64encode(image_file.read()).decode('utf-8')
+            
+        # Construct prompt
+        content_text = question
+        if fen_context:
+            content_text = f"{question}\n\nFEN representation: {fen_context}"
+            
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model_name,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "text", "text": content_text},
+                            {
+                                "type": "image_url",
+                                "image_url": {
+                                    "url": f"data:image/jpeg;base64,{base64_image}"
+                                }
+                            }
+                        ]
+                    }
+                ],
+                max_tokens=300
+            )
+            return response.choices[0].message.content
+        except Exception as e:
+            print(f"[ERROR] OpenAI API error: {e}")
+            return f"Error: {str(e)}"
+
+    def answer_question_batch(self, image_paths: list, questions: list, fen_contexts: Optional[list] = None) -> list:
+        """Batch answer (sequential for API)."""
+        if fen_contexts is None:
+            fen_contexts = [None] * len(image_paths)
+        return [self.answer_question(img, q, fen) for img, q, fen in zip(image_paths, questions, fen_contexts)]
 
 
 class MockVLMInterface:

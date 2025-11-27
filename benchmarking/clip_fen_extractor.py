@@ -49,7 +49,7 @@ class CLIPFENExtractor:
         model.load_state_dict(model_state_dict)
         model.eval()
         
-        print(f"✅ CLIP model loaded from {self.checkpoint_path}")
+        print(f"[OK] CLIP model loaded from {self.checkpoint_path}")
         return model, tokenizer
     
     def _get_image_transform(self):
