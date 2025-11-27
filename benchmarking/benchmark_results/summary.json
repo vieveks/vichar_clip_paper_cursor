@@ -10,4 +10,86 @@
   "average_improvement": 0.0,
   "improvement_percentage": 0.0,
   "questions_summary": {
-    
+    "1": {
+      "question_type": "piece_location",
+      "average_score_without_fen": 0.0,
+      "average_score_with_fen": 0.0,
+      "accuracy_without_fen": 0.0,
+      "accuracy_with_fen": 0.0,
+      "average_improvement": 0.0,
+      "total_tests": 1
+    },
+    "2": {
+      "question_type": "best_move",
+      "average_score_without_fen": 0.0,
+      "average_score_with_fen": 0.0,
+      "accuracy_without_fen": 0.0,
+      "accuracy_with_fen": 0.0,
+      "average_improvement": 0.0,
+      "total_tests": 1
+    },
+    "4": {
+      "question_type": "position_strength",
+      "average_score_without_fen": 0.0,
+      "average_score_with_fen": 0.0,
+      "accuracy_without_fen": 0.0,
+      "accuracy_with_fen": 0.0,
+      "average_improvement": 0.0,
+      "total_tests": 1
+    },
+    "5": {
+      "question_type": "previous_move_quality",
+      "average_score_without_fen": 0.0,
+      "average_score_with_fen": 0.0,
+      "accuracy_without_fen": 0.0,
+      "accuracy_with_fen": 0.0,
+      "average_improvement": 0.0,
+      "total_tests": 1
+    },
+    "6": {
+      "question_type": "piece_attacks",
+      "average_score_without_fen": 0.0,
+      "average_score_with_fen": 0.0,
+      "accuracy_without_fen": 0.0,
+      "accuracy_with_fen": 0.0,
+      "average_improvement": 0.0,
+      "total_tests": 1
+    },
+    "7": {
+      "question_type": "material_count",
+      "average_score_without_fen": 0.0,
+      "average_score_with_fen": 0.0,
+      "accuracy_without_fen": 0.0,
+      "accuracy_with_fen": 0.0,
+      "average_improvement": 0.0,
+      "total_tests": 1
+    },
+    "8": {
+      "question_type": "check_status",
+      "average_score_without_fen": 0.0,
+      "average_score_with_fen": 0.0,
+      "accuracy_without_fen": 0.0,
+      "accuracy_with_fen": 0.0,
+      "average_improvement": 0.0,
+      "total_tests": 1
+    },
+    "9": {
+      "question_type": "castling_rights",
+      "average_score_without_fen": 0.0,
+      "average_score_with_fen": 0.0,
+      "accuracy_without_fen": 0.0,
+      "accuracy_with_fen": 0.0,
+      "average_improvement": 0.0,
+      "total_tests": 1
+    },
+    "10": {
+      "question_type": "threats",
+      "average_score_without_fen": 0.0,
+      "average_score_with_fen": 0.0,
+      "accuracy_without_fen": 0.0,
+      "accuracy_with_fen": 0.0,
+      "average_improvement": 0.0,
+      "total_tests": 1
+    }
+  }
+}

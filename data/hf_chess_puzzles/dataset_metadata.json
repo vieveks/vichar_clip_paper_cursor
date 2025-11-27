@@ -1,0 +1,31 @@
+{
+  "dataset_name": "bingbangboom/chess-puzzles-images-mini",
+  "source": "https://huggingface.co/datasets/bingbangboom/chess-puzzles-images-mini",
+  "total_samples": 124999,
+  "splits": {
+    "train": {
+      "size": 99999,
+      "csv_path": "data\\hf_chess_puzzles\\train.csv",
+      "image_dir": "data\\hf_chess_puzzles\\train\\images"
+    },
+    "validation": {
+      "size": 12500,
+      "csv_path": "data\\hf_chess_puzzles\\validation.csv",
+      "image_dir": "data\\hf_chess_puzzles\\validation\\images"
+    },
+    "test": {
+      "size": 12500,
+      "csv_path": "data\\hf_chess_puzzles\\test.csv",
+      "image_dir": "data\\hf_chess_puzzles\\test\\images"
+    }
+  },
+  "description": "Chess puzzles dataset with 125k positions from Lichess puzzles",
+  "fields": {
+    "image": "Chess board image (512x512)",
+    "board_state": "FEN string (shortened)",
+    "active_color": "w or b (whose turn)",
+    "castling_rights": "Castling availability",
+    "en_passant_target_square": "En passant target or -",
+    "best_continuation": "Best move sequence"
+  }
+}

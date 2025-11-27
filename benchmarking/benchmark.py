@@ -370,32 +370,33 @@ class ChessVLMBenchmark:
         accuracy_with_fen = (df['score_with_fen'] >= 0.9).mean() * 100
         
         summary = {
-            'total_images': df['image_path'].nunique(),
-            'total_questions': df['question_id'].nunique(),
-            'total_tests': len(results),
-            'average_score_without_fen': df['score_without_fen'].mean(),
-            'average_score_with_fen': df['score_with_fen'].mean(),
-            'accuracy_without_fen': accuracy_without_fen,
-            'accuracy_with_fen': accuracy_with_fen,
-            'accuracy_improvement': accuracy_with_fen - accuracy_without_fen,
-            'average_improvement': df['improvement'].mean(),
-            'improvement_percentage': (df['score_with_fen'].mean() - df['score_without_fen'].mean()) / max(df['score_without_fen'].mean(), 0.01) * 100,
+            'total_images': int(df['image_path'].nunique()),
+            'total_questions': int(df['question_id'].nunique()),
+            'total_tests': int(len(results)),
+            'average_score_without_fen': float(df['score_without_fen'].mean()),
+            'average_score_with_fen': float(df['score_with_fen'].mean()),
+            'accuracy_without_fen': float(accuracy_without_fen),
+            'accuracy_with_fen': float(accuracy_with_fen),
+            'accuracy_improvement': float(accuracy_with_fen - accuracy_without_fen),
+            'average_improvement': float(df['improvement'].mean()),
+            'improvement_percentage': float((df['score_with_fen'].mean() - df['score_without_fen'].mean()) / max(df['score_without_fen'].mean(), 0.01) * 100),
             'questions_summary': {}
         }
         
-        # Per-question summary
+        # Per-question summary (convert numpy int64 to regular int for JSON)
         for qid in df['question_id'].unique():
+            qid_int = int(qid)  # Convert numpy int64 to regular int
             qdf = df[df['question_id'] == qid]
             q_accuracy_without = (qdf['score_without_fen'] >= 0.9).mean() * 100
             q_accuracy_with = (qdf['score_with_fen'] >= 0.9).mean() * 100
-            summary['questions_summary'][qid] = {
+            summary['questions_summary'][qid_int] = {
                 'question_type': qdf['question_type'].iloc[0],
-                'average_score_without_fen': qdf['score_without_fen'].mean(),
-                'average_score_with_fen': qdf['score_with_fen'].mean(),
-                'accuracy_without_fen': q_accuracy_without,
-                'accuracy_with_fen': q_accuracy_with,
-                'average_improvement': qdf['improvement'].mean(),
-                'total_tests': len(qdf)
+                'average_score_without_fen': float(qdf['score_without_fen'].mean()),
+                'average_score_with_fen': float(qdf['score_with_fen'].mean()),
+                'accuracy_without_fen': float(q_accuracy_without),
+                'accuracy_with_fen': float(q_accuracy_with),
+                'average_improvement': float(qdf['improvement'].mean()),
+                'total_tests': int(len(qdf))
             }
         
         return summary

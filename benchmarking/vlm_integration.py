@@ -121,24 +121,60 @@ class VLMInterface:
             else:
                 prompt = question
             
-            # Process inputs
-            inputs = self.processor(
-                text=prompt,
-                images=image,
-                return_tensors="pt"
-            ).to(self.device)
+            # Process inputs - handle different LLaVA API versions
+            if self.use_imagetext_api:
+                # ImageTextToText API (newer)
+                inputs = self.processor(
+                    images=image,
+                    text=prompt,
+                    return_tensors="pt"
+                ).to(self.device)
+            else:
+                # Standard format (Vision2Seq or LLaVA 1.5)
+                try:
+                    inputs = self.processor(
+                        text=prompt,
+                        images=image,
+                        return_tensors="pt"
+                    ).to(self.device)
+                except Exception as e1:
+                    # Try alternative format for Vision2Seq
+                    if hasattr(self.processor, 'image_processor') and hasattr(self.processor, 'tokenizer'):
+                        image_inputs = self.processor.image_processor(image, return_tensors="pt")
+                        text_inputs = self.processor.tokenizer(prompt, return_tensors="pt", padding=True)
+                        inputs = {**image_inputs, **text_inputs}
+                        inputs = {k: v.to(self.device) if isinstance(v, torch.Tensor) else v for k, v in inputs.items()}
+                    else:
+                        raise e1
             
             # Generate response
             with torch.no_grad():
-                outputs = self.model.generate(
-                    **inputs,
-                    max_new_tokens=512,
-                    do_sample=False,
-                    temperature=0.7,
-                )
+                generate_kwargs = {
+                    "max_new_tokens": 512,
+                    "do_sample": False,
+                }
+                
+                try:
+                    outputs = self.model.generate(**inputs, **generate_kwargs)
+                except Exception as e:
+                    # Remove temperature if do_sample is False
+                    if "temperature" in str(e).lower() or "unexpected keyword" in str(e).lower():
+                        generate_kwargs.pop("temperature", None)
+                    try:
+                        outputs = self.model.generate(**inputs, **generate_kwargs)
+                    except Exception as e2:
+                        # Last resort: try with minimal kwargs
+                        outputs = self.model.generate(**inputs, max_new_tokens=512)
             
             # Decode response
-            response = self.processor.decode(outputs[0], skip_special_tokens=True)
+            try:
+                if hasattr(self.processor, 'tokenizer'):
+                    response = self.processor.tokenizer.decode(outputs[0], skip_special_tokens=True)
+                else:
+                    response = self.processor.decode(outputs[0], skip_special_tokens=True)
+            except:
+                # Fallback decoding
+                response = str(outputs[0])
             
             # Extract answer (remove prompt from response)
             if prompt in response:
