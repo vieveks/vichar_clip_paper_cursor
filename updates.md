@@ -187,5 +187,22 @@ This file tracks all updates and changes made to the project on a date-wise basi
   - Near-perfect performance on test set demonstrates effective fine-tuning
   - All results documented and ready for paper publication
 
+### FEN Generator: EOS Token Masking Approach Evaluation
+- **Approach**: Implemented EOS (End-of-Sequence) token masking during generation to prevent premature stopping
+- **Implementation**: Modified `FEN_generator/model.py` to mask EOS token in logits until minimum length (35 tokens) is reached
+- **Method**: During beam search generation, EOS token logits are set to `-inf` if current sequence length < `min_length` parameter
+- **Evaluation Results** (on test set of 12,500 samples):
+  - **Exact Match Accuracy**: 0.00% (0/12500) - same as baseline
+  - **Average CER**: 0.7387 (worse than baseline v2's 0.7019)
+  - **Issue**: While the approach successfully forced longer generation, it produced repetitive garbage sequences
+  - **Example**: GT `r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1` → GEN `r3k2r/1B1/4/2B2RK1RK1rN1rN1rN1rN1r1`
+- **Analysis**:
+  - EOS masking successfully prevented early stopping (sequences were longer)
+  - However, model generated repetitive patterns and invalid FEN structures
+  - Root cause: Model was never trained to generate beyond ~20 tokens, so forcing longer sequences causes hallucination
+  - The approach addresses the symptom (early EOS) but not the underlying training issue (exposure bias)
+- **Conclusion**: EOS masking alone is insufficient. The fundamental problem is that the model needs better training strategies (e.g., scheduled sampling) to learn to condition on its own predictions rather than always seeing ground truth during training.
+- **Status**: Evaluation completed. Approach documented for future reference. Next steps should focus on training improvements rather than inference-time constraints.
+
 ---
 
