@@ -122,19 +122,58 @@ Use policy gradient or RL to optimize for exact match:
 
 ## Current Status
 
-**Best Model (v2)**: `runs/fen_generator_v2/best_model_stage1.pt`
-- Training: Val Loss 0.0225 (excellent convergence)
-- Evaluation: 0% accuracy (cannot generate full-length FENs)
+**v3 Results - Length Penalty Overcorrected**
+- Training: Val Loss 0.0084 (excellent)
+- Evaluation: **CER 1.16** (73% worse than v2!)
+- Issue: Model generates excessive length with repetitions
+- Example: `8/8/8/8/8///////////` (excessive slashes and padding)
 
-**Next: v3 - Length-Aware Loss Implementation**
-- Implementing Option 1: Adding length penalty to training loss
-- Goal: Penalize sequences shorter than target length
-- Formula: `total_loss = ce_loss + lambda * length_penalty`
+**Analysis:**
+The length penalty forced the model to generate longer sequences, but:
+1. It learned to pad with garbage tokens (`///`, repeated chars)
+2. No understanding of valid FEN structure
+3. CER degraded significantly from v2's 0.70
 
-**Next Steps After v3**:
-1. Evaluate v3 model on test set
-2. If still issues, consider curriculum learning approach
-3. Ablation: try masking out EOS token during training until step > 30
+**Root Cause (Revised):**
+The fundamental problem is **teacher forcing** during training:
+- Model sees ground truth at each step
+- Never learns to condition on its own predictions
+- At inference, prediction errors compound ("exposure bias")
+- After ~10-15 correct tokens, model enters garbage generation mode
+
+## Recommended Next Approach
+
+### Option A: Lower Length Penalty Weight (Quick Fix)
+Reduce penalty from `0.1` to `0.01` or `0.02`:
+- Less aggressive push toward longer sequences
+- May find balance between v2 and v3
+
+### Option B: Scheduled Sampling (Preferred)
+Gradually replace teacher forcing with model predictions:
+```python
+# During training, use model's own predictions with probability p
+if random.random() < sampling_prob:
+    next_input = model_prediction
+else:
+    next_input = ground_truth
+```
+Start with `p=0.0`, increase to `p=0.5` over epochs.
+
+### Option C: Minimum EOS Logit Masking (Simplest)
+Mask out EOS token in logits until step > 35:
+```python
+if step < min_steps:
+    logits[:, :, eos_token_id] = -float('inf')
+```
+Forces generation without changing loss function.
+
+### Option D: Use v2 Model (Pragmatic)
+Accept v2's 0% exact match but:
+- CER of 0.66 means ~34% char accuracy
+- Partial FENs might be useful for VLM context
+- Document as limitation in paper
+
+**Recommendation:** Try **Option C** (EOS masking) next - easiest to implement and doesn't require retraining loss changes.
 
 ## How to Run
 

@@ -133,6 +133,12 @@ class ChessFENGenerator(nn.Module):
                     # Decode
                     output = self.decoder(tgt=tgt_emb, memory=mem)
                     logits = self.fc_out(output[:, -1, :])  # [beam_size, vocab_size]
+                    
+                    # Mask EOS token if we haven't reached minimum length
+                    current_len = current_seqs.size(1) - 1  # -1 for SOS token
+                    if current_len < min_length:
+                        logits[:, tokenizer.eos_token_id] = -float('inf')
+                    
                     log_probs = torch.log_softmax(logits, dim=-1)
                     
                     # Expand scores: add log prob to each beam's score
