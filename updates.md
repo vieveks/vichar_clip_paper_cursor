@@ -204,5 +204,44 @@ This file tracks all updates and changes made to the project on a date-wise basi
 - **Conclusion**: EOS masking alone is insufficient. The fundamental problem is that the model needs better training strategies (e.g., scheduled sampling) to learn to condition on its own predictions rather than always seeing ground truth during training.
 - **Status**: Evaluation completed. Approach documented for future reference. Next steps should focus on training improvements rather than inference-time constraints.
 
+### FEN Generator: Spatial Alignment Fix and Expanded FEN Format (v4)
+- **Problem Identified**: Root cause analysis revealed fundamental spatial misalignment - CLIP ViT-B/32 produces 7×7 patch features, but chess boards are 8×8 squares, preventing accurate piece localization
+- **Solution 1 - Spatial Interpolation**: Implemented bilinear interpolation to upsample CLIP features from 7×7 to 8×8, aligning features with chess board squares
+  - Modified `FEN_generator/model.py` to interpolate features in both `forward()` and `generate()` methods
+  - Each of 64 feature vectors now corresponds to one chess square
+- **Solution 2 - Expanded FEN Format**: Implemented expanded FEN format where numbers are replaced with repeated '1' tokens
+  - Added `expand_fen()` and `collapse_fen()` functions to `FEN_generator/dataset.py`
+  - Updated tokenizer to remove digits 2-8, keeping only '1' for empty squares (vocab: 27→20 tokens)
+  - Expanded FEN: 71 tokens (64 squares + 7 slashes) vs standard ~42-44 tokens
+  - Rationale: Eliminates counting requirement, makes every row exactly 8 tokens
+- **Training Results**:
+  - **3 epochs**: Train Loss 1.26, Val Loss 3.53 (high validation loss)
+  - **10 epochs**: Best Val Loss 0.8926 at Epoch 6 (74% improvement from initial 3.5)
+  - Training diverged after Epoch 6 (overfitting)
+- **Evaluation Results** (10 epochs, best model from Epoch 6):
+  - **Exact Match Accuracy**: 0.00% (0/10) - no improvement
+  - **Average CER**: 1.0341 (worse than v2's 0.6663)
+  - **Issue**: Model still generates invalid output ("80" or repeating characters)
+  - **Sequence Length**: Hitting max_len (80 tokens) instead of generating valid FEN
+- **Analysis**:
+  - Spatial alignment fix (8×8 interpolation) is correct and should help
+  - Expanded FEN format made the task harder, not easier:
+    - Too many repeated '1' tokens (harder to learn patterns)
+    - Longer sequences (71 vs 42-44 tokens)
+    - Model gets stuck in loops or hits max_len
+  - Despite better validation loss (0.89), generation quality didn't improve
+  - Model learned to minimize loss but not the FEN structure
+- **Conclusion**: 
+  - Spatial alignment fix (7×7 → 8×8) is valuable and should be kept
+  - Expanded FEN format should be reverted - it makes the task harder
+  - Next step: Test standard FEN format with 8×8 spatial alignment
+- **Files Modified**:
+  - `FEN_generator/model.py`: Added 8×8 interpolation
+  - `FEN_generator/dataset.py`: Added expand/collapse FEN functions
+  - `FEN_generator/tokenizer.py`: Updated vocabulary (removed digits 2-8)
+  - `FEN_generator/evaluate.py`: Added FEN collapsing for comparison
+  - Created `FEN_generator/SPATIAL_ALIGNMENT_FIX.md` documentation
+- **Status**: Spatial alignment fix implemented and tested. Expanded FEN format found to be counterproductive. Ready to test standard FEN with 8×8 alignment.
+
 ---
 

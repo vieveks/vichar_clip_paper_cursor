@@ -10,7 +10,7 @@
 \usepackage{url}
 
 \title{Enhancing Vision-Language Models for Chess Position Understanding via Symbolic Grounding}
-\author{Anonymous Authors\\
+\author{Vivek Padman, Prajeet Khante, Hirak Basumatory\\
 \small Paper under double-blind review}
 \date{}
 
@@ -19,7 +19,7 @@
 \maketitle
 
 \begin{abstract}
-Vision-Language Models (VLMs) have shown remarkable capabilities in visual reasoning tasks, yet they struggle with precise spatial understanding required for structured domains like chess. We propose a two-phase approach to bridge this vision--text modality gap by grounding visual inputs in symbolic representations (FEN notation). First, we demonstrate via a **retrieval-based** method that providing ground-truth or retrieved FEN strings significantly enhances VLM performance. Second, to address the limitations of retrieval in open-world settings, we introduce a **Generative FEN Decoder**—a fine-tuned CLIP-based encoder-decoder model that synthesizes FEN strings for unseen board configurations. Our methods achieve a 75\% relative improvement in chess position understanding tasks compared to using vision alone. We demonstrate that providing VLMs with symbolic context significantly improves performance on tasks requiring precise piece localization and board state reasoning. Our findings suggest that hybrid vision--symbolic approaches can enhance VLM performance in structured visual domains.
+Vision-Language Models (VLMs) have shown remarkable capabilities in visual reasoning tasks, yet they struggle with precise spatial understanding required for structured domains like chess. We propose a two-phase approach to bridge this vision--text modality gap by grounding visual inputs in symbolic representations (FEN notation). First, we demonstrate via a **retrieval-based** method that providing ground-truth or retrieved FEN strings significantly enhances VLM performance, achieving 99.98\% top-1 accuracy and a 75\% relative improvement in chess understanding tasks. Second, to address the limitations of retrieval in open-world settings, we explore a **Generative FEN Decoder**—a fine-tuned CLIP-based encoder-decoder model that synthesizes FEN strings for unseen board configurations. While the generative approach faces significant challenges (0\% exact match accuracy due to exposure bias and premature stopping), our analysis reveals important lessons for vision-to-symbol generation. We demonstrate that providing VLMs with symbolic context significantly improves performance on tasks requiring precise piece localization and board state reasoning. Our findings suggest that hybrid vision--symbolic approaches can enhance VLM performance in structured visual domains, though generative methods require further research to overcome current limitations.
 \end{abstract}
 
 \noindent\textbf{Keywords:} Vision-Language Models, Chess AI, Symbolic Reasoning, CLIP, Multimodal Learning, Generative Decoding
@@ -41,16 +41,18 @@ Chess therefore serves as an ideal testbed for studying VLM limitations because:
 
 In this work, we investigate the hypothesis that **symbolic grounding**—explicitly converting the visual input into a structured text representation—can unlock the reasoning capabilities of strong LLMs. We present our contributions in two phases:
 
-1.  **Phase 1: Retrieval-Based Grounding.** We first validate the utility of FEN context using a fine-tuned CLIP model to retrieve FEN strings from a database. This serves as a proof-of-concept that *if* a VLM has access to accurate symbolic state, its reasoning performance improves dramatically.
-2.  **Phase 2: Generative FEN Prediction.** To overcome the "closed-world" limitation of retrieval (which fails on unseen positions), we develop a **Generative FEN Decoder**. This model combines our fine-tuned CLIP encoder with a Transformer decoder to synthesize valid FEN strings for *any* board configuration, enabling true open-world application.
+1.  **Phase 1: Retrieval-Based Grounding.** We first validate the utility of FEN context using a fine-tuned CLIP model to retrieve FEN strings from a database. This serves as a proof-of-concept that *if* a VLM has access to accurate symbolic state, its reasoning performance improves dramatically (75\% relative improvement).
+2.  **Phase 2: Generative FEN Prediction.** To overcome the "closed-world" limitation of retrieval (which fails on unseen positions), we explore a **Generative FEN Decoder**. This model combines our fine-tuned CLIP encoder with a Transformer decoder to synthesize FEN strings for unseen board configurations. While this approach faces significant challenges (exposure bias, premature stopping), our systematic evaluation provides important insights into the difficulties of vision-to-symbol generation and suggests directions for future research.
 
 Our approach is instantiated in the open-source \emph{Vichar-CLIP} codebase,\footnote{\url{https://github.com/vieveks/vichar_clip_paper_cursor}.} which trains a ViT-B/32 CLIP model on chess boards to predict FEN and achieves $>96\%$ top-1 accuracy on held-out positions.
 
 \paragraph{Contributions.} Our contributions are:
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Novel pipeline:} We introduce, to our knowledge, the first VLM pipeline that explicitly augments vision with generated symbolic representations (FEN) for structured visual reasoning in chess.
-    \item \textbf{Generative Architecture:} We propose a robust Encoder-Decoder architecture that leverages pre-trained CLIP embeddings to generate valid FEN strings for unseen positions, overcoming the limitations of fixed-vocabulary retrieval.
-    \item \textbf{Empirical validation:} We demonstrate a 75\% relative improvement on chess understanding benchmarks compared to a vision-only baseline.
+    \item \textbf{Novel pipeline:} We introduce, to our knowledge, the first VLM pipeline that explicitly augments vision with symbolic representations (FEN) for structured visual reasoning in chess, demonstrating significant improvements when accurate FEN is available.
+    \item \textbf{Retrieval-based validation:} We achieve 99.98\% top-1 accuracy on FEN retrieval, demonstrating that fine-tuned CLIP models are highly effective for closed-world vision-to-symbol mapping.
+    \item \textbf{Generative architecture exploration:} We propose and systematically evaluate an Encoder-Decoder architecture for generating FEN strings for unseen positions, revealing fundamental challenges (exposure bias, training-inference mismatch) that limit current generative approaches.
+    \item \textbf{Empirical validation:} We demonstrate a 75\% relative improvement on chess understanding benchmarks when accurate FEN context is provided, compared to a vision-only baseline.
+    \item \textbf{Lessons for vision-to-symbol generation:} Our analysis of generative model failures provides important insights into the challenges of structured output generation from visual inputs, including the disconnect between training metrics and generation quality, and the critical role of exposure bias.
     \item \textbf{Link to chess-LLM literature:} We situate our method within recent work on chess-specific LLMs~\citep{zhang2025chessllm,feng2023chessgpt,jiang2023nlchess}, reasoning with explanations~\citep{wang2024mate}, searchless transformers~\citep{deepmind2024searchless}, world models~\citep{xie2025worldmodels}, and human-aligned engines~\citep{zhang2024allie}.
     \item \textbf{Open-source:} We release our training and evaluation pipeline (Vichar-CLIP) and the benchmark scripts necessary to reproduce our results.
 \end{itemize}
@@ -129,15 +131,18 @@ To address the closed-world limitation, we develop a generative model capable of
 
 \paragraph{Architecture.}
 \begin{enumerate}
-    \item **Encoder:** The **CLIP ViT-B/32** vision model from Approach 1. We initialize it with the weights fine-tuned in the retrieval phase to leverage the learned chess features.
-    \item **Decoder:** A **Transformer Decoder** that attends to the encoder's output and autoregressively generates the FEN string token-by-token.
+    \item **Encoder:** The **CLIP ViT-B/32** vision model from Approach 1, initialized with weights fine-tuned in the retrieval phase. We extract spatial patch embeddings ($7 \times 7 = 49$ tokens) rather than pooled features to preserve spatial information needed for piece localization.
+    \item **Decoder:** A **Transformer Decoder** (6 layers, 8 heads, 512 dimensions) that attends to the encoder's spatial tokens and autoregressively generates the FEN string token-by-token using a character-level tokenizer.
 \end{enumerate}
 
 \paragraph{Two-Stage Training Strategy.}
 \begin{itemize}
-    \item **Stage 1 (Syntax Learning):** We **freeze** the CLIP encoder and train only the Decoder. This teaches the model the grammar of FEN notation (e.g., rank separators `/`, empty square numbers).
-    \item **Stage 2 (Fine-Tuning):** We **unfreeze** the encoder and fine-tune the full model end-to-end. We use a lower learning rate for the encoder ($10^{-6}$) to preserve its robust features while refining spatial precision.
+    \item **Stage 1 (Syntax Learning):** We **freeze** the CLIP encoder and train only the Decoder. This teaches the model the grammar of FEN notation (e.g., rank separators `/`, empty square numbers) while leveraging fixed visual features.
+    \item **Stage 2 (Fine-Tuning):** We **unfreeze** the encoder and fine-tune the full model end-to-end. We use a lower learning rate for the encoder ($10^{-6}$) to preserve its robust features while refining spatial precision. Gradient clipping (max norm 1.0) prevents training instability.
 \end{itemize}
+
+\paragraph{Training Challenges.}
+Despite careful architecture design and two-stage training, the model exhibits a critical failure mode: it learns to predict the End-of-Sequence (EOS) token prematurely during training, generating incomplete FEN strings at inference. This occurs because the training objective (cross-entropy with padding) allows the model to minimize loss by predicting EOS early, then relying on padding tokens that are ignored in the loss computation. The model effectively learns to generate $\sim$20 tokens (where it predicts EOS) rather than the required 42--44 tokens for complete FEN strings.
 
 \subsection{VLM Integration}
 
@@ -213,26 +218,49 @@ We first evaluated whether providing FEN context helps, assuming the retrieval m
     \end{tabular}
 \end{table}
 
-**Finding:** Providing the FEN significantly boosts performance, confirming our hypothesis that symbolic grounding is the key bottleneck. The largest gains appear in tasks requiring precise state understanding (check detection, FEN extraction), where a single mislocalized piece can flip correctness.
+\paragraph{Finding.} Providing the FEN significantly boosts performance, confirming our hypothesis that symbolic grounding is the key bottleneck. The largest gains appear in tasks requiring precise state understanding (check detection, FEN extraction), where a single mislocalized piece can flip correctness.
 
 \subsection{Phase 2: Generative Performance}
 
-We then evaluated the Generative Decoder on unseen positions where retrieval would fail.
+We then evaluated the Generative Decoder on unseen positions where retrieval would fail. Our experiments revealed significant challenges in generating complete, accurate FEN strings.
 
 \begin{table}[h]
     \centering
-    \caption{Generative FEN Decoder Performance.}
+    \caption{Generative FEN Decoder Performance on Test Set (12,500 samples).}
     \begin{tabular}{lcc}
         \toprule
-        \textbf{Metric} & \textbf{Stage 1 (Frozen Enc)} & \textbf{Stage 2 (Fine-Tuned)} \\
+        \textbf{Decoding Strategy} & \textbf{Exact Match} & \textbf{Average CER} \\
         \midrule
-        Validation Loss & 0.85 & \textbf{0.10} \\
-        Exact Match & 12\% & \textbf{88\%} \\
+        Greedy Decoding (Baseline) & 0.00\% & 0.6663 \\
+        Beam Search (beam=5) & 0.00\% & 0.7120 \\
+        Min Length Constraint (35) & 0.00\% & 0.7204 \\
+        EOS Token Masking (min=35) & 0.00\% & 0.7387 \\
+        Length Penalty in Loss (v3) & 0.00\% & 1.16 \\
         \bottomrule
     \end{tabular}
 \end{table}
 
-**Finding:** The two-stage training is critical. Stage 1 learns the syntax, but Stage 2 is required to achieve high precision in piece placement. The generative model matches the retrieval model's accuracy on known positions while generalizing to new ones.
+\paragraph{Training Performance.} Despite achieving low validation loss (0.0225 in Stage 1, 0.0084 in Stage 2), the model fails to generate complete FEN strings at inference time. The model consistently predicts the End-of-Sequence (EOS) token prematurely, generating only $\sim$15--20 tokens instead of the expected 42--44 tokens for complete FEN strings.
+
+\paragraph{Key Findings.}
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Training-Validation Gap:} Low validation loss (0.0084) does not translate to generation quality, indicating a fundamental mismatch between the training objective and the generation task.
+    \item \textbf{Premature Stopping:} All decoding strategies fail to produce complete sequences, with generated FENs typically containing only 3--4 ranks instead of 8.
+    \item \textbf{Inference-Time Constraints Ineffective:} Attempts to force longer generation (minimum length constraints, EOS masking) produce repetitive garbage patterns rather than valid FEN syntax.
+    \item \textbf{Exposure Bias:} The model was trained with teacher forcing (always seeing ground truth), but at inference must condition on its own predictions. After $\sim$10--15 correct tokens, prediction errors compound and the model enters a degenerate generation mode.
+\end{itemize}
+
+\paragraph{Root Cause Analysis.} We identified three contributing factors:
+\begin{enumerate}
+    \item \textbf{Padding Strategy:} During training, sequences are padded to a fixed length (80 tokens). The model learns it can minimize loss by predicting EOS early, then relying on padding tokens (which are ignored in the loss function).
+    \item \textbf{Teacher Forcing:} The model never learns to recover from its own prediction errors, as it always sees ground truth during training.
+    \item \textbf{Length Mismatch:} The model is effectively trained to generate $\sim$20 tokens (where it predicts EOS), but complete FEN strings require 42--44 tokens.
+\end{enumerate}
+
+\paragraph{Example Failure Case.}
+Ground truth: \texttt{r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1} \\
+Generated (greedy): \texttt{r3k2r/1N1P02/Q02/1PK1} \\
+The model correctly identifies the first rank but stops prematurely, producing an incomplete FEN that cannot be used for downstream reasoning tasks.
 
 \subsection{Per-Task Analysis}
 
@@ -270,6 +298,20 @@ We hypothesize three mechanisms:
 
 This is consistent with evidence that language explanations and structured text scaffolds improve reasoning in chess~\citep{wang2024mate} and beyond~\citep{xie2025worldmodels}.
 
+\subsection{Lessons from Generative Model Failures}
+
+Our extensive experimentation with generative FEN prediction revealed several important lessons for the vision-to-symbol generation community:
+
+\paragraph{Training Metrics Can Mislead.} Our model achieved excellent validation loss (0.0084) but 0\% exact match accuracy, demonstrating that standard sequence modeling metrics (cross-entropy loss) do not necessarily correlate with generation quality for structured outputs. This echoes findings in other structured generation tasks where models optimize for local token-level accuracy rather than global sequence validity.
+
+\paragraph{Exposure Bias is Critical.} The fundamental challenge is that teacher forcing during training creates a distribution mismatch at inference. The model never learns to recover from its own prediction errors because it always sees ground truth. After $\sim$10--15 correct tokens, small errors compound and the model enters a degenerate generation mode. This suggests that scheduled sampling or other techniques that gradually introduce model predictions during training may be necessary for successful generative models.
+
+\paragraph{Inference-Time Constraints Are Insufficient.} We attempted multiple inference-time strategies to force longer generation (minimum length constraints, EOS token masking, beam search), but all failed because the model was never trained to generate beyond its learned distribution. Simply preventing EOS prediction does not teach the model how to continue generating valid tokens; it only produces repetitive invalid patterns. This indicates that the solution must come from training improvements, not inference-time hacks.
+
+\paragraph{Structured Outputs Require Specialized Objectives.} The rigid syntax of FEN (exactly 8 ranks, 7 slashes, specific piece notation) suggests that sequence-level training objectives (e.g., policy gradient methods optimizing for exact match) or constrained decoding may be necessary. Standard maximum likelihood training with padding allows the model to ``cheat'' by predicting EOS early.
+
+These findings contribute to the broader understanding of challenges in vision-to-symbol generation and suggest directions for future research in structured output generation from visual inputs.
+
 \subsection{Relation to Chess-Specific LLMs}
 
 Our pipeline can be viewed as a \emph{front-end} for existing chess-LLM systems:
@@ -282,14 +324,35 @@ Our pipeline can be viewed as a \emph{front-end} for existing chess-LLM systems:
 
 In that sense, our work complements policy- and explanation-centric research by solving the ``vision bottleneck'' that prevents these methods from operating directly on images.
 
-\subsection{Limitations}
+\subsection{Limitations and Challenges}
 
+\paragraph{Generative Model Limitations.}
+Our generative FEN decoder faces significant challenges that limit its practical deployment:
 \begin{itemize}[leftmargin=*]
-    \item \textbf{Generator accuracy:} Our generative model is not perfect; errors in FEN prediction propagate to the VLM. In critical tactical positions, a single mislocated piece can completely change the evaluation.
-    \item \textbf{Task dependency:} Gains are task-specific; strategic reasoning and best-move selection remain challenging even with perfect state information, consistent with prior findings~\citep{deepmind2024searchless,jiang2023nlchess}.
-    \item \textbf{Generality:} We evaluate on standard chess. Extensions to chess variants, 3D boards, or noisy real-world camera feeds would require domain adaptation.
-    \item \textbf{Symbolic-only bias:} By privileging FEN, we may underutilize visual cues (e.g., clock, user interface elements) that could be informative in some applications.
+    \item \textbf{Zero Exact Match Accuracy:} Despite low training loss, the model achieves 0\% exact match accuracy on the test set, generating incomplete FEN strings that typically contain only 3--4 ranks instead of 8.
+    \item \textbf{Exposure Bias:} The fundamental issue is that teacher forcing during training does not prepare the model for autoregressive generation at inference, where it must condition on its own (potentially erroneous) predictions.
+    \item \textbf{Training Objective Mismatch:} The cross-entropy loss with padding allows the model to minimize loss by predicting EOS early, creating a disconnect between training metrics and generation quality.
+    \item \textbf{Inference-Time Constraints Fail:} Attempts to force longer generation (EOS masking, minimum length constraints) produce repetitive invalid patterns rather than valid FEN syntax, indicating the model lacks the capacity to generate beyond its training distribution.
 \end{itemize}
+
+\paragraph{Partial FEN Utility.}
+While complete FEN generation fails, partial FENs (even with CER $\sim$0.67) may still provide useful context for VLMs. The first 3--4 ranks often contain critical information (piece locations, king safety) that could improve VLM reasoning, though this remains an open empirical question.
+
+\paragraph{Retrieval Model Limitations.}
+The retrieval-based approach, while highly accurate (99.98\% top-1), is fundamentally limited to closed-world settings:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Database Dependency:} Only works for positions present in the training database, failing on novel positions.
+    \item \textbf{Scalability:} Requires maintaining and searching a large FEN database, which may not be practical for all applications.
+\end{itemize}
+
+\paragraph{Task Dependency.}
+Gains from FEN context are task-specific; strategic reasoning and best-move selection remain challenging even with perfect state information, consistent with prior findings~\citep{deepmind2024searchless,jiang2023nlchess}.
+
+\paragraph{Generality.}
+We evaluate on standard chess. Extensions to chess variants, 3D boards, or noisy real-world camera feeds would require domain adaptation.
+
+\paragraph{Symbolic-Only Bias.}
+By privileging FEN, we may underutilize visual cues (e.g., clock, user interface elements) that could be informative in some applications.
 
 \subsection{Broader Impact and Connections to World Models and Games}
 
@@ -308,16 +371,21 @@ We presented a simple yet effective approach for enhancing VLM performance on ch
 
 \paragraph{Key Takeaways.}
 \begin{itemize}[leftmargin=*]
-    \item Symbolic grounding (via FEN) significantly improves VLM spatial reasoning in structured domains like chess.
-    \item Hybrid vision--symbolic systems outperform pure vision or pure text in tasks that require precise state understanding.
-    \item Fine-tuned CLIP models are effective and practical tools for extracting structured representations from images, as demonstrated by Vichar-CLIP.
+    \item Symbolic grounding (via FEN) significantly improves VLM spatial reasoning in structured domains like chess, as demonstrated by our retrieval-based approach achieving 75\% relative improvement.
+    \item Fine-tuned CLIP models are highly effective for retrieval-based FEN matching (99.98\% top-1 accuracy), providing a practical solution for closed-world settings.
+    \item Generative FEN prediction faces fundamental challenges: exposure bias and training-inference mismatch lead to premature stopping and 0\% exact match accuracy, despite low training loss.
+    \item The gap between training metrics (loss) and generation quality highlights the importance of evaluating generative models on their actual output, not just training statistics.
+    \item Hybrid vision--symbolic systems show promise, but current generative approaches require significant improvements before they can replace retrieval in open-world settings.
 \end{itemize}
 
 \paragraph{Future Work.}
 \begin{itemize}[leftmargin=*]
-    \item Integrate our visual front-end with strong text-only chess engines (ChessLLM, ChessGPT, ALLIE) to evaluate full-game strength from images.
-    \item Extend to other structured domains (Go, molecular structures, circuit diagrams) where a concise symbolic representation exists.
-    \item Combine visual symbolic grounding with explanation-augmented reasoning~\citep{wang2024mate} and multi-agent opponent modeling~\citep{yu2025emo}.
+    \item \textbf{Generative Model Improvements:} Address exposure bias through scheduled sampling, curriculum learning (starting with short FENs), or sequence-level training objectives. Explore alternative architectures (e.g., non-autoregressive generation) that may better handle the rigid FEN syntax.
+    \item \textbf{Hybrid Approaches:} Combine retrieval (for known positions) with generative fallback (for novel positions), potentially using confidence scores to decide which method to trust.
+    \item \textbf{Partial FEN Evaluation:} Systematically evaluate whether partial FENs (even with high CER) improve VLM performance, which could make the current generative model practically useful despite its limitations.
+    \item \textbf{Integration:} Integrate our visual front-end with strong text-only chess engines (ChessLLM, ChessGPT, ALLIE) to evaluate full-game strength from images.
+    \item \textbf{Generalization:} Extend to other structured domains (Go, molecular structures, circuit diagrams) where a concise symbolic representation exists.
+    \item \textbf{Enhanced Reasoning:} Combine visual symbolic grounding with explanation-augmented reasoning~\citep{wang2024mate} and multi-agent opponent modeling~\citep{yu2025emo}.
 \end{itemize}
 
 \begin{thebibliography}{99}
