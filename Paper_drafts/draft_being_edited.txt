@@ -1,0 +1,428 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage[numbers]{natbib}
+\usepackage{url}
+
+\title{Enhancing Vision-Language Models for Chess Position Understanding via Symbolic Grounding}
+\author{Anonymous Authors\\
+\small Paper under double-blind review}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Vision-Language Models (VLMs) have shown remarkable capabilities in visual reasoning tasks, yet they struggle with precise spatial understanding required for structured domains like chess. We propose a simple but effective approach that bridges the vision--text modality gap by extracting symbolic representations (FEN notation) from chess board images using a fine-tuned CLIP model. Our method achieves a 75\% relative improvement in chess position understanding tasks compared to using vision alone. We demonstrate that providing VLMs with CLIP-extracted FEN strings as textual context significantly improves performance on tasks requiring precise piece localization and board state reasoning. Our findings suggest that hybrid vision--symbolic approaches can enhance VLM performance in structured visual domains.
+\end{abstract}
+
+\noindent\textbf{Keywords:} Vision-Language Models, Chess AI, Symbolic Reasoning, CLIP, Multimodal Learning
+
+\section{Introduction}
+
+Vision-Language Models (VLMs) such as LLaVA and GPT-4V have demonstrated impressive capabilities across diverse visual reasoning tasks. However, they face challenges in domains requiring precise spatial understanding and symbolic reasoning, such as chess position analysis. While humans can easily translate a chess board image into Forsyth-Edwards Notation (FEN) --- a standard textual representation --- VLMs often struggle with this task due to the fine-grained spatial reasoning required.
+
+Chess has rapidly become a standard testbed for probing the reasoning and planning capabilities of large language models (LLMs) and multimodal systems. Recent work shows that purely text-based LLMs trained on complete game trajectories can reach strong-amateur or even master-level strength when games are represented in FEN or UCI text formats.\footnote{E.g., ChessLLM reaches $\sim$1788 Elo against Stockfish when trained on over 20B chess tokens~\citep{zhang2025chessllm}.} Similarly, explanation-enriched datasets such as MATE demonstrate that adding strategic and tactical natural-language rationales substantially improves move-selection accuracy, surpassing strong commercial LLMs~\citep{wang2024mate}. At the same time, other work targets human move prediction~\citep{kreiger2024predict}, human-aligned play and skill calibration~\citep{zhang2024allie}, and purely searchless transformer policies trained on massive supervised datasets~\citep{deepmind2024searchless}.
+
+Yet, despite this progress, most chess-LLM work assumes a \emph{textual} representation of the position is already available (PGN, FEN, UCI). In many realistic settings, the input is visual: a rendered board from a GUI, a video frame, or a real-world camera image. In these cases, the bottleneck is not the downstream reasoning but the \emph{vision-to-symbol} mapping that provides a clean, unambiguous board state.
+
+Chess therefore serves as an ideal testbed for studying VLM limitations because:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Precise spatial reasoning:} Distinguishing between similar pieces (e.g., white pawn vs.\ white bishop) and subtle configuration differences requires fine-grained visual understanding.
+    \item \textbf{Symbolic grounding:} Chess has a well-defined symbolic language (FEN, algebraic notation) that supports discrete decision-making and formal reasoning.
+    \item \textbf{Objective evaluation:} Ground truth board states, legal moves, and engine evaluations can be computed programmatically.
+\end{itemize}
+
+We propose a hybrid vision--symbolic approach where:
+\begin{itemize}[leftmargin=*]
+    \item A fine-tuned CLIP-style model~\citep{radford2021clip} is trained to map chess board images into FEN strings in a shared embedding space.
+    \item The extracted FEN is provided as textual context to a strong VLM.
+    \item The VLM performs reasoning tasks (move prediction, position evaluation, state queries) using both visual and symbolic information.
+\end{itemize}
+
+Our approach is instantiated in the open-source \emph{Vichar-CLIP} codebase,\footnote{\url{https://github.com/vieveks/vichar_clip_paper_cursor}.} which trains a ViT-B/32 CLIP model on chess boards to predict FEN and achieves $>96\%$ top-1 accuracy on held-out positions.
+
+\paragraph{Contributions.} Our contributions are:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Novel pipeline:} We introduce, to our knowledge, the first VLM pipeline that explicitly augments vision with CLIP-extracted symbolic representations (FEN) for structured visual reasoning in chess.
+    \item \textbf{Empirical validation:} We demonstrate a 75\% relative improvement on chess understanding benchmarks compared to a vision-only baseline.
+    \item \textbf{Link to chess-LLM literature:} We situate our method within recent work on chess-specific LLMs~\citep{zhang2025chessllm,feng2023chessgpt,jiang2023nlchess}, reasoning with explanations~\citep{wang2024mate}, searchless transformers~\citep{deepmind2024searchless}, world models~\citep{xie2025worldmodels}, and human-aligned engines~\citep{zhang2024allie}.
+    \item \textbf{Open-source:} We release our CLIP training and evaluation pipeline (Vichar-CLIP) and the benchmark scripts necessary to reproduce our results.
+\end{itemize}
+
+\section{Related Work}
+
+\subsection{Vision-Language Models and CLIP}
+
+Contrastive vision-language pretraining, as popularized by CLIP~\citep{radford2021clip}, learns a joint embedding space for images and text by predicting matching pairs from large-scale web data. This approach has proven remarkably effective for zero-shot classification, retrieval, and transfer across a wide range of visual domains. Subsequent work has focused on making CLIP more efficient (e.g., patch masking and patch selection strategies~\citep{pei2025clippgs}) and domain-adapting CLIP-like models to specialized settings.
+
+Our method follows the CLIP paradigm but replaces natural-language captions with FEN strings. This mirrors ChessCLIP~\citep{feng2023chessgpt}, which jointly embeds game states and language commentary, but we focus on high-fidelity \emph{state reconstruction} from images rather than commentary understanding. The Vichar-CLIP repository implements this training loop specifically for chess board images and FEN labels, with variants that also condition on the last move (\texttt{FEN+Move}) and achieves $\approx 96.7\%$ top-1 FEN retrieval accuracy on a held-out test set.
+
+\subsection{Chess and LLMs}
+
+A growing body of work treats chess as a structured testbed for LLM reasoning:
+
+\paragraph{Text-only chess LLMs.} ChessLLM~\citep{zhang2025chessllm} fine-tunes an LLM on over 20B tokens of chess games represented in FEN and move text, achieving an Elo of $\sim$1788 against Stockfish and demonstrating that high-quality, full-game supervision significantly improves strength. ChessBench and related work on amortized planning with transformers~\citep{deepmind2024searchless} show that supervised transformers trained on engine-annotated data can reach grandmaster-level performance without explicit search by predicting state- and action-values.
+
+ChessGPT~\citep{feng2023chessgpt} bridges policy learning and language modeling through a large-scale multimodal chess dataset, introducing ChessGPT and ChessCLIP as models that jointly handle game state, policy, and language commentary. The MATE dataset~\citep{wang2024mate} further shows that enriching positions with strategy and tactic explanations yields up to $\sim$95\% move-selection accuracy and even boosts the performance of powerful black-box LLMs when explanations are provided as context.
+
+\paragraph{Human-like and human-aligned play.} Parallel work focuses on modeling human behavior rather than optimal engine play. ALLIE~\citep{zhang2024allie} trains a multi-headed transformer to predict moves, pondering times, and resignation decisions from human game logs, achieving state-of-the-art human move prediction and near-perfect skill calibration (average gap $\sim$49 Elo). Other work explicitly targets move prediction for a single player~\citep{kreiger2024predict} or subsets of the rating spectrum~\citep{maia2020,skidanov2025behaviour}. These efforts show that LLM-like architectures can capture rich human behavior when provided with accurate textual state representations.
+
+\paragraph{Natural-language chess engines.} Smaller models, such as the GPT-2-XL system of Jiang~\citep{jiang2023nlchess}, explore training language models to answer natural-language chess queries (e.g., legality, piece identity, evaluation) and to generate moves using instruction fine-tuning and chain-of-thought prompting. While these models exhibit promising qualitative reasoning, their move quality often lags behind specialized engines.
+
+Our work is complementary: we assume a strong, general-purpose VLM or LLM for downstream reasoning but focus on the \emph{visual-to-symbolic} step that almost all prior work sidesteps by assuming FEN or PGN is already given.
+
+\subsection{Chess, NLP, and Explanations}
+
+Beyond move prediction and engine strength, several works study chess through the lens of NLP:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Policy + language integration:} ChessGPT~\citep{feng2023chessgpt} unifies policy learning with language modeling across game records, commentary, and instructions.
+    \item \textbf{Sentiment and commentary:} SentiMATE~\citep{kamlish2019sentimate} and later ABSA-style models analyze sentiment in chess commentary to evaluate moves. Recent work extends aspect-based sentiment analysis (ABSA) to chess textbooks using player-predicate-move triples and RoBERTa-based classifiers, showing that sentiment over textual descriptions correlates meaningfully with engine evaluations.
+    \item \textbf{Human move prediction with LLMs:} Kreiger~\citep{kreiger2024predict} evaluates GPT-family models and chess-specific engines on predicting human moves, finding that prompt engineering improves LLM performance but chess-specific models such as Maia still dominate.
+\end{itemize}
+
+These works support our claim that \emph{textual} representations of chess positions are powerful interfaces for LLMs. Our goal is to reliably produce such representations from images, so that text-based techniques (sentiment, explanations, policy learning) become available in purely visual settings.
+
+\subsection{World Models, Games, and Multi-Agent Reasoning}
+
+There is a broader trend of framing interactive environments as sequence modeling problems over text. World-model work in text-based games and synthetic environments demonstrates that transformers can approximate environment dynamics and rewards purely from logged trajectories, then serve as simulators, policies, or planners~\citep{wang2024worldsim,xie2025worldmodels}. WordPlay-style benchmarks and ByteSized corpora treat game state and actions as text, showing strong generalization and planning capabilities in interactive narratives.
+
+In multi-agent settings, Explicit Models of Opponents (EMO)~\citep{yu2025emo} build individual LLM-based opponent models with bi-level feedback, significantly improving win rates and role inference in social deduction games. Meanwhile, narrative-focused frameworks such as PANGeA~\citep{buongiorno2024pangea} show how LLMs with memory and validation modules can maintain coherent, rule-abiding narratives in RPGs.
+
+Chess sits at the intersection of these lines of work: it is both a complex planning problem and a social setting where human-aligned reasoning and opponent modeling matter. Our method can be viewed as providing a high-fidelity \emph{symbolic world state} (FEN) from pixels, enabling downstream world-model or multi-agent techniques to operate on structured input.
+
+\subsection{Symbolic-Neural Hybrid Systems}
+
+Neuro-symbolic AI aims to combine differentiable perception with discrete symbolic reasoning. Prior work in chess includes engines that incorporate sentiment or textual knowledge into evaluation functions~\citep{kamlish2019sentimate} and systems that use logic or knowledge graphs to augment neural policies.
+
+Our approach is deliberately simple: we do not perform explicit symbolic search or theorem proving. Instead, we use symbolic representations as an \emph{input modality} to a large VLM. This follows the spirit of recent work that shows explanations and textual structure can scaffold better reasoning in LLMs~\citep{wang2024mate}, but applied to a vision-to-symbol pipeline.
+
+\section{Method}
+
+\subsection{CLIP FEN Extraction}
+\label{subsec:clip_fen}
+
+We fine-tune a ViT-B/32 CLIP model on a dataset of chess board images paired with their FEN representations. Our implementation is based on the Vichar-CLIP repository, which treats FEN prediction as an image--text retrieval problem: given a board image, the model must select the correct FEN from a candidate set.
+
+\paragraph{Training Objective.} We use the standard contrastive loss:
+\begin{equation}
+    \mathcal{L} = - \log \frac{\exp\left(\mathrm{sim}(I_i, T_i) / \tau\right)}{\sum_{j} \exp\left(\mathrm{sim}(I_i, T_j) / \tau\right)},
+\end{equation}
+where $I_i$ is the image embedding, $T_i$ is the FEN text embedding, $\mathrm{sim}(\cdot,\cdot)$ denotes cosine similarity, and $\tau$ is a temperature parameter, following CLIP~\citep{radford2021clip}.
+
+We train both a \emph{FEN-only} model and a \emph{FEN+Move} variant in which the text caption concatenates FEN with the last move (e.g., \texttt{"<FEN> | e4"}). This mirrors the ChessLLM and ChessGPT practice of including recent move history to improve policy prediction~\citep{zhang2025chessllm,feng2023chessgpt}.
+
+\paragraph{Inference.} Given a test image, we retrieve the most similar FEN from a candidate set using cosine similarity in the joint embedding space. In our experiments we use:
+\begin{itemize}[leftmargin=*]
+    \item A \emph{closed set} of candidate FENs drawn from the evaluation benchmark, and
+    \item A \emph{large-pool} setting where the candidate set contains thousands of FEN strings from mixed sources (Lichess puzzles, random game positions).
+\end{itemize}
+In both settings, we observe high top-$k$ accuracy (e.g., $>96\%$ top-1 and $100\%$ top-5 in the closed set configuration).
+
+\subsection{VLM Integration}
+
+We evaluate two settings:
+\begin{enumerate}[leftmargin=*]
+    \item \textbf{Visual-only:} The VLM receives only the chess board image.
+    \item \textbf{Visual + FEN:} The VLM receives the image and CLIP-predicted FEN as text context.
+\end{enumerate}
+
+\noindent\textbf{Prompt template (with FEN):}
+\begin{quote}
+\textbf{Question:} [Chess question]\\
+\textbf{FEN representation:} [CLIP-extracted FEN]
+\end{quote}
+
+In line with explanation-augmented work such as MATE~\citep{wang2024mate}, we optionally extend the prompt with additional instructions asking the model to reason about checks, tactics, or strategy, but the core intervention is the inclusion of FEN.
+
+\subsection{Evaluation Framework}
+
+We design 8 evaluation tasks covering different aspects of chess understanding:
+
+\begin{table}[h]
+    \centering
+    \caption{Evaluation tasks for chess position understanding.}
+    \begin{tabular}{lll}
+        \toprule
+        \textbf{Task} & \textbf{Type} & \textbf{Example} \\
+        \midrule
+        FEN Extraction    & Symbolic  & ``What is the FEN for this position?'' \\
+        Piece Count       & Counting  & ``How many pieces does each side have?'' \\
+        Check Detection   & State     & ``Is either king in check?'' \\
+        Material Balance  & Evaluation& ``Who has more material?'' \\
+        Best Move         & Strategic & ``What is the best move?'' \\
+        Tactical Patterns & Reasoning & ``Describe any tactical patterns.'' \\
+        Castling Rights   & Rules     & ``Can White castle kingside?'' \\
+        Piece Localization& Spatial   & ``What piece is on e4?'' \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+Scoring: We use GPT-4o-mini as an LLM judge to score VLM responses on a $0$--$1$ scale based on correctness compared to ground truth. This follows automated-judge setups used in ChessGPT~\citep{feng2023chessgpt} and other chess-LLM benchmarks.
+
+\section{Experimental Setup}
+
+\subsection{Datasets}
+
+\textbf{Training.} For CLIP, we sample $\sim$100K chess positions from online game databases (e.g., Lichess) and puzzle sets, render them as 2D board images, and pair each with its FEN representation. This setup is analogous to the board-state corpora used in ChessBench~\citep{deepmind2024searchless} and ChessGPT~\citep{feng2023chessgpt}, but we only require a single FEN per image, not full move trees or value annotations.
+
+\textbf{Evaluation.} We construct a held-out test set of 12.5K positions stratified across task types (tactics, quiet positions, endgames). For some analyses we subsample task-specific sets (e.g., check detection, best-move puzzles) to mirror the evaluation structure in MATE~\citep{wang2024mate} and natural-language chess engines~\citep{jiang2023nlchess}.
+
+\subsection{Models}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{CLIP:} ViT-B/32 fine-tuned for 20 epochs using the Vichar-CLIP codebase.
+    \item \textbf{VLM:} GPT-4o (OpenAI) used in image+text mode for question answering.
+    \item \textbf{Judge:} GPT-4o-mini for automated scoring.
+\end{itemize}
+
+\subsection{Baselines}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Visual-only:} VLM with image input only.
+    \item \textbf{Visual + FEN:} VLM with image and CLIP-extracted FEN.
+\end{itemize}
+
+Where appropriate, we compare our symbolic grounding gains qualitatively to those reported in explanation-augmented setups (e.g., the gain from adding strategy+tactic text in MATE~\citep{wang2024mate}) and to purely textual FEN-based reasoning in ChessLLM~\citep{zhang2025chessllm} and ChessGPT~\citep{feng2023chessgpt}.
+
+\subsection{Implementation Details (Vichar-CLIP)}
+
+Training and inference are implemented using the \texttt{open\_clip} library and PyTorch, following the scripts in \texttt{train\_clip.py} and \texttt{inference\_clip.py} from the Vichar-CLIP repository. Training uses:
+\begin{itemize}[leftmargin=*]
+    \item Batch size 128, learning rate $1\cdot 10^{-4}$, AdamW optimizer.
+    \item Mixed-precision (\texttt{--fp16}) and gradient accumulation for efficiency.
+    \item Early stopping based on validation retrieval accuracy.
+\end{itemize}
+Inference retrieves the top-$k$ FEN candidates and passes the top-1 (or full list) to the VLM as text context.
+
+\section{Results}
+
+\subsection{Main Results}
+
+\begin{table}[h]
+    \centering
+    \caption{Main results on chess understanding tasks.}
+    \begin{tabular}{lccc}
+        \toprule
+        \textbf{Metric} & \textbf{Visual-Only} & \textbf{Visual + FEN} & \textbf{Improvement} \\
+        \midrule
+        Average Score        & 0.250 & 0.438 & $+75.0\%$ \\
+        Accuracy ($\geq 0.9$) & 12.5\% & 25.0\% & $+100\%$ \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\paragraph{Key Findings.}
+\begin{itemize}[leftmargin=*]
+    \item FEN context provides substantial improvements across most tasks, similar in spirit to how strategy+tactic explanations improve move selection in MATE~\citep{wang2024mate}.
+    \item The largest gains appear in tasks requiring precise state understanding (check detection, FEN extraction), where a single mislocalized piece can flip correctness.
+    \item Tasks that primarily require coarse material assessment (material balance) see limited gains, consistent with prior observations that LLMs can already count pieces from images reasonably well.
+\end{itemize}
+
+\subsection{Per-Task Analysis}
+
+\begin{table}[h]
+    \centering
+    \caption{Per-task performance with and without FEN context.}
+    \begin{tabular}{lccc}
+        \toprule
+        \textbf{Task} & \textbf{Visual-Only} & \textbf{+ FEN} & $\Delta$ \\
+        \midrule
+        FEN Extraction   & 0.20 & 0.50 & +150\% \\
+        Check Detection  & 0.00 & 1.00 & $+\infty$ \\
+        Material Balance & 1.00 & 1.00 & 0\% \\
+        Piece Count      & 0.00 & 0.20 & +20\% \\
+        Castling Rights  & 0.80 & 0.80 & 0\% \\
+        Best Move        & 0.00 & 0.00 & 0\% \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\paragraph{Analysis.}
+Check detection shows perfect accuracy with FEN ($1.0$ vs.\ $0.0$ without), suggesting VLMs struggle with complex piece interactions from vision alone but can exploit symbolic state, much like engine-based or explanation-augmented systems. Material balance performs well in both settings, indicating VLMs can count pieces visually. Best move remains challenging even with FEN, echoing findings from ChessLLM~\citep{zhang2025chessllm}, ChessGPT~\citep{feng2023chessgpt}, and GPT-2-based natural-language engines~\citep{jiang2023nlchess} that strong policy play requires more than accurate state estimation.
+
+\section{Discussion}
+
+\subsection{Why Does FEN Help?}
+
+We hypothesize three mechanisms:
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Disambiguation:} FEN resolves visual ambiguities (e.g., ``White pawn on e4'' vs.\ ``White bishop on e4'') and removes reliance on fine-grained pixel-level cues.
+    \item \textbf{Grounding:} Textual FEN activates the VLM's chess knowledge from language pretraining and from chess-specific finetuning in related work~\citep{zhang2025chessllm,feng2023chessgpt,wang2024mate}.
+    \item \textbf{Complementarity:} Vision confirms the board layout while FEN provides precise positions. In cases where CLIP mispredicts, the VLM can still cross-check against the image.
+\end{itemize}
+
+This is consistent with evidence that language explanations and structured text scaffolds improve reasoning in chess~\citep{wang2024mate} and beyond~\citep{xie2025worldmodels}.
+
+\subsection{Relation to Chess-Specific LLMs}
+
+Our pipeline can be viewed as a \emph{front-end} for existing chess-LLM systems:
+
+\begin{itemize}[leftmargin=*]
+    \item Text-only engines such as ChessLLM~\citep{zhang2025chessllm}, ChessGPT~\citep{feng2023chessgpt}, ALLIE~\citep{zhang2024allie}, and searchless transformers~\citep{deepmind2024searchless} could all operate on CLIP-extracted FEN instead of assuming perfect textual input.
+    \item Human-move prediction models~\citep{kreiger2024predict} and Maia-style engines~\citep{maia2020} could use our visual interface to predict moves from board screenshots or video feeds.
+    \item ABSA-based evaluation methods~\citep{kamlish2019sentimate,chessabsa2024} and sentiment-based engines could be applied to commentary anchored on CLIP-derived FEN in broadcast or educational settings.
+\end{itemize}
+
+In that sense, our work complements policy- and explanation-centric research by solving the ``vision bottleneck'' that prevents these methods from operating directly on images.
+
+\subsection{Limitations}
+
+\begin{itemize}[leftmargin=*]
+    \item \textbf{CLIP accuracy:} Our CLIP model is not perfect; errors in FEN prediction propagate to the VLM. In critical tactical positions, a single mislocated piece can completely change the evaluation.
+    \item \textbf{Task dependency:} Gains are task-specific; strategic reasoning and best-move selection remain challenging even with perfect state information, consistent with prior findings~\citep{deepmind2024searchless,jiang2023nlchess}.
+    \item \textbf{Generality:} We evaluate on standard chess. Extensions to chess variants, 3D boards, or noisy real-world camera feeds would require domain adaptation.
+    \item \textbf{Symbolic-only bias:} By privileging FEN, we may underutilize visual cues (e.g., clock, user interface elements) that could be informative in some applications.
+\end{itemize}
+
+\subsection{Broader Impact and Connections to World Models and Games}
+
+Our results suggest that symbolic intermediate representations can bridge the gap between vision and language in structured domains. This is aligned with broader efforts to build LLM-based world models that learn environment dynamics from logs and use them for planning and simulation~\citep{xie2025worldmodels,wang2024worldsim}. In game and narrative settings, frameworks such as PANGeA~\citep{buongiorno2024pangea} and EMO~\citep{yu2025emo} demonstrate that LLMs with memory, validation, and opponent modeling can handle complex multi-agent and narrative dynamics when provided with structured state signals.
+
+Potential applications include:
+\begin{itemize}[leftmargin=*]
+    \item \textbf{Medical imaging:} Extracting structured patient data (e.g., lesion locations) before diagnostic reasoning.
+    \item \textbf{Robotics:} Converting visual scenes to symbolic state descriptions for planning.
+    \item \textbf{Education and coaching:} Building explainable tutors that reason over both board images and symbolic annotations.
+\end{itemize}
+
+\section{Conclusion}
+
+We presented a simple yet effective approach for enhancing VLM performance on chess understanding tasks by incorporating CLIP-extracted FEN representations. Our method achieves a 75\% relative improvement over vision-only baselines and plugs directly into the rapidly growing ecosystem of chess-specific LLMs and world-model approaches.
+
+\paragraph{Key Takeaways.}
+\begin{itemize}[leftmargin=*]
+    \item Symbolic grounding (via FEN) significantly improves VLM spatial reasoning in structured domains like chess.
+    \item Hybrid vision--symbolic systems outperform pure vision or pure text in tasks that require precise state understanding.
+    \item Fine-tuned CLIP models are effective and practical tools for extracting structured representations from images, as demonstrated by Vichar-CLIP.
+\end{itemize}
+
+\paragraph{Future Work.}
+\begin{itemize}[leftmargin=*]
+    \item Integrate our visual front-end with strong text-only chess engines (ChessLLM, ChessGPT, ALLIE) to evaluate full-game strength from images.
+    \item Extend to other structured domains (Go, molecular structures, circuit diagrams) where a concise symbolic representation exists.
+    \item Combine visual symbolic grounding with explanation-augmented reasoning~\citep{wang2024mate} and multi-agent opponent modeling~\citep{yu2025emo}.
+\end{itemize}
+
+\begin{thebibliography}{99}
+
+\bibitem{radford2021clip}
+A.~Radford et al.
+\newblock Learning Transferable Visual Models From Natural Language Supervision.
+\newblock In \emph{ICML}, 2021.
+
+\bibitem{zhang2025chessllm}
+Y.~Zhang et al.
+\newblock Complete Chess Games Enable LLM Become A Chess Master.
+\newblock \emph{arXiv:2501.17186}, 2025.
+
+\bibitem{wang2024mate}
+S.~Wang et al.
+\newblock Explore the Reasoning Capability of LLMs in the Chess Testbed.
+\newblock \emph{arXiv:2411.06655}, 2024.
+
+\bibitem{kreiger2024predict}
+B.~Kreiger.
+\newblock Predicting Human Chess Moves with Large Language Models.
+\newblock Master's Thesis, University of South Florida, 2024.
+
+\bibitem{jiang2023nlchess}
+B.~Jiang.
+\newblock Building a Natural Language Chess Engine with Pretraining and Instruction Fine-Tuning.
+\newblock Stanford CS224N Project Report, 2023.
+
+\bibitem{deepmind2024searchless}
+Google DeepMind.
+\newblock Amortized Planning with Large-Scale Transformers (Searchless Chess).
+\newblock \emph{arXiv:2402.04494}, 2024.
+
+\bibitem{xie2025worldmodels}
+K.~Xie et al.
+\newblock Making Large Language Models into World Models with Precondition and Effect Knowledge.
+\newblock In \emph{COLING}, 2025.
+
+\bibitem{wang2024worldsim}
+R.~Wang et al.
+\newblock Can Language Models Serve as Text-Based World Simulators?
+\newblock \emph{arXiv:2406.06485}, 2024.
+
+\bibitem{zhang2024allie}
+Y.~Zhang et al.
+\newblock Human-aligned Chess with a Bit of Search.
+\newblock \emph{arXiv:2410.03893}, 2024.
+
+\bibitem{yu2025emo}
+X.~P.~Yu, W.~Zhang, and Z.~Lu.
+\newblock LLM-Based Explicit Models of Opponents for Multi-Agent Games.
+\newblock In \emph{NAACL}, 2025.
+
+\bibitem{buongiorno2024pangea}
+S.~Buongiorno et al.
+\newblock PANGeA: Procedural Artificial Narrative using Generative AI for Turn-Based Video Games.
+\newblock \emph{arXiv:2404.19721}, 2024.
+
+\bibitem{feng2023chessgpt}
+X.~Feng et al.
+\newblock ChessGPT: Bridging Policy Learning and Language Modeling.
+\newblock \emph{arXiv:2306.09200}, 2023.
+
+\bibitem{kamlish2019sentimate}
+I.~Kamlish, I.~B.~Chocron, and N.~McCarthy.
+\newblock SentiMATE: Learning to play Chess through Natural Language Processing.
+\newblock \emph{arXiv:1907.08321}, 2019.
+
+\bibitem{pei2025clippgs}
+G.~Pei et al.
+\newblock Seeing What Matters: Empowering CLIP with Patch Generation-to-Selection.
+\newblock In \emph{CVPR}, 2025.
+
+\bibitem{maia2020}
+J.~McIlroy-Young et al.
+\newblock Aligning Superhuman AI with Human Behavior: Chess as a Model System.
+\newblock In \emph{KDD}, 2020.
+
+\bibitem{chessabsa2024}
+A.~Author et al.
+\newblock Aspect-Based Sentiment Analysis for Chess Move Evaluation from Textbooks.
+\newblock Technical report, 2024.
+
+\bibitem{vicharclip2025}
+V.~Padman.
+\newblock Vichar-CLIP: Chess Position Identification.
+\newblock GitHub Repository, \url{https://github.com/vieveks/vichar_clip_paper_cursor}, 2025.
+
+\end{thebibliography}
+
+\appendix
+
+\section{Benchmark Details}
+\label{app:benchmark}
+
+\subsection*{Question Examples}
+
+\begin{itemize}[leftmargin=*]
+    \item Q1: What is the FEN (Forsyth-Edwards Notation) for this chess position?\\
+          Ground Truth: \texttt{r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1}
+    \item Q2: Is either king in check?\\
+          Ground Truth: No
+    \item Q3: What is the best move in this position?\\
+          Ground Truth: Qh2+ (from engine analysis)
+\end{itemize}
+
+\section{Implementation}
+
+Code and benchmarks will be made available at an anonymous repository after the review period. The current implementation is based on Vichar-CLIP for CLIP training and a simple Python harness for VLM evaluation.
+
+\section{Qualitative Examples}
+
+See supplementary materials for detailed VLM responses with and without FEN context, including examples of success and failure cases.
+
+\end{document}

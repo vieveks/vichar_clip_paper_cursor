@@ -1,0 +1,16 @@
+{
+  "total_samples": 100,
+  "top1_accuracy": 100.0,
+  "top5_accuracy": 100.0,
+  "top10_accuracy": 100.0,
+  "correct_top1": 100,
+  "correct_top5": 100,
+  "correct_top10": 100,
+  "batch_accuracies": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "per_sample_count": 100
+}

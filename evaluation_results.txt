@@ -1,0 +1,107 @@
+Evaluation Results
+Checkpoint: runs/fen_generator/best_model_stage1.pt
+Total Samples: 12500
+Exact Match Accuracy: 0.0000
+Average CER: 0.6663
+
+--- Examples ---
+GT:  r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1
+GEN: r3/p1kqp1n/1PQ/P4PP2BK1
+Match: False
+CER: 0.6731
+---
+GT:  8/pp3k2/3p1p1p/2pP1RrP/2P2KP1/8/PP6/8
+GEN: 8/p1kp1PKPpPr1/8/8
+Match: False
+CER: 0.6216
+---
+GT:  5rkN/1Q4pp/4p3/8/3Pb3/2PnP3/PP2K1PP/R6R
+GEN: 5r/1pk/4PPPPPK1/R
+Match: False
+CER: 0.5897
+---
+GT:  8/8/4k3/1pB1p1n1/1P2P1p1/6K1/6P1/8
+GEN: 8/1p1K1P1k3/6/8
+Match: False
+CER: 0.6471
+---
+GT:  1r2n3/5kbR/p1np2p1/qp2pbP1/4NP2/1P1QP3/1BPP4/2KR2N1
+GEN: 1r3/pqk1p1p1P1PbPQ/PBK1
+Match: False
+CER: 0.6667
+---
+GT:  r2q1bBr/pp1k2pp/8/2p1p3/3nP3/2Q5/PPPP2PP/RNB2RK1
+GEN: r2/1qpkbp3/8/PPPPPPRNK1
+Match: False
+CER: 0.6042
+---
+GT:  r4k2/6Rp/8/1p6/pP4P1/2Bb3P/3RnP1K/8
+GEN: r4/1kpPp/8/8
+Match: False
+CER: 0.7429
+---
+GT:  8/p4pbk/bq4p1/1NN4p/PQ2P3/5P2/6PP/5K2
+GEN: 8/1pQbk1pq1/P5/5K
+Match: False
+CER: 0.6757
+---
+GT:  r4rk1/p1q3bp/1p1p2pB/1Nn1p3/4P1P1/P4P2/1PPQ4/2KR3R
+GEN: r4/1p1q/P1Pk1p1PPKR3r3R
+Match: False
+CER: 0.7000
+---
+GT:  2k2b1r/ppp2pp1/q7/4P1Pp/2nN4/1PNQB2P/P5B1/2K5
+GEN: 2k1r/pq2p2/8/P1B1K
+Match: False
+CER: 0.6667
+---
+GT:  r1bq1rk1/5ppp/p3p3/np1pP3/3P3n/bPN1BN2/2B2PPP/2RQ1RK1
+GEN: r1qk1/p5/p1b1PPPPPPRK1
+Match: False
+CER: 0.6415
+---
+GT:  5rk1/pB3ppp/4pn2/3p1b2/1b1P1B2/1Pr1P3/1P3PPP/R3K2R
+GEN: 5/p5r1/1P1P/K3kr3R
+Match: False
+CER: 0.7400
+---
+GT:  r4r1k/pR2p2p/Q1pq1bp1/2N1np2/8/3PB3/P1P2PPP/5RK1
+GEN: r4/p1kq/p1P1P5/5RK1
+Match: False
+CER: 0.6667
+---
+GT:  6r1/6P1/Kpk5/6R1/p7/P7/8/8
+GEN: 6/r1/P/k6PK7/8
+Match: False
+CER: 0.6154
+---
+GT:  rn3k1r/pp3ppp/4bn2/1p6/8/2P2PB1/P1P4P/2KR2NR
+GEN: rn2k1/ppp3/8/RKBNR
+Match: False
+CER: 0.6818
+---
+GT:  6k1/1p4pp/3qp1r1/p2p4/3Pn3/P1P1Q3/1P2B1PP/1R5K
+GEN: 6/p1/1q/P/P1K1Q
+Match: False
+CER: 0.7391
+---
+GT:  r1bqr2k/pp1n1R1p/6pB/3N4/2Bn4/8/PP4PP/R5K1
+GEN: r2k/p2p4Bp/8/R1K1
+Match: False
+CER: 0.6667
+---
+GT:  r1b2rk1/pp4pp/3b2q1/2p1n3/2P2B2/P2P1N1P/1P2BPP1/R2Q1R1K
+GEN: r1bk1/p2q1p2/P3P1P1B1K
+Match: False
+CER: 0.6182
+---
+GT:  6k1/5ppp/4pn2/2p1Q1B1/7K/N1P2q1b/1P6/8
+GEN: 6/p1/1k/1q1P1K7
+Match: False
+CER: 0.7368
+---
+GT:  r3kr2/1p4bp/pq1p2p1/4p3/P3Pn2/2N1Q1N1/BP5P/2BR1K1R
+GEN: r3/p1qk1p1/P4PbQ/R1B1K
+Match: False
+CER: 0.7000
+---
