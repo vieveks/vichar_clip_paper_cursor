@@ -1,7 +1,9 @@
 
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import open_clip
+import math
 
 class ChessFENGenerator(nn.Module):
     """
@@ -65,13 +67,23 @@ class ChessFENGenerator(nn.Module):
         # Get the last layer's spatial features [B, 768, 7, 7]
         spatial_features = encoder_output['image_intermediates'][-1]
         
-        # Reshape to sequence: [B, 768, 7, 7] -> [B, 768, 49] -> [B, 49, 768]
-        batch_size = spatial_features.size(0)
-        spatial_features = spatial_features.view(batch_size, self.encoder_intermediate_dim, -1)  # [B, 768, 49]
-        spatial_features = spatial_features.permute(0, 2, 1)  # [B, 49, 768]
+        # CRITICAL FIX: Interpolate from 7×7 to 8×8 to align with chess board squares
+        # Chess board is 8×8, but CLIP ViT-B/32 produces 7×7 patches (224/32 = 7)
+        # We use bilinear interpolation to upsample features to match board dimensions
+        upsampled_features = F.interpolate(
+            spatial_features, 
+            size=(8, 8), 
+            mode='bilinear', 
+            align_corners=False
+        )  # [B, 768, 8, 8]
+        
+        # Flatten to sequence: [B, 768, 8, 8] -> [B, 768, 64] -> [B, 64, 768]
+        batch_size = upsampled_features.size(0)
+        flattened_features = upsampled_features.flatten(2)  # [B, 768, 64]
+        flattened_features = flattened_features.permute(0, 2, 1)  # [B, 64, 768]
         
         # Project to d_model
-        memory = self.encoder_proj(spatial_features)  # [B, 49, 512]
+        memory = self.encoder_proj(flattened_features)  # [B, 64, 512]
         
         # Decode
         tgt_emb = self.embedding(tgt_tokens) * math.sqrt(self.d_model)
@@ -100,20 +112,28 @@ class ChessFENGenerator(nn.Module):
             encoder_output = self.encoder.forward_intermediates(images)
             spatial_features = encoder_output['image_intermediates'][-1]
             
-            # Reshape to sequence
-            batch_size = spatial_features.size(0)
-            spatial_features = spatial_features.view(batch_size, self.encoder_intermediate_dim, -1)
-            spatial_features = spatial_features.permute(0, 2, 1)
+            # CRITICAL FIX: Interpolate from 7×7 to 8×8 to align with chess board squares
+            upsampled_features = F.interpolate(
+                spatial_features, 
+                size=(8, 8), 
+                mode='bilinear', 
+                align_corners=False
+            )  # [B, 768, 8, 8]
+            
+            # Flatten to sequence: [B, 768, 8, 8] -> [B, 768, 64] -> [B, 64, 768]
+            batch_size = upsampled_features.size(0)
+            flattened_features = upsampled_features.flatten(2)  # [B, 768, 64]
+            flattened_features = flattened_features.permute(0, 2, 1)  # [B, 64, 768]
             
             # Project
-            memory = self.encoder_proj(spatial_features)  # [batch_size, 49, d_model]
+            memory = self.encoder_proj(flattened_features)  # [batch_size, 64, d_model]
             
             # For simplicity, process one image at a time
             all_outputs = []
             for b in range(batch_size):
                 # Get memory for this sample and expand for beam
-                mem = memory[b:b+1]  # [1, 49, d_model]
-                mem = mem.expand(beam_size, -1, -1)  # [beam_size, 49, d_model]
+                mem = memory[b:b+1]  # [1, 64, d_model]
+                mem = mem.expand(beam_size, -1, -1)  # [beam_size, 64, d_model]
                 
                 # Initialize beams - all start with SOS
                 current_seqs = torch.full((beam_size, 1), tokenizer.sos_token_id, dtype=torch.long, device=device)
@@ -213,8 +233,6 @@ class ChessFENGenerator(nn.Module):
                 padded.append(o)
             
             return torch.cat(padded, dim=0)
-
-import math
 
 class PositionalEncoding(nn.Module):
     def __init__(self, d_model, dropout=0.1, max_len=5000):

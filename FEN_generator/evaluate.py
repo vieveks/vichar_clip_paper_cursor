@@ -11,7 +11,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from model import ChessFENGenerator
 from tokenizer import FENTokenizer
-from dataset import create_fen_dataloaders
+from dataset import create_fen_dataloaders, collapse_fen
 from train_clip_hf_dataset import create_transforms
 
 def calculate_cer(reference, hypothesis):
@@ -87,17 +87,22 @@ def main():
             
             # Decode
             for i in range(images.size(0)):
-                # Get ground truth string
+                # Get ground truth string (in expanded FEN format)
                 # tgt_tokens includes SOS and EOS. We need to strip them for comparison or let decode handle it.
                 # tokenizer.decode handles SOS/EOS skipping/breaking.
                 gt_ids = tgt_tokens[i].tolist()
-                gt_fen = tokenizer.decode(gt_ids)
+                gt_expanded_fen = tokenizer.decode(gt_ids)
                 
-                # Get generated string
+                # Get generated string (also in expanded FEN format)
                 gen_ids = generated_tokens[i].tolist()
-                gen_fen = tokenizer.decode(gen_ids)
+                gen_expanded_fen = tokenizer.decode(gen_ids)
                 
-                # Metrics
+                # Collapse both to standard FEN format for comparison
+                # This allows us to compare with standard FEN notation
+                gt_fen = collapse_fen(gt_expanded_fen)
+                gen_fen = collapse_fen(gen_expanded_fen)
+                
+                # Metrics (comparing standard FEN format)
                 if gen_fen == gt_fen:
                     exact_matches += 1
                 
@@ -106,9 +111,16 @@ def main():
                 
                 total_samples += 1
                 
-                # Save some examples
+                # Save some examples (show both expanded and collapsed for debugging)
                 if total_samples <= 20:
-                    results.append(f"GT:  {gt_fen}\nGEN: {gen_fen}\nMatch: {gen_fen == gt_fen}\nCER: {cer:.4f}\n---")
+                    results.append(
+                        f"GT (expanded):  {gt_expanded_fen}\n"
+                        f"GT (standard): {gt_fen}\n"
+                        f"GEN (expanded): {gen_expanded_fen}\n"
+                        f"GEN (standard): {gen_fen}\n"
+                        f"Match: {gen_fen == gt_fen}\n"
+                        f"CER: {cer:.4f}\n---"
+                    )
 
     accuracy = exact_matches / total_samples
     avg_cer = total_cer / total_samples

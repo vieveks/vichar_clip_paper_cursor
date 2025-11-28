@@ -2,14 +2,16 @@
 class FENTokenizer:
     """
     Tokenizer for Chess FEN strings (Board placement part).
-    Vocabulary: p, n, b, r, q, k, P, N, B, R, Q, K, 1-8, /, w, b, -, <SOS>, <EOS>, <PAD>
+    Uses expanded FEN format where numbers are replaced with '1' tokens.
+    Vocabulary: p, n, b, r, q, k, P, N, B, R, Q, K, 1 (empty), /, w, b, -, <SOS>, <EOS>, <PAD>
+    Note: Digits 2-8 are removed since we use expanded FEN format (e.g., '3' -> '111')
     """
     def __init__(self):
         self.vocab = [
             "<PAD>", "<SOS>", "<EOS>",
             "p", "n", "b", "r", "q", "k",
             "P", "N", "B", "R", "Q", "K",
-            "1", "2", "3", "4", "5", "6", "7", "8",
+            "1",  # Empty square token (replaces all digits 1-8 in expanded FEN)
             "/", "w", "b", "-"
         ]
         self.token_to_id = {token: i for i, token in enumerate(self.vocab)}
