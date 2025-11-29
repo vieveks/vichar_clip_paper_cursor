@@ -59,6 +59,16 @@ vichar_clip/
 │   ├── dataset_prep_pillow.py         # Alternative dataset prep
 │   └── Chess_zip.py                   # Archive utilities
 │
+├── clip_as_encoder/                   # ChessCLIP as Vision Encoder Experiment
+│   ├── __init__.py                    # Package initialization
+│   ├── model.py                       # Custom LLaVA with swappable vision encoder
+│   ├── dataset.py                     # Chess QA dataset loader
+│   ├── train.py                       # Training script for fine-tuning
+│   ├── evaluate.py                    # Evaluation script comparing baseline vs chess-CLIP
+│   ├── quick_test.py                  # Quick test script to verify setup
+│   ├── README.md                      # Usage guide and experiment description
+│   └── EXPERIMENT_DESCRIPTION.md      # Detailed research design document
+│
 └── runs/                              # Training run outputs
     └── clip_fen/
 ```
@@ -77,10 +87,17 @@ vichar_clip/
 - **`Notebooks/comprehensive_evaluation.py`** - Comprehensive evaluation with overfitting analysis
 - **`testing_files/benchmark_*.py`** - Benchmark scripts
 - **`testing_files/test_*.py`** - Various test scripts
+- **`clip_as_encoder/evaluate.py`** - Compare baseline vs chess-CLIP LLaVA models
 
 ### Utilities
 - **`utils/download_pgn.py`** - Download PGN files from Lichess database
 - **`utils/check_data_independence.py`** - Check for data overlap between datasets
+
+### Experiments
+- **`clip_as_encoder/`** - ChessCLIP as Vision Encoder for LLaVA experiment
+  - Tests whether chess-finetuned CLIP improves LLaVA's chess reasoning
+  - Compare baseline (generic CLIP) vs chess-CLIP vision encoders
+  - See `clip_as_encoder/README.md` for usage instructions
 
 ## Quick Start
 
