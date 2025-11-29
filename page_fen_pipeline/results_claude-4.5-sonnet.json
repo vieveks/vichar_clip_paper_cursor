@@ -1,0 +1,121 @@
+[
+  {
+    "page_num": 1,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 2,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 3,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 4,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 5,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 6,
+    "boards_count": 1,
+    "boards": [
+      {
+        "board_index": 1,
+        "fen": "I'll analyze this chess board carefully, going from rank 8 (top) to rank 1 (bottom).\n\n**Rank 8 (top row):** Bishop on b8, empty squares, Black King on h8\n**Rank 7:** Empty, White Queen on d7, empty squares\n**Rank 6:** Empty squares, White Rook on c6, White Rook on d6, Black pawn on e6, White Knight on f6, empty squares\n**Rank 5:** Star marker on a5 (not a piece), White Knight on c5, empty, Black pawn on f5, empty squares\n**Rank 4:** Empty squares, White Pawn on g4, empty\n**Rank 3:** Empty, White King on g3, empty\n**Rank 2:** Empty, White Rook on b2, empty squares\n**Rank 1:** Empty squares\n\nLet me construct the FEN:\n\n- Rank 8: `1b4k1`\n- Rank 7: `3Q4`\n- Rank 6: `2RRp1N1` (wait, let me recount - I see rooks on c6, d6)\n- Rank 5: `2N2p2`\n- Rank 4: `6P1`\n- Rank 3: `6K1`\n- Rank 2: `1R6`\n- Rank 1: `8`\n\n**FEN:** `1b4k1/3Q4/2RRpN2/2N2p2/6P1/6K1/1R6/8 w - - 0 1`",
+        "bbox": [
+          391,
+          983,
+          1014,
+          1014
+        ],
+        "crop_path": "book2\\page_006\\board_1.png"
+      }
+    ]
+  },
+  {
+    "page_num": 7,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 8,
+    "boards_count": 6,
+    "boards": [
+      {
+        "board_index": 1,
+        "fen": "I'll analyze this chess board carefully.\n\nFrom the image, I can see:\n- Top of board (rank 8): Black King on d8\n- Rank 5: Black Queen on e5 (with an arrow pointing to it)\n- Rank 2: White Queen on c2, White King on d2\n\nThe board is shown from White's perspective (rank 1 at bottom, rank 8 at top).\n\nLet me construct the FEN:\n- Rank 8: Black King on d8 = \"3k4\"\n- Rank 7: Empty = \"8\"\n- Rank 6: Empty = \"8\"\n- Rank 5: Black Queen on e5 = \"4q3\"\n- Rank 4: Empty = \"8\"\n- Rank 3: Empty = \"8\"\n- Rank 2: White Queen on c2, White King on d2 = \"2QK5\"\n- Rank 1: Empty = \"8\"\n\n**FEN: 3k4/8/8/4q3/8/8/2QK4/8 w - - 0 1**",
+        "bbox": [
+          299,
+          622,
+          809,
+          808
+        ],
+        "crop_path": "book2\\page_008\\board_1.png"
+      },
+      {
+        "board_index": 2,
+        "fen": "I'll analyze this chess board carefully, going rank by rank from top (rank 8) to bottom (rank 1).\n\n**Rank 8 (top):** empty, empty, empty, black rook, empty, empty, empty, black king\n**Rank 7:** empty, black queen, empty, empty, empty, black pawn, black pawn, black pawn\n**Rank 6:** empty, empty, empty, empty, empty, empty, empty, empty\n**Rank 5:** empty, empty, empty, black knight, empty, empty, empty, empty\n**Rank 4:** empty, empty, empty, empty, empty, empty, empty, empty\n**Rank 3:** empty, empty, empty, empty, empty, white bishop, white knight, empty\n**Rank 2:** white queen, empty, empty, empty, empty, white pawn, empty, white pawn\n**Rank 1:** empty, empty, empty, white rook, empty, empty, white king, empty\n\nConverting to FEN:\n\n`3r3k/1q3ppp/8/3n4/8/5BN1/Q4P1P/3R2K1 w - - 0 1`",
+        "bbox": [
+          1469,
+          622,
+          809,
+          808
+        ],
+        "crop_path": "book2\\page_008\\board_2.png"
+      },
+      {
+        "board_index": 3,
+        "fen": "I'll analyze this chess board carefully.\n\nFrom top to bottom (ranks 8 to 1):\n\n**Rank 8:** Empty, empty, empty, black knight (circle at top), empty, empty, empty, empty\n\n**Rank 7:** Empty, X (pawn), empty, empty, X (pawn), empty, empty, white king\n\n**Rank 6:** Empty, empty, X (pawn), empty, X (pawn), empty, empty, empty\n\n**Rank 5:** White bishop, empty, empty, white bishop, empty, empty, empty, empty\n\n**Rank 4-2:** All empty\n\n**Rank 1:** Empty, empty, empty, white king, empty, empty, empty, empty\n\nWait, let me reconsider. Looking at the coordinates more carefully:\n\n**Rank 8:** empty, empty, empty, black knight, empty, empty, empty, empty\n**Rank 7:** empty, black pawn (X), empty, empty, black pawn (X), empty, empty, white king\n**Rank 6:** empty, empty, black pawn (X), empty, black pawn (X), empty, empty, empty  \n**Rank 5:** White bishop, empty, empty, white bishop, empty, empty, empty, empty\n**Ranks 4-2:** empty\n**Rank 1:** empty, empty, empty, white king, empty, empty, empty, empty\n\nThis gives me:\n`3n4/1p2p2K/2p1p3/B2B4/8/8/8/3K4 w - - 0 1`\n\nWait, there are two kings for white which is impossible. Let me re-examine - the king on h7 and the king on d1. One must be black.\n\nRe-analyzing: The king on h7 has a cross (white), the king on d1 has a cross (white). That's wrong. Looking again at h7 - it has a crown symbol which appears to be the BLACK king.\n\n**3n4/1p2p2k/2p1p3/B2B4/8/8/8/3K4 w - - 0 1**",
+        "bbox": [
+          1468,
+          1608,
+          811,
+          841
+        ],
+        "crop_path": "book2\\page_008\\board_3.png"
+      },
+      {
+        "board_index": 4,
+        "fen": "I'll analyze this chess board carefully.\n\nFrom top to bottom (rank 8 to rank 1):\n\n**Rank 8:** Black King on d8\n**Rank 7:** Black Queen on c7\n**Rank 6:** Empty\n**Rank 5:** Black Knight on d5\n**Rank 4:** Empty\n**Rank 3:** Empty\n**Rank 2:** White Queen on g2\n**Rank 1:** White King on d1\n\nLet me verify by checking each square systematically:\n- d8: Black King (♔)\n- c7: Black Queen (♕)\n- d5: Black Knight (♞)\n- e3: There's an X mark (this appears to be marking a square, not a piece)\n- g2: White Queen (♕)\n- d1: White King (♔)\n\nThe FEN notation format is: piece placement from rank 8 to rank 1, with numbers representing empty squares.\n\n**Rank 8:** 3k4 (3 empty, black king, 4 empty)\n**Rank 7:** 2q5 (2 empty, black queen, 5 empty)\n**Rank 6:** 8 (all empty)\n**Rank 5:** 3n4 (3 empty, black knight, 4 empty)\n**Rank 4:** 8 (all empty)\n**Rank 3:** 8 (all empty)\n**Rank 2:** 6Q1 (6 empty, white Queen, 1 empty)\n**Rank 1:** 3K4 (3 empty, white King, 4 empty)\n\n**3k4/2q5/8/3n4/8/8/6Q1/3K4 w - - 0 1**",
+        "bbox": [
+          299,
+          1640,
+          809,
+          808
+        ],
+        "crop_path": "book2\\page_008\\board_4.png"
+      },
+      {
+        "board_index": 5,
+        "fen": "I'll analyze this chess board carefully to determine the FEN notation.\n\nLooking at the board from rank 8 (top) to rank 1 (bottom):\n\n**Rank 8:** Empty, empty, empty, empty, empty, black king, empty, empty\n**Rank 7:** Empty, black pawn, empty, black bishop, empty, empty, black pawn, empty\n**Rank 6:** Empty, empty, X (marked square at c6), empty, empty, empty, empty, empty\n**Rank 5:** Empty, empty, empty, empty, empty, empty, empty, empty\n**Rank 4:** Empty, empty, empty, white Queen, empty, empty, empty, empty\n**Rank 3:** Empty, empty, empty, empty, empty, empty, empty, empty\n**Rank 2:** Empty, empty, empty, empty, empty, empty, white King, empty\n**Rank 1:** Empty, empty, empty, empty, empty, empty, empty, empty\n\nConverting to FEN notation:\n- Rank 8: 5k2\n- Rank 7: 1p1b2p1\n- Rank 6: 8\n- Rank 5: 8\n- Rank 4: 3Q4\n- Rank 3: 8\n- Rank 2: 6K1\n- Rank 1: 8\n\nThe position shows it's White's turn (based on standard convention), no castling rights available, no en passant, and move counters.\n\n**5k2/1p1b2p1/8/8/3Q4/8/6K1/8 w - - 0 1**",
+        "bbox": [
+          299,
+          2656,
+          809,
+          808
+        ],
+        "crop_path": "book2\\page_008\\board_5.png"
+      },
+      {
+        "board_index": 6,
+        "fen": "I'll analyze this chess board carefully to construct the FEN notation.\n\nStarting from rank 8 (top) to rank 1 (bottom):\n\n**Rank 8:** Empty, Empty, Empty, Empty, Empty, Black King, Empty, Empty\n- This gives: `5k2`\n\n**Rank 7:** Empty, Black Pawn, Empty, Black Bishop, Empty, Empty, Black Pawn, Empty\n- This gives: `1p1b2p1`\n\n**Rank 6:** Empty, Empty, X (marked square at c6), Empty, Empty, Empty, Empty, Empty\n- The X appears to be a marker, not a piece, so: `8`\n\n**Rank 5:** Empty squares\n- This gives: `8`\n\n**Rank 4:** Empty, Empty, Empty, White King, Empty, Empty, Empty, Empty\n- This gives: `3K4`\n\n**Rank 3:** Empty squares\n- This gives: `8`\n\n**Rank 2:** Empty, Empty, Empty, Empty, Empty, Empty, White Rook, Empty\n- This gives: `6R1`\n\n**Rank 1:** Empty squares\n- This gives: `8`\n\nCombining all ranks with slashes:\n`5k2/1p1b2p1/8/8/3K4/8/6R1/8`\n\nSince the position shows White to move (typically), no castling rights appear available, no en passant, and adding move counters:\n\n**FEN: 5k2/1p1b2p1/8/8/3K4/8/6R1/8 w - - 0 1**",
+        "bbox": [
+          1469,
+          2656,
+          809,
+          808
+        ],
+        "crop_path": "book2\\page_008\\board_6.png"
+      }
+    ]
+  }
+]

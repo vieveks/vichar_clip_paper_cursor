@@ -186,3 +186,23 @@ python FEN_generator/train.py --data_dir data/hf_chess_puzzles --checkpoint_path
 ```powershell
 python FEN_generator/evaluate.py --data_dir data/hf_chess_puzzles --checkpoint_path runs/fen_generator_v2/best_model_stage1.pt --batch_size 32
 ```
+
+## [Paper Update] Integrated LLM-Based FEN Extraction
+**Date:** 2025-11-27
+**Status:** Complete
+
+### Changes
+Integrated the new `page_fen_pipeline` results into `draft_v4_detailed.tex`:
+1.  **Abstract & Intro:** Added "Phase 3: LLM-Based Extraction" as a core contribution.
+2.  **Method:** Added Section 3.3 describing Simple, Enhanced, and Consensus strategies.
+3.  **Results:** Added Section 5.3 reporting accuracy:
+    *   Simple: 78%
+    *   Enhanced: 88%
+    *   Consensus: 94%
+4.  **Discussion:** Added comparative analysis of Retrieval (fast/closed), Generative (broken), and LLM (slow/open/accurate) methods.
+
+### Key Narrative
+The paper now presents a complete story:
+*   **Retrieval:** Proves FEN helps (99% acc, closed world).
+*   **Generative:** Shows difficulty of vision-to-symbol (0% acc, exposure bias).
+*   **LLM Extraction:** Provides the practical open-world solution (94% acc, high cost).

@@ -1,0 +1,13 @@
+pymupdf>=1.23.0
+opencv-python>=4.8.0
+pillow>=10.0.0
+numpy>=1.24.0
+openai>=1.0.0
+python-dotenv>=1.0.0
+
+# Optional: For Anthropic Claude models
+# anthropic>=0.18.0
+
+# Optional: For Google Gemini models
+# google-generativeai>=0.3.0
+

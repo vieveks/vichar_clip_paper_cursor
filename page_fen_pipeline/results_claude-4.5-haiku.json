@@ -1,0 +1,44 @@
+[
+  {
+    "page_num": 1,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 2,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 3,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 4,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 5,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 6,
+    "boards_count": 1,
+    "boards": [
+      {
+        "board_index": 1,
+        "fen": "I'll analyze this chess position carefully, going from rank 8 to rank 1, and from file a to file h.\n\n**Rank 8 (top):** Bishop on b8, King on h8\n- `1b4k1`\n\n**Rank 7:** Empty\n- `8`\n\n**Rank 6:** Queen on d6\n- `3q4`\n\n**Rank 5:** Bishop on c5, Pawn on c5, Black pawn on e5, Knight on f5\n- `2BP1n2`\n\n**Rank 4:** Knight on b4, Black pawn on e4\n- `1n2p3`\n\n**Rank 3:** Pawn on h3\n- `7P`\n\n**Rank 2:** King on h2\n- `7K`\n\n**Rank 1:** Rook on a1\n- `R7`\n\nLet me reconsider by looking at the board more carefully with the coordinate system:\n\nReading from rank 8 to rank 1, left to right:\n\n- **Rank 8:** Empty, Bishop (b8), empty, empty, empty, empty, King (h8)\n- **Rank 7:** All empty\n- **Rank 6:** Queen (d6), empty squares\n- **Rank 5:** Bishop (c5), Pawn (c5), Black pawn (e5), Knight (f5)\n- **Rank 4:** Knight (b4), Black pawn (e4)\n- **Rank 3:** Pawn (h3)\n- **Rank 2:** King (h2)\n- **Rank 1:** Rook (a1)\n\nLet me reconstruct more carefully:\n\n`1b3k2/8/3q4/2BPpn2/1n2p3/7P/7K/R7 w - - 0 1`\n\n**1b3k2/8/3q4/2BPpn2/1n2p3/7P/7K/R7 w - - 0 1**",
+        "bbox": [
+          391,
+          983,
+          1014,
+          1014
+        ],
+        "crop_path": "book2\\page_006\\board_1.png"
+      }
+    ]
+  }
+]

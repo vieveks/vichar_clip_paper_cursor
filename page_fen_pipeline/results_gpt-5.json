@@ -1,0 +1,44 @@
+[
+  {
+    "page_num": 1,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 2,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 3,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 4,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 5,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 6,
+    "boards_count": 1,
+    "boards": [
+      {
+        "board_index": 1,
+        "fen": "[No text returned]",
+        "bbox": [
+          391,
+          983,
+          1014,
+          1014
+        ],
+        "crop_path": "book2\\page_006\\board_1.png"
+      }
+    ]
+  }
+]

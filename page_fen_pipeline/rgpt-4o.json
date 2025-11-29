@@ -1,0 +1,121 @@
+[
+  {
+    "page_num": 1,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 2,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 3,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 4,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 5,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 6,
+    "boards_count": 1,
+    "boards": [
+      {
+        "board_index": 1,
+        "fen": "Based on the board, here is the FEN:\n\n`b6k/3Q4/8/2PPpN2/1n2p3/6P1/8/1R4K1 w - - 0 1`",
+        "bbox": [
+          391,
+          983,
+          1014,
+          1014
+        ],
+        "crop_path": "book2\\page_006\\board_1.png"
+      }
+    ]
+  },
+  {
+    "page_num": 7,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 8,
+    "boards_count": 6,
+    "boards": [
+      {
+        "board_index": 1,
+        "fen": "4k3/8/8/8/8/5q2/2Q1K3/8 b - - 0 1",
+        "bbox": [
+          299,
+          622,
+          809,
+          808
+        ],
+        "crop_path": "book2\\page_008\\board_1.png"
+      },
+      {
+        "board_index": 2,
+        "fen": "5rk1/1q3ppp/8/3n4/8/5BP1/Q4P1P/3R2K1 w - - 0 1",
+        "bbox": [
+          1469,
+          622,
+          809,
+          808
+        ],
+        "crop_path": "book2\\page_008\\board_2.png"
+      },
+      {
+        "board_index": 3,
+        "fen": "I'm unable to determine the position with confidence due to image clarity issues, so I will respond with 'UNCERTAIN'.",
+        "bbox": [
+          1468,
+          1608,
+          811,
+          841
+        ],
+        "crop_path": "book2\\page_008\\board_3.png"
+      },
+      {
+        "board_index": 4,
+        "fen": "I'm unable to determine the position with complete confidence from the provided image. Therefore, my response is: UNCERTAIN.",
+        "bbox": [
+          299,
+          1640,
+          809,
+          808
+        ],
+        "crop_path": "book2\\page_008\\board_4.png"
+      },
+      {
+        "board_index": 5,
+        "fen": "I'm unable to determine the FEN of this position with absolute confidence. My response is UNCERTAIN.",
+        "bbox": [
+          299,
+          2656,
+          809,
+          808
+        ],
+        "crop_path": "book2\\page_008\\board_5.png"
+      },
+      {
+        "board_index": 6,
+        "fen": "6k1/1p1b2p1/8/8/4K3/8/6R1/8 w - - 0 1",
+        "bbox": [
+          1469,
+          2656,
+          809,
+          808
+        ],
+        "crop_path": "book2\\page_008\\board_6.png"
+      }
+    ]
+  }
+]

@@ -1,0 +1,44 @@
+[
+  {
+    "page_num": 1,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 2,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 3,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 4,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 5,
+    "boards_count": 0,
+    "boards": []
+  },
+  {
+    "page_num": 6,
+    "boards_count": 1,
+    "boards": [
+      {
+        "board_index": 1,
+        "fen": "I'll analyze this chess board image carefully to determine the FEN notation.\n\nLet me examine each rank from top to bottom (rank 8 to rank 1):\n\nRank 8 (top row): Black bishop on a8, empty squares, then black king on g8\nRank 7: Empty, white queen on c7, empty squares\nRank 6: Empty squares\nRank 5: Empty, white pawn on b5, white pawn on c5, black pawn on e5, black knight on f5, empty\nRank 4: Black knight on b4, empty, black pawn on e4, empty squares\nRank 3: Empty squares, white pawn on g3\nRank 2: Empty squares, white king on f2, empty\nRank 1: White rook on a1, empty squares\n\nLet me construct the FEN:\n- Rank 8: b5k1/\n- Rank 7: 2Q5/\n- Rank 6: 8/\n- Rank 5: 1PPpn3/\n- Rank 4: 1n2p3/\n- Rank 3: 6P1/\n- Rank 2: 5K2/\n- Rank 1: R7\n\nThe complete FEN would be: b5k1/2Q5/8/1PPpn3/1n2p3/6P1/5K2/R7\n\nHowever, I need to be more careful. Let me recount the pieces systematically.\n\nActually, upon closer inspection, I notice there's a star marker on the board which might indicate whose turn it is, but I should focus on the piece positions.\n\nGiven the complexity and the diagonal shading pattern making it difficult to read some pieces with complete certainty, I must respond:\n\nUNCERTAIN",
+        "bbox": [
+          391,
+          983,
+          1014,
+          1014
+        ],
+        "crop_path": "book2\\page_006\\board_1.png"
+      }
+    ]
+  }
+]

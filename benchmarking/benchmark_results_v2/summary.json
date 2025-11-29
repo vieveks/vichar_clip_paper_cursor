@@ -1,0 +1,86 @@
+{
+  "total_images": 10,
+  "total_questions": 8,
+  "total_tests": 80,
+  "average_score_without_fen": 0.12625,
+  "average_score_with_fen": 0.2125,
+  "accuracy_without_fen": 5.0,
+  "accuracy_with_fen": 8.75,
+  "accuracy_improvement": 3.75,
+  "average_improvement": 0.08625,
+  "improvement_percentage": 68.31683168316832,
+  "questions_summary": {
+    "1": {
+      "question_type": "fen_extraction",
+      "average_score_without_fen": 0.13,
+      "average_score_with_fen": 0.4600000000000001,
+      "accuracy_without_fen": 0.0,
+      "accuracy_with_fen": 40.0,
+      "average_improvement": 0.33000000000000007,
+      "total_tests": 10
+    },
+    "2": {
+      "question_type": "piece_count",
+      "average_score_without_fen": 0.3,
+      "average_score_with_fen": 0.3,
+      "accuracy_without_fen": 30.0,
+      "accuracy_with_fen": 30.0,
+      "average_improvement": 0.0,
+      "total_tests": 10
+    },
+    "3": {
+      "question_type": "check_status",
+      "average_score_without_fen": 0.05,
+      "average_score_with_fen": 0.4,
+      "accuracy_without_fen": 0.0,
+      "accuracy_with_fen": 0.0,
+      "average_improvement": 0.35000000000000003,
+      "total_tests": 10
+    },
+    "4": {
+      "question_type": "material_balance",
+      "average_score_without_fen": 0.2699999999999999,
+      "average_score_with_fen": 0.29999999999999993,
+      "accuracy_without_fen": 0.0,
+      "accuracy_with_fen": 0.0,
+      "average_improvement": 0.030000000000000027,
+      "total_tests": 10
+    },
+    "5": {
+      "question_type": "best_move",
+      "average_score_without_fen": 0.26,
+      "average_score_with_fen": 0.24000000000000005,
+      "accuracy_without_fen": 10.0,
+      "accuracy_with_fen": 0.0,
+      "average_improvement": -0.019999999999999962,
+      "total_tests": 10
+    },
+    "6": {
+      "question_type": "tactical_pattern",
+      "average_score_without_fen": 0.0,
+      "average_score_with_fen": 0.0,
+      "accuracy_without_fen": 0.0,
+      "accuracy_with_fen": 0.0,
+      "average_improvement": 0.0,
+      "total_tests": 10
+    },
+    "7": {
+      "question_type": "castling_available",
+      "average_score_without_fen": 0.0,
+      "average_score_with_fen": 0.0,
+      "accuracy_without_fen": 0.0,
+      "accuracy_with_fen": 0.0,
+      "average_improvement": 0.0,
+      "total_tests": 10
+    },
+    "8": {
+      "question_type": "piece_on_square",
+      "average_score_without_fen": 0.0,
+      "average_score_with_fen": 0.0,
+      "accuracy_without_fen": 0.0,
+      "accuracy_with_fen": 0.0,
+      "average_improvement": 0.0,
+      "total_tests": 10
+    }
+  }
+}
