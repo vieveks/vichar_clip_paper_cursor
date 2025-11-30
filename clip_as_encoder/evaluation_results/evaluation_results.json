@@ -1,0 +1,223 @@
+{
+  "chess_clip": {
+    "results": [
+      {
+        "image_path": "data/hf_chess_puzzles/test/images\\test_000000.png",
+        "question": "What is the FEN (Forsyth-Edwards Notation) for this chess position? Provide only the FEN string.",
+        "question_type": "fen_extraction",
+        "ground_truth_answer": "r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1",
+        "model_response": "The FEN (Forsyth-Edwards Notation) for this chess position is: r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1",
+        "fen": "r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1",
+        "score": 1.0
+      },
+      {
+        "image_path": "data/hf_chess_puzzles/test/images\\test_000000.png",
+        "question": "How many total pieces (not including kings) does White have? How many does Black have? Answer in format: 'White: X, Black: Y'",
+        "question_type": "piece_count",
+        "ground_truth_answer": "{'white': 12, 'black': 13}",
+        "model_response": "The Forsyth-Edwards Notation (FEN) for this position is: r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1\n\nTo determine the number of pieces for each player, we need to count the pieces on the board.\n\nWhite has:\n- 1 king\n- 1 queen\n- 2 rooks\n- 2 knights\n- 8 pawns\n\nSo, White",
+        "fen": "r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1",
+        "score": 0.2
+      },
+      {
+        "image_path": "data/hf_chess_puzzles/test/images\\test_000000.png",
+        "question": "Is either king in check? Answer with 'Yes' or 'No', and if yes, specify which king (White or Black).",
+        "question_type": "check_status",
+        "ground_truth_answer": "{'white_in_check': False, 'black_in_check': False, 'is_check': False}",
+        "model_response": "No, neither king is in check.",
+        "fen": "r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1",
+        "score": 1.0
+      },
+      {
+        "image_path": "data/hf_chess_puzzles/test/images\\test_000000.png",
+        "question": "Who has more material (using standard piece values: Pawn=1, Knight=3, Bishop=3, Rook=5, Queen=9)? Answer: 'White', 'Black', or 'Equal'.",
+        "question_type": "material_balance",
+        "ground_truth_answer": "White",
+        "model_response": "The position is a chess position, and the Forsyth-Edwards Notation (FEN) is a way to describe the position of the pieces on a chessboard. The FEN string you provided describes the position of the pieces on the board.\n\nTo determine which player has more material, we need to count the total value of each player's pieces. In this position, White has 16 pieces (1 king, 2 queens, 2 rooks, 2 bishops, 4 knights, and 8 pawns), which is 1 + 2",
+        "fen": "r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1",
+        "score": 0.2
+      },
+      {
+        "image_path": "data/hf_chess_puzzles/test/images\\test_000000.png",
+        "question": "What is the material advantage? Calculate using standard values (Pawn=1, Knight=3, Bishop=3, Rook=5, Queen=9) and answer with the point difference (e.g., 'White +3', 'Black +2', or 'Equal').",
+        "question_type": "material_advantage",
+        "ground_truth_answer": "White +1",
+        "model_response": "The material advantage for White is +3.",
+        "fen": "r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1",
+        "score": 0.2
+      },
+      {
+        "image_path": "data/hf_chess_puzzles/test/images\\test_000000.png",
+        "question": "What is White's total material value using standard piece values (Pawn=1, Knight=3, Bishop=3, Rook=5, Queen=9)? Answer with just the number.",
+        "question_type": "material_count_white",
+        "ground_truth_answer": "36",
+        "model_response": "15",
+        "fen": "r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1",
+        "score": 0.0
+      },
+      {
+        "image_path": "data/hf_chess_puzzles/test/images\\test_000000.png",
+        "question": "What is Black's total material value using standard piece values (Pawn=1, Knight=3, Bishop=3, Rook=5, Queen=9)? Answer with just the number.",
+        "question_type": "material_count_black",
+        "ground_truth_answer": "35",
+        "model_response": "12",
+        "fen": "r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1",
+        "score": 0.0
+      },
+      {
+        "image_path": "data/hf_chess_puzzles/test/images\\test_000000.png",
+        "question": "How many queens does White have? How many queens does Black have? Answer in format: 'White: X, Black: Y'.",
+        "question_type": "queen_count",
+        "ground_truth_answer": "{'white': 1, 'black': 1}",
+        "model_response": "White: 1, Black: 1",
+        "fen": "r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1",
+        "score": 1.0
+      },
+      {
+        "image_path": "data/hf_chess_puzzles/test/images\\test_000000.png",
+        "question": "Who has more minor pieces (knights and bishops combined)? Answer: 'White', 'Black', or 'Equal'.",
+        "question_type": "minor_piece_balance",
+        "ground_truth_answer": "White",
+        "model_response": "The position is a chess position, and the Forsyth-Edwards Notation (FEN) is a way to describe the position of the pieces on a chessboard. The FEN string you provided describes the position of the pieces on the board.\n\nTo answer your question, I would need to count the number of knights and bishops for each player (White and Black) and then compare them. However, without the actual position of the pieces on the board, I cannot provide an answer.\n\nTo determine the number of knights and bishops for each player, I would need",
+        "fen": "r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1",
+        "score": 0.2
+      },
+      {
+        "image_path": "data/hf_chess_puzzles/test/images\\test_000000.png",
+        "question": "How many rooks does White have? How many rooks does Black have? Answer in format: 'White: X, Black: Y'.",
+        "question_type": "rook_count",
+        "ground_truth_answer": "{'white': 2, 'black': 2}",
+        "model_response": "White: 2, Black: 2",
+        "fen": "r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1",
+        "score": 1.0
+      },
+      {
+        "image_path": "data/hf_chess_puzzles/test/images\\test_000000.png",
+        "question": "Who has more pawns? Answer: 'White', 'Black', or 'Equal'.",
+        "question_type": "pawn_advantage",
+        "ground_truth_answer": "Black",
+        "model_response": "The Forsyth-Edwards Notation (FEN) for this position is: r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1\n\nThe position is a chess position, and the Forsyth-Edwards Notation (FEN) is a way to describe the position of the pieces on a chessboard. In this FEN, the pieces are arranged as follows:\n\n- White has 1 king",
+        "fen": "r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1",
+        "score": 0.0
+      },
+      {
+        "image_path": "data/hf_chess_puzzles/test/images\\test_000000.png",
+        "question": "What is the best move in this position? Provide the move in algebraic notation (e.g., Nf3, e4, O-O).",
+        "question_type": "best_move",
+        "ground_truth_answer": "Qh2#",
+        "model_response": "The best move in this position is 1. Nf3. This move attacks the pawn on d5 and puts pressure on the center. It also allows the knight to be developed to a more active square.",
+        "fen": "r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1",
+        "score": 0.0
+      },
+      {
+        "image_path": "data/hf_chess_puzzles/test/images\\test_000000.png",
+        "question": "Is there a tactical pattern (pin, fork, skewer, discovered attack) in this position? If yes, describe it briefly.",
+        "question_type": "tactical_pattern",
+        "ground_truth_answer": "None detected",
+        "model_response": "The position you've provided is a starting position for a game of chess. There are no tactical patterns such as pins, forks, skewers, or discovered attacks in this position. The position is neutral, and both players have equal opportunities to develop their pieces and gain an advantage. The key to success in this position would be to develop your pieces effectively and to exploit any weaknesses in your opponent's position.",
+        "fen": "r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1",
+        "score": 1.0
+      },
+      {
+        "image_path": "data/hf_chess_puzzles/test/images\\test_000000.png",
+        "question": "Can White castle kingside? Can Black castle kingside? Answer for each: 'Yes' or 'No'.",
+        "question_type": "castling_available",
+        "ground_truth_answer": "{'white_kingside': False, 'white_queenside': False, 'black_kingside': False, 'black_queenside': False}",
+        "model_response": "The Forsyth-Edwards Notation (FEN) for this position is: r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1\n\nTo answer your question, I need to know the current position of the pieces on the board. However, the FEN string provided does not contain enough information to determine the current position of the pieces. FEN strings only provide the initial position of the pieces, and do not include the current position",
+        "fen": "r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1",
+        "score": 0.0
+      },
+      {
+        "image_path": "data/hf_chess_puzzles/test/images\\test_000000.png",
+        "question": "What piece is on square e4? Answer with the piece type and color (e.g., 'White Knight', 'Black Pawn', or 'Empty').",
+        "question_type": "piece_on_square",
+        "ground_truth_answer": "Empty",
+        "model_response": "The piece on square e4 is a 'Black Pawn'.",
+        "fen": "r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1",
+        "score": 0.0
+      }
+    ],
+    "summary": {
+      "total_samples": 15,
+      "average_score": 0.38666666666666666,
+      "accuracy": 33.33333333333333,
+      "per_question_type": {
+        "fen_extraction": {
+          "count": 1,
+          "average_score": 1.0,
+          "accuracy": 100.0
+        },
+        "piece_count": {
+          "count": 1,
+          "average_score": 0.2,
+          "accuracy": 0.0
+        },
+        "check_status": {
+          "count": 1,
+          "average_score": 1.0,
+          "accuracy": 100.0
+        },
+        "material_balance": {
+          "count": 1,
+          "average_score": 0.2,
+          "accuracy": 0.0
+        },
+        "material_advantage": {
+          "count": 1,
+          "average_score": 0.2,
+          "accuracy": 0.0
+        },
+        "material_count_white": {
+          "count": 1,
+          "average_score": 0.0,
+          "accuracy": 0.0
+        },
+        "material_count_black": {
+          "count": 1,
+          "average_score": 0.0,
+          "accuracy": 0.0
+        },
+        "queen_count": {
+          "count": 1,
+          "average_score": 1.0,
+          "accuracy": 100.0
+        },
+        "minor_piece_balance": {
+          "count": 1,
+          "average_score": 0.2,
+          "accuracy": 0.0
+        },
+        "rook_count": {
+          "count": 1,
+          "average_score": 1.0,
+          "accuracy": 100.0
+        },
+        "pawn_advantage": {
+          "count": 1,
+          "average_score": 0.0,
+          "accuracy": 0.0
+        },
+        "best_move": {
+          "count": 1,
+          "average_score": 0.0,
+          "accuracy": 0.0
+        },
+        "tactical_pattern": {
+          "count": 1,
+          "average_score": 1.0,
+          "accuracy": 100.0
+        },
+        "castling_available": {
+          "count": 1,
+          "average_score": 0.0,
+          "accuracy": 0.0
+        },
+        "piece_on_square": {
+          "count": 1,
+          "average_score": 0.0,
+          "accuracy": 0.0
+        }
+      }
+    }
+  }
+}

@@ -149,8 +149,18 @@ class GroundTruthExtractor:
                 return best_move
             
             return None
+        except requests.exceptions.HTTPError as e:
+            if e.response.status_code == 404:
+                # 404 means position not in Lichess database - this is expected for many positions
+                # Silently return None (don't print error for every 404)
+                return None
+            else:
+                print(f"Error getting best move from Lichess API: {e}")
+                return None
         except Exception as e:
-            print(f"Error getting best move from Lichess API: {e}")
+            # Only print non-404 errors to reduce noise
+            if "404" not in str(e):
+                print(f"Error getting best move from Lichess API: {e}")
             return None
     
     def _algebraic_to_uci(self, board: chess.Board, algebraic_move: str) -> Optional[str]:
@@ -221,12 +231,17 @@ class GroundTruthExtractor:
             print(f"Error getting evaluation from Lichess API: {e}")
             return None
     
-    def get_material_count(self, fen_string: str) -> Dict[str, int]:
+    def get_material_count(self, fen_string: str, color: Optional[str] = None) -> Dict[str, int]:
         """
-        Get material count for both sides.
+        Get material count for both sides or a specific color.
+        
+        Args:
+            fen_string: FEN representation
+            color: Optional "white" or "black" to get single value, None for both
         
         Returns:
-            Dict with 'white' and 'black' material counts
+            If color specified: int value
+            If color is None: Dict with 'white' and 'black' material counts
         """
         board = self.get_fen_from_image(fen_string)
         
@@ -247,10 +262,15 @@ class GroundTruthExtractor:
                 else:
                     black_material += value
         
-        return {
-            "white": white_material,
-            "black": black_material
-        }
+        if color == "white":
+            return white_material
+        elif color == "black":
+            return black_material
+        else:
+            return {
+                "white": white_material,
+                "black": black_material
+            }
     
     def get_check_status(self, fen_string: str) -> Dict[str, bool]:
         """
@@ -405,6 +425,99 @@ class GroundTruthExtractor:
         if white_material > black_material:
             return "White"
         elif black_material > white_material:
+            return "Black"
+        else:
+            return "Equal"
+    
+    def get_material_advantage(self, fen_string: str) -> str:
+        """
+        Get material advantage as point difference.
+        
+        Returns:
+            "White +X", "Black +X", or "Equal"
+        """
+        material = self.get_material_count(fen_string)
+        white_material = material["white"]
+        black_material = material["black"]
+        diff = white_material - black_material
+        
+        if diff > 0:
+            return f"White +{diff}"
+        elif diff < 0:
+            return f"Black +{abs(diff)}"
+        else:
+            return "Equal"
+    
+    def get_queen_count(self, fen_string: str) -> Dict[str, int]:
+        """Get queen count for both sides."""
+        board = self.get_fen_from_image(fen_string)
+        white_queens = 0
+        black_queens = 0
+        
+        for square in chess.SQUARES:
+            piece = board.piece_at(square)
+            if piece and piece.piece_type == chess.QUEEN:
+                if piece.color == chess.WHITE:
+                    white_queens += 1
+                else:
+                    black_queens += 1
+        
+        return {"white": white_queens, "black": black_queens}
+    
+    def get_rook_count(self, fen_string: str) -> Dict[str, int]:
+        """Get rook count for both sides."""
+        board = self.get_fen_from_image(fen_string)
+        white_rooks = 0
+        black_rooks = 0
+        
+        for square in chess.SQUARES:
+            piece = board.piece_at(square)
+            if piece and piece.piece_type == chess.ROOK:
+                if piece.color == chess.WHITE:
+                    white_rooks += 1
+                else:
+                    black_rooks += 1
+        
+        return {"white": white_rooks, "black": black_rooks}
+    
+    def get_minor_piece_balance(self, fen_string: str) -> str:
+        """Get minor piece (knights + bishops) balance."""
+        board = self.get_fen_from_image(fen_string)
+        white_minors = 0
+        black_minors = 0
+        
+        for square in chess.SQUARES:
+            piece = board.piece_at(square)
+            if piece and piece.piece_type in [chess.KNIGHT, chess.BISHOP]:
+                if piece.color == chess.WHITE:
+                    white_minors += 1
+                else:
+                    black_minors += 1
+        
+        if white_minors > black_minors:
+            return "White"
+        elif black_minors > white_minors:
+            return "Black"
+        else:
+            return "Equal"
+    
+    def get_pawn_advantage(self, fen_string: str) -> str:
+        """Get pawn count advantage."""
+        board = self.get_fen_from_image(fen_string)
+        white_pawns = 0
+        black_pawns = 0
+        
+        for square in chess.SQUARES:
+            piece = board.piece_at(square)
+            if piece and piece.piece_type == chess.PAWN:
+                if piece.color == chess.WHITE:
+                    white_pawns += 1
+                else:
+                    black_pawns += 1
+        
+        if white_pawns > black_pawns:
+            return "White"
+        elif black_pawns > white_pawns:
             return "Black"
         else:
             return "Equal"

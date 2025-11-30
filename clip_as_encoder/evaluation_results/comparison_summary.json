@@ -1,0 +1,383 @@
+{
+  "baseline_summary": {
+    "total_samples": 15,
+    "average_score": 0.38666666666666666,
+    "accuracy": 33.33333333333333,
+    "per_question_type": {
+      "fen_extraction": {
+        "count": 1,
+        "average_score": 1.0,
+        "accuracy": 100.0
+      },
+      "piece_count": {
+        "count": 1,
+        "average_score": 0.2,
+        "accuracy": 0.0
+      },
+      "check_status": {
+        "count": 1,
+        "average_score": 1.0,
+        "accuracy": 100.0
+      },
+      "material_balance": {
+        "count": 1,
+        "average_score": 0.2,
+        "accuracy": 0.0
+      },
+      "material_advantage": {
+        "count": 1,
+        "average_score": 0.2,
+        "accuracy": 0.0
+      },
+      "material_count_white": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      },
+      "material_count_black": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      },
+      "queen_count": {
+        "count": 1,
+        "average_score": 1.0,
+        "accuracy": 100.0
+      },
+      "minor_piece_balance": {
+        "count": 1,
+        "average_score": 0.2,
+        "accuracy": 0.0
+      },
+      "rook_count": {
+        "count": 1,
+        "average_score": 1.0,
+        "accuracy": 100.0
+      },
+      "pawn_advantage": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      },
+      "best_move": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      },
+      "tactical_pattern": {
+        "count": 1,
+        "average_score": 1.0,
+        "accuracy": 100.0
+      },
+      "castling_available": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      },
+      "piece_on_square": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      }
+    }
+  },
+  "chess_clip_summary": {
+    "total_samples": 15,
+    "average_score": 0.37333333333333335,
+    "accuracy": 33.33333333333333,
+    "per_question_type": {
+      "fen_extraction": {
+        "count": 1,
+        "average_score": 1.0,
+        "accuracy": 100.0
+      },
+      "piece_count": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      },
+      "check_status": {
+        "count": 1,
+        "average_score": 1.0,
+        "accuracy": 100.0
+      },
+      "material_balance": {
+        "count": 1,
+        "average_score": 0.2,
+        "accuracy": 0.0
+      },
+      "material_advantage": {
+        "count": 1,
+        "average_score": 0.2,
+        "accuracy": 0.0
+      },
+      "material_count_white": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      },
+      "material_count_black": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      },
+      "queen_count": {
+        "count": 1,
+        "average_score": 1.0,
+        "accuracy": 100.0
+      },
+      "minor_piece_balance": {
+        "count": 1,
+        "average_score": 0.2,
+        "accuracy": 0.0
+      },
+      "rook_count": {
+        "count": 1,
+        "average_score": 1.0,
+        "accuracy": 100.0
+      },
+      "pawn_advantage": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      },
+      "best_move": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      },
+      "tactical_pattern": {
+        "count": 1,
+        "average_score": 1.0,
+        "accuracy": 100.0
+      },
+      "castling_available": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      },
+      "piece_on_square": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      }
+    }
+  },
+  "improvements": {
+    "score_improvement": -0.013333333333333308,
+    "score_improvement_percent": -3.448275862068959,
+    "accuracy_improvement": 0.0
+  },
+  "per_question_type": {
+    "fen_extraction": {
+      "baseline": {
+        "count": 1,
+        "average_score": 1.0,
+        "accuracy": 100.0
+      },
+      "chess_clip": {
+        "count": 1,
+        "average_score": 1.0,
+        "accuracy": 100.0
+      },
+      "score_improvement": 0.0,
+      "accuracy_improvement": 0.0
+    },
+    "piece_count": {
+      "baseline": {
+        "count": 1,
+        "average_score": 0.2,
+        "accuracy": 0.0
+      },
+      "chess_clip": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      },
+      "score_improvement": -0.2,
+      "accuracy_improvement": 0.0
+    },
+    "check_status": {
+      "baseline": {
+        "count": 1,
+        "average_score": 1.0,
+        "accuracy": 100.0
+      },
+      "chess_clip": {
+        "count": 1,
+        "average_score": 1.0,
+        "accuracy": 100.0
+      },
+      "score_improvement": 0.0,
+      "accuracy_improvement": 0.0
+    },
+    "material_balance": {
+      "baseline": {
+        "count": 1,
+        "average_score": 0.2,
+        "accuracy": 0.0
+      },
+      "chess_clip": {
+        "count": 1,
+        "average_score": 0.2,
+        "accuracy": 0.0
+      },
+      "score_improvement": 0.0,
+      "accuracy_improvement": 0.0
+    },
+    "material_advantage": {
+      "baseline": {
+        "count": 1,
+        "average_score": 0.2,
+        "accuracy": 0.0
+      },
+      "chess_clip": {
+        "count": 1,
+        "average_score": 0.2,
+        "accuracy": 0.0
+      },
+      "score_improvement": 0.0,
+      "accuracy_improvement": 0.0
+    },
+    "material_count_white": {
+      "baseline": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      },
+      "chess_clip": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      },
+      "score_improvement": 0.0,
+      "accuracy_improvement": 0.0
+    },
+    "material_count_black": {
+      "baseline": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      },
+      "chess_clip": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      },
+      "score_improvement": 0.0,
+      "accuracy_improvement": 0.0
+    },
+    "queen_count": {
+      "baseline": {
+        "count": 1,
+        "average_score": 1.0,
+        "accuracy": 100.0
+      },
+      "chess_clip": {
+        "count": 1,
+        "average_score": 1.0,
+        "accuracy": 100.0
+      },
+      "score_improvement": 0.0,
+      "accuracy_improvement": 0.0
+    },
+    "minor_piece_balance": {
+      "baseline": {
+        "count": 1,
+        "average_score": 0.2,
+        "accuracy": 0.0
+      },
+      "chess_clip": {
+        "count": 1,
+        "average_score": 0.2,
+        "accuracy": 0.0
+      },
+      "score_improvement": 0.0,
+      "accuracy_improvement": 0.0
+    },
+    "rook_count": {
+      "baseline": {
+        "count": 1,
+        "average_score": 1.0,
+        "accuracy": 100.0
+      },
+      "chess_clip": {
+        "count": 1,
+        "average_score": 1.0,
+        "accuracy": 100.0
+      },
+      "score_improvement": 0.0,
+      "accuracy_improvement": 0.0
+    },
+    "pawn_advantage": {
+      "baseline": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      },
+      "chess_clip": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      },
+      "score_improvement": 0.0,
+      "accuracy_improvement": 0.0
+    },
+    "best_move": {
+      "baseline": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      },
+      "chess_clip": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      },
+      "score_improvement": 0.0,
+      "accuracy_improvement": 0.0
+    },
+    "tactical_pattern": {
+      "baseline": {
+        "count": 1,
+        "average_score": 1.0,
+        "accuracy": 100.0
+      },
+      "chess_clip": {
+        "count": 1,
+        "average_score": 1.0,
+        "accuracy": 100.0
+      },
+      "score_improvement": 0.0,
+      "accuracy_improvement": 0.0
+    },
+    "castling_available": {
+      "baseline": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      },
+      "chess_clip": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      },
+      "score_improvement": 0.0,
+      "accuracy_improvement": 0.0
+    },
+    "piece_on_square": {
+      "baseline": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      },
+      "chess_clip": {
+        "count": 1,
+        "average_score": 0.0,
+        "accuracy": 0.0
+      },
+      "score_improvement": 0.0,
+      "accuracy_improvement": 0.0
+    }
+  }
+}

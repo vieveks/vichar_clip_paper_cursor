@@ -10,10 +10,13 @@ import torch
 import torch.nn as nn
 from typing import Optional, Dict, List
 import open_clip
+import logging
 from transformers import AutoModelForCausalLM, AutoProcessor
 from transformers import AutoModelForVision2Seq
 from transformers.models.llava.modeling_llava import LlavaForConditionalGeneration
 from transformers.models.llava.processing_llava import LlavaProcessor
+
+logger = logging.getLogger(__name__)
 
 
 class ChessLLaVA(nn.Module):
@@ -280,14 +283,17 @@ class ChessLLaVA(nn.Module):
                 raise ValueError(f"Mismatch: {len(pil_images)} images but {len(prompts)} prompts")
         
         # Use processor to format inputs properly
-        # LLaVA Next uses a specific format with chat template
+        # Format prompts based on model type
         formatted_prompts = []
         for prompt in prompts:
             if self.llava_type == "next":
                 # LLaVA Next uses chat template - we'll format it in the processing step
                 formatted_prompts.append(prompt)
+            elif self.llava_type == "vision2seq":
+                # Vision2Seq (LLaVA 1.6) - use simple format
+                formatted_prompts.append(prompt)
             else:
-                # LLaVA 1.5/1.6 format: "USER: <image>\n{prompt}\nASSISTANT:"
+                # LLaVA 1.5 format: "USER: <image>\n{prompt}\nASSISTANT:"
                 formatted_prompts.append(f"USER: <image>\n{prompt}\nASSISTANT:")
         
         # Process inputs - handle one at a time for LLaVA Next compatibility
@@ -296,9 +302,18 @@ class ChessLLaVA(nn.Module):
         for i, (img, prompt) in enumerate(zip(pil_images, formatted_prompts)):
             try:
                 # Process single image-prompt pair
-                # LLaVA Next processor needs proper format with chat template
-                if self.llava_type == "next" and hasattr(self.processor, 'apply_chat_template'):
-                    # Use LLaVA Next chat template format
+                # Handle different LLaVA processor types
+                if self.llava_type == "vision2seq":
+                    # Vision2Seq (LLaVA 1.6) - use simple format, processor handles the rest
+                    # Don't use apply_chat_template for Vision2Seq
+                    inputs = self.processor(
+                        text=prompt,
+                        images=img,
+                        return_tensors="pt",
+                        padding=True
+                    ).to(self.device)
+                elif self.llava_type == "next" and hasattr(self.processor, 'apply_chat_template'):
+                    # LLaVA Next - use chat template
                     conversation = [
                         {
                             "role": "user",
@@ -308,13 +323,10 @@ class ChessLLaVA(nn.Module):
                             ]
                         }
                     ]
-                    # Apply chat template (this formats the prompt correctly)
                     formatted_prompt = self.processor.apply_chat_template(
                         conversation, 
-                        add_generation_prompt=True,
-                        tokenize=False
+                        add_generation_prompt=True
                     )
-                    # Process with formatted prompt
                     inputs = self.processor(
                         text=formatted_prompt,
                         images=img,
@@ -322,31 +334,53 @@ class ChessLLaVA(nn.Module):
                         padding=True
                     ).to(self.device)
                 else:
-                    # Standard format for other LLaVA versions
+                    # LLaVA 1.5 or fallback
+                    simple_prompt = f"USER: <image>\n{prompt}\nASSISTANT:" if "USER:" not in prompt else prompt
                     inputs = self.processor(
-                        text=prompt,
+                        text=simple_prompt,
                         images=img,
                         return_tensors="pt",
                         padding=True
                     ).to(self.device)
                 
-                # Generate
+                # Generate with memory management
                 with torch.no_grad():
                     try:
+                        # Clear cache before generation
+                        if torch.cuda.is_available():
+                            torch.cuda.empty_cache()
+                        
                         outputs = self.language_model.generate(
                             **inputs,
                             max_new_tokens=max_new_tokens,
                             **generate_kwargs
                         )
-                    except Exception as e:
-                        # Fallback: remove problematic kwargs
-                        safe_kwargs = {k: v for k, v in generate_kwargs.items() 
-                                      if k not in ['temperature', 'do_sample']}
-                        outputs = self.language_model.generate(
-                            **inputs,
-                            max_new_tokens=max_new_tokens,
-                            **safe_kwargs
-                        )
+                        
+                        # Clear cache after generation
+                        if torch.cuda.is_available():
+                            torch.cuda.empty_cache()
+                    except RuntimeError as e:
+                        if "out of memory" in str(e) or "CUDA" in str(e):
+                            # Clear cache and try again with smaller max_new_tokens
+                            if torch.cuda.is_available():
+                                torch.cuda.empty_cache()
+                            logger.warning(f"OOM error, retrying with smaller max_new_tokens")
+                            safe_kwargs = {k: v for k, v in generate_kwargs.items() 
+                                          if k not in ['temperature', 'do_sample']}
+                            safe_kwargs['max_new_tokens'] = min(max_new_tokens, 128)
+                            outputs = self.language_model.generate(
+                                **inputs,
+                                **safe_kwargs
+                            )
+                        else:
+                            # Fallback: remove problematic kwargs
+                            safe_kwargs = {k: v for k, v in generate_kwargs.items() 
+                                          if k not in ['temperature', 'do_sample']}
+                            outputs = self.language_model.generate(
+                                **inputs,
+                                max_new_tokens=max_new_tokens,
+                                **safe_kwargs
+                            )
                 
                 # Decode single response
                 if hasattr(self.processor, 'tokenizer'):

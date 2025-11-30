@@ -138,7 +138,8 @@ def create_qa_dataset_from_benchmark(
     
     try:
         from benchmarking.ground_truth import GroundTruthExtractor
-        gt_extractor = GroundTruthExtractor()
+        # Pass dataset_csv so it can use best_continuation field instead of API
+        gt_extractor = GroundTruthExtractor(dataset_csv=dataset_csv)
         
         for image_path, fen in zip(image_paths, fens):
             for question in questions:
@@ -157,6 +158,20 @@ def create_qa_dataset_from_benchmark(
                         answer = str(gt_extractor.get_check_status(fen))
                     elif qtype == "material_balance":
                         answer = str(gt_extractor.get_material_balance(fen))
+                    elif qtype == "material_advantage":
+                        answer = str(gt_extractor.get_material_advantage(fen))
+                    elif qtype == "material_count_white":
+                        answer = str(gt_extractor.get_material_count(fen, color="white"))
+                    elif qtype == "material_count_black":
+                        answer = str(gt_extractor.get_material_count(fen, color="black"))
+                    elif qtype == "queen_count":
+                        answer = str(gt_extractor.get_queen_count(fen))
+                    elif qtype == "minor_piece_balance":
+                        answer = str(gt_extractor.get_minor_piece_balance(fen))
+                    elif qtype == "rook_count":
+                        answer = str(gt_extractor.get_rook_count(fen))
+                    elif qtype == "pawn_advantage":
+                        answer = str(gt_extractor.get_pawn_advantage(fen))
                     elif qtype == "best_move":
                         answer = str(gt_extractor.get_best_move(fen))
                     elif qtype == "tactical_pattern":
