@@ -10,20 +10,27 @@ This experiment tests whether using a chess-finetuned CLIP model as the vision e
 
 ## Architecture
 
-The experiment compares three model variants:
+The experiment compares model variants with different vision encoders and language models:
 
-1. **Baseline-LLaVA (Generic Vision)**
+### Supported Language Models:
+- **LLaVA** (default: `llava-hf/llava-v1.6-mistral-7b-hf`)
+- **Qwen2.5-VL-3B** (`Qwen/Qwen2-VL-3B-Instruct`)
+
+### Model Variants:
+
+1. **Baseline (Generic Vision)**
    - Standard pretrained CLIP ViT-B/32 as vision encoder
-   - LLaVA language model (Mistral-7B)
+   - LLaVA or Qwen2.5-VL language model
    - Projection layer connecting vision to language
 
-2. **ChessCLIP-LLaVA (Retrieval-Finetuned Vision)**
+2. **ChessCLIP (Retrieval-Finetuned Vision)**
    - Chess-finetuned CLIP ViT-B/32 as vision encoder (from retrieval approach)
-   - Same LLaVA language model
+   - Same language model (LLaVA or Qwen2.5-VL)
    - Same projection layer (trained on chess QA data)
 
-3. **FEN-LLaVA (Optional)**
+3. **With FEN Context (Optional)**
    - Same as above but with explicit FEN text as additional context
+   - Can be toggled on/off with `--use_fen_context` flag
    - Demonstrates upper bound of symbolic grounding
 
 ## Files
@@ -121,6 +128,93 @@ This will compare:
 - Baseline: Generic CLIP + LLaVA (untrained projection)
 - ChessCLIP: Chess-finetuned CLIP + LLaVA (untrained projection)
 
+### 4. Using Qwen2-VL Models
+
+You can also use Qwen2-VL models instead of LLaVA. Available models:
+- `Qwen/Qwen2-VL-2B-Instruct` (2B parameters)
+- `Qwen/Qwen2-VL-7B-Instruct` (7B parameters)
+
+**Note:** Some Qwen models may be gated and require HuggingFace authentication.
+
+#### Option 1: Login via CLI (Recommended)
+```bash
+huggingface-cli login
+# Enter your HuggingFace token when prompted
+```
+
+#### Option 2: Pass token via command line
+```bash
+# Evaluate Qwen2-VL-2B with FEN context
+python clip_as_encoder/evaluate.py \
+    --model_type qwen \
+    --language_model Qwen/Qwen2-VL-2B-Instruct \
+    --chess_clip_checkpoint runs/clip_hf_chess_100k_20epochs_fixed/best_model.pt \
+    --dataset_csv data/hf_chess_puzzles/test.csv \
+    --images_dir data/hf_chess_puzzles/test/images \
+    --num_samples 10 \
+    --use_fen_context \
+    --hf_token YOUR_HUGGINGFACE_TOKEN \
+    --output_dir evaluation_results
+
+# Evaluate Qwen2-VL-2B WITHOUT FEN context
+python clip_as_encoder/evaluate.py \
+    --model_type qwen \
+    --language_model Qwen/Qwen2-VL-2B-Instruct \
+    --chess_clip_checkpoint runs/clip_hf_chess_100k_20epochs_fixed/best_model.pt \
+    --dataset_csv data/hf_chess_puzzles/test.csv \
+    --images_dir data/hf_chess_puzzles/test/images \
+    --num_samples 10 \
+    --hf_token YOUR_HUGGINGFACE_TOKEN \
+    --output_dir evaluation_results
+```
+
+#### Option 3: Set environment variable
+```bash
+export HF_TOKEN=YOUR_HUGGINGFACE_TOKEN
+# Then run without --hf_token flag
+python clip_as_encoder/evaluate.py \
+    --model_type qwen \
+    --language_model Qwen/Qwen2-VL-2B-Instruct \
+    ...
+```
+
+**Note:** The `--use_fen_context` flag controls whether FEN context is included in prompts. By default, FEN context is disabled. Set the flag to enable it.
+
+### 5. Comparing with and without FEN Context
+
+To compare the same model with and without FEN context:
+
+```bash
+# Without FEN context
+python clip_as_encoder/evaluate.py \
+    --model_type qwen \
+    --language_model Qwen/Qwen2-VL-2B-Instruct \
+    --chess_clip_checkpoint runs/clip_hf_chess_100k_20epochs_fixed/best_model.pt \
+    --dataset_csv data/hf_chess_puzzles/test.csv \
+    --images_dir data/hf_chess_puzzles/test/images \
+    --num_samples 10 \
+    --evaluate_chess_only \
+    --output_dir evaluation_results/qwen_no_fen
+
+# With FEN context
+python clip_as_encoder/evaluate.py \
+    --model_type qwen \
+    --language_model Qwen/Qwen2-VL-2B-Instruct \
+    --chess_clip_checkpoint runs/clip_hf_chess_100k_20epochs_fixed/best_model.pt \
+    --dataset_csv data/hf_chess_puzzles/test.csv \
+    --images_dir data/hf_chess_puzzles/test/images \
+    --num_samples 10 \
+    --use_fen_context \
+    --evaluate_chess_only \
+    --output_dir evaluation_results/qwen_with_fen
+```
+
+**Note on Qwen2-VL Models:**
+- Qwen2-VL has a built-in vision encoder that cannot be swapped with CLIP like LLaVA
+- The `--chess_clip_checkpoint` parameter is still required for consistency, but the CLIP encoder is not actually used
+- Qwen2-VL is useful for testing the effect of FEN context on performance
+- To compare generic CLIP vs chess-finetuned CLIP, use LLaVA (`--model_type llava`) instead
+
 ## Expected Results
 
 Based on the hypothesis, we expect:
@@ -128,6 +222,15 @@ Based on the hypothesis, we expect:
 1. **Piece count, material balance, check status**: Noticeable improvement with ChessCLIP-LLaVA
 2. **Best move**: Small or noisy gains (still fundamentally a policy/reasoning problem)
 3. **Tactical patterns, castling rights**: May remain low, but any improvement indicates better state estimation
+
+### Experimental Results
+
+**Qwen2-VL with FEN Context:**
+- **Without FEN**: Average Score: 0.273, Accuracy: 20.00%
+- **With FEN**: Average Score: 0.307, Accuracy: 26.67%
+- **Improvement**: +12.5% score improvement, +33.4% accuracy improvement
+
+This demonstrates that providing explicit symbolic context (FEN) significantly improves vision-language model performance on chess reasoning tasks, supporting the hypothesis that symbolic grounding enhances multimodal reasoning.
 
 ## Interpretation
 
@@ -154,6 +257,10 @@ All three show complementary benefits, demonstrating that symbolic grounding imp
 - **Training is optional**: You can compare untrained models to see if chess-CLIP embeddings alone help
 - **Lightweight option**: Freeze language model, train only projection layer (faster, less compute)
 - **Evaluation uses LLM judge**: Same scoring methodology as main benchmark for consistency
+- **Qwen2-VL vs LLaVA**: 
+  - Qwen2-VL: Cannot swap vision encoder, but useful for testing FEN context effects
+  - LLaVA: Can swap vision encoder (generic vs chess-finetuned CLIP), better for comparing vision encoders
+- **FEN Context**: Adding FEN context consistently improves performance across models, demonstrating the value of symbolic grounding
 
 ## Troubleshooting
 

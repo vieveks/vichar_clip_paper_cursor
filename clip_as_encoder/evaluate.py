@@ -12,7 +12,7 @@ import pandas as pd
 from typing import Dict, List
 import logging
 
-from model import ChessLLaVA
+from model import ChessLLaVA, ChessQwenVL
 from dataset import ChessQADataset, create_qa_dataset_from_benchmark
 
 # Setup logging
@@ -30,15 +30,16 @@ except ImportError:
     logger.warning("CLIPFENExtractor not available. Cannot use CLIP-predicted FEN.")
 
 
-def evaluate_model(model, dataloader, device, questions, clip_predicted_fens=None):
+def evaluate_model(model, dataloader, device, questions, clip_predicted_fens=None, use_fen_context=True):
     """Evaluate model on dataset.
     
     Args:
-        model: ChessLLaVA model to evaluate
+        model: ChessLLaVA or ChessQwenVL model to evaluate
         dataloader: DataLoader with evaluation samples
         device: Device to run on
         questions: List of question definitions
         clip_predicted_fens: Optional dict mapping image_path -> predicted FEN
+        use_fen_context: Whether to include FEN context in prompts
     """
     model.eval()
     
@@ -80,15 +81,18 @@ def evaluate_model(model, dataloader, device, questions, clip_predicted_fens=Non
                     single_question = questions_batch[i]
                     single_fen = fens[i] if i < len(fens) and fens[i] else None
                     
-                    # Add FEN context to prompt if available
-                    if single_fen:
+                    # Add FEN context to prompt if available and use_fen_context is True
+                    if use_fen_context and single_fen:
                         fen_context = f"\n\nContext: The FEN (Forsyth-Edwards Notation) for this position is: {single_fen}"
                         enhanced_question = single_question + fen_context
                     else:
                         enhanced_question = single_question
                     
                     # Format prompt based on model type
-                    if hasattr(model, 'llava_type') and model.llava_type == "next":
+                    if isinstance(model, ChessQwenVL):
+                        # Qwen2.5-VL format - just pass the question, processor handles formatting
+                        prompt = enhanced_question
+                    elif hasattr(model, 'llava_type') and model.llava_type == "next":
                         # LLaVA Next uses chat template - just pass the question
                         prompt = enhanced_question
                     else:
@@ -244,7 +248,14 @@ def main():
         "--language_model",
         type=str,
         default="llava-hf/llava-v1.6-mistral-7b-hf",
-        help="LLaVA language model name"
+        help="Language model name (LLaVA or Qwen2.5-VL)"
+    )
+    parser.add_argument(
+        "--model_type",
+        type=str,
+        default="llava",
+        choices=["llava", "qwen"],
+        help="Model type: 'llava' for LLaVA models, 'qwen' for Qwen2.5-VL models"
     )
     
     # Data arguments
@@ -301,8 +312,24 @@ def main():
         default=None,
         help="CSV file with FEN candidates for CLIP matching (defaults to dataset_csv if not provided)"
     )
+    parser.add_argument(
+        "--use_fen_context",
+        action="store_true",
+        help="Include FEN context in prompts (default: False, set this flag to enable)"
+    )
+    parser.add_argument(
+        "--hf_token",
+        type=str,
+        default=None,
+        help="HuggingFace token for accessing gated models (or set HF_TOKEN environment variable)"
+    )
     
     args = parser.parse_args()
+    
+    # Set HuggingFace token in environment if provided
+    if args.hf_token:
+        os.environ["HF_TOKEN"] = args.hf_token
+        os.environ["HUGGINGFACE_TOKEN"] = args.hf_token
     
     # Device
     device = args.device or ("cuda" if torch.cuda.is_available() else "cpu")
@@ -421,15 +448,24 @@ def main():
     # 1. Baseline (generic CLIP) - unless chess_only
     if not args.evaluate_chess_only:
         logger.info("\n" + "="*60)
-        logger.info("Evaluating Baseline LLaVA (Generic CLIP)")
+        model_name = "Qwen2.5-VL" if args.model_type == "qwen" else "LLaVA"
+        logger.info(f"Evaluating Baseline {model_name} (Generic CLIP)")
         logger.info("="*60)
         
-        baseline_model = ChessLLaVA(
-            vision_encoder_type="generic",
-            chess_clip_checkpoint=None,
-            language_model_name=args.language_model,
-            device=device
-        )
+        if args.model_type == "qwen":
+            baseline_model = ChessQwenVL(
+                vision_encoder_type="generic",
+                chess_clip_checkpoint=None,
+                language_model_name=args.language_model,
+                device=device
+            )
+        else:
+            baseline_model = ChessLLaVA(
+                vision_encoder_type="generic",
+                chess_clip_checkpoint=None,
+                language_model_name=args.language_model,
+                device=device
+            )
         
         if args.baseline_model and os.path.exists(args.baseline_model):
             logger.info(f"Loading baseline model from {args.baseline_model}")
@@ -438,7 +474,8 @@ def main():
         
         baseline_results = evaluate_model(
             baseline_model, dataloader, device, questions,
-            clip_predicted_fens=clip_predicted_fens
+            clip_predicted_fens=clip_predicted_fens,
+            use_fen_context=args.use_fen_context
         )
         baseline_scored = score_responses(baseline_results, questions)
         baseline_summary = generate_summary(baseline_scored, questions)
@@ -472,22 +509,31 @@ def main():
         gc.collect()
         logger.info("GPU memory cleared")
     
-    # 2. Chess-CLIP LLaVA - unless baseline_only
+    # 2. Chess-CLIP model - unless baseline_only
     if not args.evaluate_baseline_only:
         if not args.chess_clip_checkpoint:
             logger.error("--chess_clip_checkpoint is required when evaluating chess-CLIP model")
             return
         
         logger.info("\n" + "="*60)
-        logger.info("Evaluating ChessCLIP-LLaVA")
+        model_name = "Qwen2.5-VL" if args.model_type == "qwen" else "LLaVA"
+        logger.info(f"Evaluating ChessCLIP-{model_name}")
         logger.info("="*60)
         
-        chess_model = ChessLLaVA(
-            vision_encoder_type="chess_finetuned",
-            chess_clip_checkpoint=args.chess_clip_checkpoint,
-            language_model_name=args.language_model,
-            device=device
-        )
+        if args.model_type == "qwen":
+            chess_model = ChessQwenVL(
+                vision_encoder_type="chess_finetuned",
+                chess_clip_checkpoint=args.chess_clip_checkpoint,
+                language_model_name=args.language_model,
+                device=device
+            )
+        else:
+            chess_model = ChessLLaVA(
+                vision_encoder_type="chess_finetuned",
+                chess_clip_checkpoint=args.chess_clip_checkpoint,
+                language_model_name=args.language_model,
+                device=device
+            )
         
         if args.chess_model and os.path.exists(args.chess_model):
             logger.info(f"Loading chess model from {args.chess_model}")
@@ -496,7 +542,8 @@ def main():
         
         chess_results = evaluate_model(
             chess_model, dataloader, device, questions,
-            clip_predicted_fens=clip_predicted_fens
+            clip_predicted_fens=clip_predicted_fens,
+            use_fen_context=args.use_fen_context
         )
         chess_scored = score_responses(chess_results, questions)
         chess_summary = generate_summary(chess_scored, questions)
