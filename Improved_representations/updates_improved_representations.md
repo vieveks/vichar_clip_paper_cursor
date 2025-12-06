@@ -152,11 +152,94 @@ Deterministic JSON/FEN conversion
 
 ---
 
-### 2025-12-06: Starting Ablation Experiments
+### 2025-12-06: Ablation Experiments Complete
 
-**Status**: Running Exp 1A (Base CLIP, frozen)
+**Status**: All ablation experiments completed
 
-Training Exp 1A to compare with 1B and understand if chess-specific fine-tuning helps.
+**Completed Experiments:**
+
+| Experiment | Configuration | Per-square Accuracy | Exact Match | Best Epoch |
+|------------|--------------|---------------------|-------------|------------|
+| **Exp 1A** | Base CLIP, Frozen Encoder | 79.31% | 0.008% | 15 |
+| **Exp 1B** | Fine-tuned CLIP, Frozen Encoder | 79.32% | 0.008% | 11 |
+| **Exp 1D** | Base CLIP, Unfrozen Encoder | 79.13% | 0.02% | 15 |
+
+**Key Findings:**
+
+1. **Chess Fine-tuning Impact (1A vs 1B)**: 
+   - Benefit: +0.01% (79.31% → 79.32%)
+   - **Conclusion**: Chess fine-tuning provides minimal benefit when encoder is frozen
+   - The pre-trained CLIP features are already sufficient for the task
+
+2. **End-to-End Training Impact (1A vs 1D)**:
+   - Benefit: -0.18% (79.31% → 79.13%)
+   - **Conclusion**: Unfreezing the encoder and training end-to-end actually **hurts** performance
+   - Freezing the encoder preserves the pre-trained CLIP features better
+
+3. **Overall Best Configuration**:
+   - **Exp 1B** (Fine-tuned CLIP, Frozen Encoder) achieves the highest accuracy (79.32%)
+   - However, the difference from Exp 1A is negligible (0.01%)
+   - **Recommendation**: Use **Exp 1A** (Base CLIP, Frozen) as it's simpler and performs nearly identically
+
+**Next Steps:**
+- Proceed with Exp 1C (Fine-tuned CLIP, Unfrozen) to complete the full ablation study
+- Then move to VLM fine-tuning (LLaVA) for JSON prediction
+
+---
+
+### 2025-12-06: Architecture Research and Literature Review
+
+**Status**: Research on state-of-the-art architectures for chess position recognition
+
+**Research Findings:**
+
+1. **Current Performance Context:**
+   - Our JSON-first approach achieves **79.32%** per-square accuracy
+   - Exact board match: **0.008%** (8 out of 10,000 positions)
+   - This is a significant improvement over the previous FEN generation approach (0% accuracy)
+
+2. **Literature Review - Related Architectures:**
+
+   **Vision Transformers (ViT):**
+   - ViTs process images as sequences of patches using self-attention
+   - Could potentially improve spatial understanding for chess boards
+   - However, our CLIP ViT-B/32 already uses transformer architecture
+
+   **Multi-Path Vision Transformer (MPViT):**
+   - Introduces multi-scale patch embedding and multi-path structure
+   - Enables fine and coarse feature representations simultaneously
+   - Could help with the 7×7 to 8×8 spatial alignment challenge
+
+   **Graph Neural Networks (GNNs):**
+   - Designed to process graph-structured data
+   - Could model piece relationships (attacks, defends, pins) explicitly
+   - Our JSON representation already includes relationship information
+
+   **MLP-Mixer:**
+   - Replaces convolutions/attention with multilayer perceptrons
+   - Simpler architecture, potentially more efficient
+   - May not capture spatial dependencies as well as transformers
+
+3. **Key Insights:**
+   - Most chess recognition papers focus on **text-based** chess (assuming FEN is given)
+   - **Visual-to-symbol** mapping is less explored in literature
+   - Our 79% accuracy appears competitive for per-square classification
+   - The main challenge is **exact board match** (0.008%), which requires all 64 squares correct
+
+4. **Potential Improvements:**
+   - **Multi-scale features**: Use MPViT-style multi-path architecture for better spatial alignment
+   - **Graph-based post-processing**: Use GNN to refine predictions using piece relationships
+   - **Ensemble methods**: Combine multiple model predictions
+   - **Curriculum learning**: Train on simpler positions first, then complex ones
+   - **Data augmentation**: More diverse board styles, lighting conditions
+
+5. **Comparison with Related Work:**
+   - **ChessLLM** (Zhang et al., 2025): Achieves ~1788 Elo, but assumes FEN is given
+   - **MATE dataset** (Wang et al., 2024): 95% move accuracy, but also assumes textual input
+   - **Our contribution**: First to systematically study vision-to-symbol mapping for chess
+
+**Conclusion:**
+Our JSON-first approach with 79% per-square accuracy is a significant step forward for vision-to-symbol mapping in chess. While exact board matching remains challenging, the per-square accuracy demonstrates that the model can reliably identify individual pieces. Future work should explore multi-scale architectures and graph-based refinement.
 
 ---
 

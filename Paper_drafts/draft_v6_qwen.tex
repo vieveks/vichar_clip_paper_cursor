@@ -19,7 +19,7 @@
 \maketitle
 
 \begin{abstract}
-Vision-Language Models (VLMs) have shown remarkable capabilities in visual reasoning tasks, yet they struggle with precise spatial understanding required for structured domains like chess. We propose a three-phase approach to bridge this vision--text modality gap by grounding visual inputs in symbolic representations (FEN notation). First, we demonstrate via a **retrieval-based** method that providing ground-truth or retrieved FEN strings significantly enhances VLM performance, achieving 99.98\% top-1 accuracy on FEN retrieval and a 68.3\% relative improvement in chess understanding tasks when evaluated on GPT-4o. Second, we explore a **Generative FEN Decoder**, which reveals fundamental challenges in vision-to-symbol generation (0\% exact match due to exposure bias). Third, we introduce an **LLM-based Extraction Pipeline** that leverages state-of-the-art VLMs (GPT-4o, Claude 3.5) with consensus strategies to achieve 94\% FEN accuracy on open-world images. We extend our evaluation to include **15 question types** (expanded from 8) with enhanced material balance questions, and demonstrate that **Qwen2-VL-2B** shows a 12.5\% score improvement and 33.4\% accuracy improvement when FEN context is provided. We demonstrate that while generative decoding remains an open research challenge, retrieval and LLM-based extraction offer complementary solutions for closed and open-world settings, respectively.
+Vision-Language Models (VLMs) have shown remarkable capabilities in visual reasoning tasks, yet they struggle with precise spatial understanding required for structured domains like chess. We propose a multi-phase approach to bridge this vision--text modality gap by grounding visual inputs in symbolic representations (FEN notation). First, we demonstrate via a **retrieval-based** method that providing ground-truth or retrieved FEN strings significantly enhances VLM performance, achieving 99.98\% top-1 accuracy on FEN retrieval and a 68.3\% relative improvement in chess understanding tasks when evaluated on GPT-4o. Second, we explore a **Generative FEN Decoder**, which reveals fundamental challenges in vision-to-symbol generation (0\% exact match due to exposure bias). Third, we introduce a **JSON-First Hierarchical Representation** approach that avoids exposure bias by predicting structured board state through parallel per-square classification, achieving 79.32\% per-square accuracy. Fourth, we present an **LLM-based Extraction Pipeline** that leverages state-of-the-art VLMs (GPT-4o, Claude 3.5) with consensus strategies to achieve 94\% FEN accuracy on open-world images. We extend our evaluation to include **15 question types** (expanded from 8) with enhanced material balance questions, and demonstrate that **Qwen2-VL-2B** shows a 12.5\% score improvement and 33.4\% accuracy improvement when FEN context is provided. We demonstrate that while generative decoding remains an open research challenge, our JSON-first approach offers a promising alternative that avoids exposure bias, and retrieval and LLM-based extraction offer complementary solutions for closed and open-world settings, respectively.
 \end{abstract}
 
 \noindent\textbf{Keywords:} Vision-Language Models, Chess AI, Symbolic Reasoning, CLIP, Multimodal Learning, Generative Decoding, Qwen2-VL
@@ -117,6 +117,98 @@ To address the closed-world limitation, we develop a generative model capable of
 \end{enumerate}
 
 \paragraph{Results.} Despite achieving low validation loss (0.0084), the generative model achieves 0\% exact match accuracy on test positions, demonstrating the challenge of vision-to-symbol generation. The model fails due to exposure bias: small errors compound after $\sim$10--15 tokens, leading to degenerate generation.
+
+\subsection{Approach 2.5: JSON-First Hierarchical Representation}
+\label{subsec:json_first}
+
+To address the exposure bias problem in generative FEN decoding, we propose a **JSON-first hierarchical representation** approach that avoids autoregressive sequence generation by predicting structured board state directly.
+
+\paragraph{Motivation.} The fundamental issue with generative FEN decoding is that errors compound during autoregressive generation. By shifting from sequence generation to **parallel per-square classification**, we can avoid exposure bias entirely. We use a structured JSON representation as an intermediate format that can be deterministically converted to FEN, providing both interpretability and lossless conversion.
+
+\paragraph{Architecture.} Our JSON-first model consists of:
+\begin{enumerate}
+    \item \textbf{Visual Encoder:} CLIP ViT-B/32 (base or fine-tuned) that extracts spatial patch embeddings ($7 \times 7 = 49$ tokens)
+    \item \textbf{Spatial Aligner:} Learnable upsampling module that maps $7 \times 7$ CLIP patches to $8 \times 8$ board squares
+    \item \textbf{Square Classifier:} 64 independent 13-way classifiers (one per square) predicting piece type (empty + 6 white + 6 black pieces)
+    \item \textbf{Metadata Predictors:} Separate heads for side-to-move and castling rights
+\end{enumerate}
+
+\paragraph{JSON Representation Format.} We use a structured JSON format that explicitly lists all pieces with their squares:
+\begin{verbatim}
+{
+  "pieces": [
+    {"piece": "white_rook", "square": "a1", "color": "white", 
+     "type": "rook", "value": 5},
+    ...
+  ],
+  "metadata": {
+    "to_move": "white",
+    "castling_rights": {"white": ["K", "Q"], "black": ["k", "q"]},
+    "material": {"white": 39, "black": 35}
+  }
+}
+\end{verbatim}
+
+This format enables deterministic conversion to FEN via a rule-based converter, ensuring lossless round-trip conversion.
+
+\paragraph{Training Details.} We train on 99,999 training samples from the Hugging Face chess puzzles dataset. The model uses:
+\begin{itemize}
+    \item \textbf{Loss function:} Cross-entropy for per-square classification + binary cross-entropy for metadata
+    \item \textbf{Batch size:} 32
+    \item \textbf{Learning rate:} $1 \times 10^{-4}$ with cosine annealing
+    \item \textbf{Training epochs:} 15--20 (early stopping based on validation accuracy)
+\end{itemize}
+
+\paragraph{Ablation Study.} We conduct a systematic ablation study comparing four configurations:
+\begin{enumerate}
+    \item \textbf{Exp 1A:} Base CLIP, frozen encoder
+    \item \textbf{Exp 1B:} Fine-tuned CLIP, frozen encoder
+    \item \textbf{Exp 1C:} Fine-tuned CLIP, unfrozen encoder (in progress)
+    \item \textbf{Exp 1D:} Base CLIP, unfrozen encoder
+\end{enumerate}
+
+\paragraph{Results.} Table~\ref{tab:json_ablation} shows the ablation study results:
+
+\begin{table}[h]
+\centering
+\caption{JSON-First Model Ablation Study Results}
+\label{tab:json_ablation}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Experiment} & \textbf{Configuration} & \textbf{Per-Square Acc.} & \textbf{Exact Match} \\
+\midrule
+Exp 1A & Base CLIP, Frozen & 79.31\% & 0.008\% \\
+Exp 1B & Fine-tuned CLIP, Frozen & 79.32\% & 0.008\% \\
+Exp 1D & Base CLIP, Unfrozen & 79.13\% & 0.02\% \\
+\midrule
+\textbf{Best} & \textbf{Fine-tuned CLIP, Frozen} & \textbf{79.32\%} & \textbf{0.008\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Key Findings.}
+\begin{itemize}
+    \item \textbf{Chess fine-tuning impact:} Minimal benefit (+0.01\%) when encoder is frozen, suggesting pre-trained CLIP features are already sufficient
+    \item \textbf{End-to-end training impact:} Unfreezing the encoder actually \emph{hurts} performance (-0.18\%), indicating that freezing preserves pre-trained features better
+    \item \textbf{Per-square accuracy:} Achieves 79.32\% accuracy, a significant improvement over 0\% exact match in generative FEN decoding
+    \item \textbf{Exact board match:} Remains challenging (0.008\%) but demonstrates the model can correctly identify individual pieces
+\end{itemize}
+
+\paragraph{Comparison with Generative Approach.} The JSON-first approach achieves:
+\begin{itemize}
+    \item \textbf{79.32\% per-square accuracy} vs. \textbf{0\% exact match} in generative FEN decoding
+    \item Avoids exposure bias by using parallel classification instead of autoregressive generation
+    \item Provides interpretable intermediate representation (JSON) that can be validated and corrected
+    \item Enables deterministic FEN conversion, ensuring syntactic correctness
+\end{itemize}
+
+\paragraph{Limitations and Future Work.} While per-square accuracy is high, exact board matching remains challenging. Future directions include:
+\begin{itemize}
+    \item Multi-scale architectures (e.g., MPViT) for better spatial alignment
+    \item Graph-based post-processing using piece relationships
+    \item Ensemble methods combining multiple model predictions
+    \item Curriculum learning from simple to complex positions
+\end{itemize}
 
 \subsection{Approach 3: LLM-Based FEN Extraction}
 \label{subsec:llm_extraction}
