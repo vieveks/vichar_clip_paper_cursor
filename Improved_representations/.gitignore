@@ -1,0 +1,28 @@
+# Model checkpoints (too large for git)
+checkpoints/
+*.pt
+*.pth
+
+# Large datasets
+data/json_dataset/*.jsonl
+data/json_dataset/*.json
+!data/json_dataset/test_sample.json
+
+# Logs
+logs/
+*.log
+
+# Results (can be regenerated)
+results/*.json
+!results/.gitkeep
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Temporary files
+*.tmp
+run_eval.py
+compare_results.py
+

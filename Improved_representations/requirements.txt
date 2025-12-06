@@ -1,0 +1,28 @@
+# Core dependencies
+torch>=2.0.0
+torchvision>=0.15.0
+numpy>=1.24.0
+pandas>=2.0.0
+pillow>=10.0.0
+tqdm>=4.65.0
+
+# Chess library
+python-chess>=1.999
+
+# CLIP models
+open-clip-torch>=2.20.0
+
+# Transformers for NL decoder
+transformers>=4.30.0
+tokenizers>=0.13.0
+
+# Graph libraries
+networkx>=3.1
+torch-geometric>=2.3.0  # Optional, for GNN-based graph decoder
+
+# Data processing
+scikit-learn>=1.3.0
+
+# Optional: Stockfish for deeper tactical analysis
+# Install separately: https://stockfishchess.org/download/
+
