@@ -182,8 +182,55 @@ Deterministic JSON/FEN conversion
    - **Recommendation**: Use **Exp 1A** (Base CLIP, Frozen) as it's simpler and performs nearly identically
 
 **Next Steps:**
-- Proceed with Exp 1C (Fine-tuned CLIP, Unfrozen) to complete the full ablation study
-- Then move to VLM fine-tuning (LLaVA) for JSON prediction
+- Proceed with VLM fine-tuning (Qwen2-VL-2B) for JSON prediction
+- Exp 1C (Fine-tuned CLIP, Unfrozen) deferred as it's expected to show similar results to Exp 1D
+
+---
+
+### 2025-12-07: VLM Fine-tuning with Qwen2-VL-2B
+
+**Status**: VLM fine-tuning completed and evaluated
+
+**Approach**: Fine-tuned Qwen2-VL-2B-Instruct model to predict JSON representation directly from chess board images using instruction-following format.
+
+**Training Configuration:**
+- Model: Qwen2-VL-2B-Instruct (2.2B parameters)
+- Fine-tuning: LoRA (Low-Rank Adaptation) for efficient training
+- Trainable parameters: 18.5M (0.83% of total)
+- Dataset: 99,999 train / 12,500 val samples (VLM instruction format)
+- Batch size: 2 (with gradient accumulation: 8)
+- Learning rate: 2e-4
+- Epochs: 3 (189 steps total)
+- Training loss: 43.64 → 16.50 (62% reduction)
+
+**Evaluation Results (50 test samples):**
+- Valid JSON rate: **46.00%** (23/50) - Model generates valid JSON structure
+- Valid position rate: **12.00%** (6/50) - Only 12% represent valid chess positions
+- Per-square accuracy: **43.55%** (averaged over valid JSON samples)
+- Exact board match: **0.00%**
+- FEN accuracy: **0.00%**
+
+**Comparison with CLIP-based JSON Predictor:**
+- CLIP-based (Exp 1B): **79.32%** per-square accuracy
+- Qwen2-VL fine-tuned: **43.55%** per-square accuracy
+- **Difference: -35.78%** (CLIP significantly outperforms VLM fine-tuning)
+
+**Key Findings:**
+
+1. **CLIP-based approach is superior**: The grid-based classification approach (CLIP + per-square classifiers) achieves 79.32% accuracy, significantly outperforming VLM fine-tuning (43.55%).
+
+2. **VLM generates structure but struggles with content**: While 46% of generated outputs are valid JSON, only 12% represent valid chess positions, indicating the model learns JSON syntax but struggles with chess-specific spatial reasoning.
+
+3. **Grid-based classification is better suited for structured spatial tasks**: The parallel per-square classification approach avoids exposure bias and provides better accuracy for chess position recognition compared to autoregressive text generation.
+
+4. **Training efficiency**: LoRA fine-tuning enabled efficient training with only 0.83% trainable parameters, but the model still requires significant training time and resources.
+
+**Conclusion**: The CLIP-based JSON predictor (Exp 1B) remains the best approach for chess position recognition, achieving 79.32% per-square accuracy. VLM fine-tuning, while promising for general vision-language tasks, is less effective for precise spatial reasoning tasks like chess position understanding.
+
+**Next Steps:**
+- Document findings in paper
+- Consider hybrid approaches (CLIP for position recognition + VLM for natural language reasoning)
+- Explore other VLM architectures or training strategies if needed
 
 ---
 

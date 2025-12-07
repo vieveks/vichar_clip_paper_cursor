@@ -12,9 +12,11 @@ python-chess>=1.999
 # CLIP models
 open-clip-torch>=2.20.0
 
-# Transformers for NL decoder
+# Transformers for NL decoder and VLM fine-tuning
 transformers>=4.30.0
 tokenizers>=0.13.0
+peft>=0.6.0  # For LoRA fine-tuning
+accelerate>=0.20.0  # For efficient training
 
 # Graph libraries
 networkx>=3.1
