@@ -1,0 +1,842 @@
+[
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000000.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 1,
+    "question_type": "fen_extraction",
+    "answer": "[INST]  \nWhat is the FEN (Forsyth-Edwards Notation) for this chess position? Provide only the FEN string. [/INST] is 1990.\n0.0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "score": 0.0,
+    "ground_truth": "r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000000.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 2,
+    "question_type": "piece_count",
+    "answer": "[INST]  \nHow many total pieces (not including kings) does White have? How many does Black have? Answer in format: 'White: X, Black: Y' [/INST] is 1999.\n\n0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "score": 0.3,
+    "ground_truth": {
+      "white": 12,
+      "black": 13
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000000.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 3,
+    "question_type": "check_status",
+    "answer": "[INST]  \nIs either king in check? Answer with 'Yes' or 'No', and if yes, specify which king (White or Black). [/INST] is 1970.\n0.0.0.0.0.00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "score": 0.0,
+    "ground_truth": {
+      "white_in_check": false,
+      "black_in_check": false,
+      "is_check": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000000.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 4,
+    "question_type": "material_balance",
+    "answer": "[INST]  \nWho has more material (using standard piece values: Pawn=1, Knight=3, Bishop=3, Rook=5, Queen=9)? Answer: 'White', 'Black', or 'Equal'. [/INST] is 1999 ",
+    "score": 0.3,
+    "ground_truth": "White"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000000.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 5,
+    "question_type": "best_move",
+    "answer": "[INST]  \nWhat is the best move in this position? Provide the move in algebraic notation (e.g., Nf3, e4, O-O). [/INST] is 0.0.0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000000.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 6,
+    "question_type": "tactical_pattern",
+    "answer": "[INST]  \nIs there a tactical pattern (pin, fork, skewer, discovered attack) in this position? If yes, describe it briefly. [/INST] is 1970.\n0.0.0.0.0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000000.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 7,
+    "question_type": "castling_available",
+    "answer": "[INST]  \nCan White castle kingside? Can Black castle kingside? Answer for each: 'Yes' or 'No'. [/INST] is 1970.\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": {
+      "white_kingside": false,
+      "white_queenside": false,
+      "black_kingside": false,
+      "black_queenside": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000000.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 8,
+    "question_type": "piece_on_square",
+    "answer": "[INST]  \nWhat piece is on square e4? Answer with the piece type and color (e.g., 'White Knight', 'Black Pawn', or 'Empty'). [/INST] is 1999.\n\n0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000001.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 1,
+    "question_type": "fen_extraction",
+    "answer": "[INST]  \nWhat is the FEN (Forsyth-Edwards Notation) for this chess position? Provide only the FEN string. [/INST] of the case.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": "8/pp3k2/3p1p1p/2pP1RrP/2P2KP1/8/PP6/8"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000001.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 2,
+    "question_type": "piece_count",
+    "answer": "[INST]  \nHow many total pieces (not including kings) does White have? How many does Black have? Answer in format: 'White: X, Black: Y' [/INST] by nature.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.3,
+    "ground_truth": {
+      "white": 7,
+      "black": 7
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000001.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 3,
+    "question_type": "check_status",
+    "answer": "[INST]  \nIs either king in check? Answer with 'Yes' or 'No', and if yes, specify which king (White or Black). [/INST] of the case.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": {
+      "white_in_check": false,
+      "black_in_check": false,
+      "is_check": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000001.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 4,
+    "question_type": "material_balance",
+    "answer": "[INST]  \nWho has more material (using standard piece values: Pawn=1, Knight=3, Bishop=3, Rook=5, Queen=9)? Answer: 'White', 'Black', or 'Equal'. [/INST] is 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19",
+    "score": 0.3,
+    "ground_truth": "Equal"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000001.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 5,
+    "question_type": "best_move",
+    "answer": "[INST]  \nWhat is the best move in this position? Provide the move in algebraic notation (e.g., Nf3, e4, O-O). [/INST]\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.0,
+    "ground_truth": "f5g5"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000001.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 6,
+    "question_type": "tactical_pattern",
+    "answer": "[INST]  \nIs there a tactical pattern (pin, fork, skewer, discovered attack) in this position? If yes, describe it briefly. [/INST] of the case.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000001.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 7,
+    "question_type": "castling_available",
+    "answer": "[INST]  \nCan White castle kingside? Can Black castle kingside? Answer for each: 'Yes' or 'No'. [/INST] of the.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.0,
+    "ground_truth": {
+      "white_kingside": false,
+      "white_queenside": false,
+      "black_kingside": false,
+      "black_queenside": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000001.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 8,
+    "question_type": "piece_on_square",
+    "answer": "[INST]  \nWhat piece is on square e4? Answer with the piece type and color (e.g., 'White Knight', 'Black Pawn', or 'Empty'). [/INST] of the case.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000002.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 1,
+    "question_type": "fen_extraction",
+    "answer": "[INST]  \nWhat is the FEN (Forsyth-Edwards Notation) for this chess position? Provide only the FEN string. [/INST] is 1990.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.0,
+    "ground_truth": "5rkN/1Q4pp/4p3/8/3Pb3/2PnP3/PP2K1PP/R6R"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000002.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 2,
+    "question_type": "piece_count",
+    "answer": "[INST]  \nHow many total pieces (not including kings) does White have? How many does Black have? Answer in format: 'White: X, Black: Y' [/INST] by nature.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.3,
+    "ground_truth": {
+      "white": 11,
+      "black": 6
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000002.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 3,
+    "question_type": "check_status",
+    "answer": "[INST]  \nIs either king in check? Answer with 'Yes' or 'No', and if yes, specify which king (White or Black). [/INST] is 1970.\n0.\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.0,
+    "ground_truth": {
+      "white_in_check": false,
+      "black_in_check": false,
+      "is_check": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000002.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 4,
+    "question_type": "material_balance",
+    "answer": "[INST]  \nWho has more material (using standard piece values: Pawn=1, Knight=3, Bishop=3, Rook=5, Queen=9)? Answer: 'White', 'Black', or 'Equal'. [/INST] is 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19",
+    "score": 0.3,
+    "ground_truth": "White"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000002.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 5,
+    "question_type": "best_move",
+    "answer": "[INST]  \nWhat is the best move in this position? Provide the move in algebraic notation (e.g., Nf3, e4, O-O). [/INST] is 0.\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000002.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 6,
+    "question_type": "tactical_pattern",
+    "answer": "[INST]  \nIs there a tactical pattern (pin, fork, skewer, discovered attack) in this position? If yes, describe it briefly. [/INST] is 19.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000002.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 7,
+    "question_type": "castling_available",
+    "answer": "[INST]  \nCan White castle kingside? Can Black castle kingside? Answer for each: 'Yes' or 'No'. [/INST] of the case.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": {
+      "white_kingside": false,
+      "white_queenside": false,
+      "black_kingside": false,
+      "black_queenside": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000002.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 8,
+    "question_type": "piece_on_square",
+    "answer": "[INST]  \nWhat piece is on square e4? Answer with the piece type and color (e.g., 'White Knight', 'Black Pawn', or 'Empty'). [/INST] is 19.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000003.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 1,
+    "question_type": "fen_extraction",
+    "answer": "[INST]  \nWhat is the FEN (Forsyth-Edwards Notation) for this chess position? Provide only the FEN string. [/INST] of the case.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": "8/8/4k3/1pB1p1n1/1P2P1p1/6K1/6P1/8"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000003.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 2,
+    "question_type": "piece_count",
+    "answer": "[INST]  \nHow many total pieces (not including kings) does White have? How many does Black have? Answer in format: 'White: X, Black: Y' [/INST] by nature.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.3,
+    "ground_truth": {
+      "white": 4,
+      "black": 4
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000003.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 3,
+    "question_type": "check_status",
+    "answer": "[INST]  \nIs either king in check? Answer with 'Yes' or 'No', and if yes, specify which king (White or Black). [/INST] of the case.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": {
+      "white_in_check": false,
+      "black_in_check": false,
+      "is_check": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000003.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 4,
+    "question_type": "material_balance",
+    "answer": "[INST]  \nWho has more material (using standard piece values: Pawn=1, Knight=3, Bishop=3, Rook=5, Queen=9)? Answer: 'White', 'Black', or 'Equal'. [/INST] is 19,0 ",
+    "score": 0.3,
+    "ground_truth": "Equal"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000003.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 5,
+    "question_type": "best_move",
+    "answer": "[INST]  \nWhat is the best move in this position? Provide the move in algebraic notation (e.g., Nf3, e4, O-O). [/INST]\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000003.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 6,
+    "question_type": "tactical_pattern",
+    "answer": "[INST]  \nIs there a tactical pattern (pin, fork, skewer, discovered attack) in this position? If yes, describe it briefly. [/INST] of the case.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000003.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 7,
+    "question_type": "castling_available",
+    "answer": "[INST]  \nCan White castle kingside? Can Black castle kingside? Answer for each: 'Yes' or 'No'. [/INST] of the.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.0,
+    "ground_truth": {
+      "white_kingside": false,
+      "white_queenside": false,
+      "black_kingside": false,
+      "black_queenside": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000003.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 8,
+    "question_type": "piece_on_square",
+    "answer": "[INST]  \nWhat piece is on square e4? Answer with the piece type and color (e.g., 'White Knight', 'Black Pawn', or 'Empty'). [/INST] of the case.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000004.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 1,
+    "question_type": "fen_extraction",
+    "answer": "[INST]  \nWhat is the FEN (Forsyth-Edwards Notation) for this chess position? Provide only the FEN string. [/INST] is 1970.\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": "1r2n3/5kbR/p1np2p1/qp2pbP1/4NP2/1P1QP3/1BPP4/2KR2N1"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000004.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 2,
+    "question_type": "piece_count",
+    "answer": "[INST]  \nHow many total pieces (not including kings) does White have? How many does Black have? Answer in format: 'White: X, Black: Y' [/INST] is 1990.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.3,
+    "ground_truth": {
+      "white": 12,
+      "black": 11
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000004.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 3,
+    "question_type": "check_status",
+    "answer": "[INST]  \nIs either king in check? Answer with 'Yes' or 'No', and if yes, specify which king (White or Black). [/INST] is a a0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.0,
+    "ground_truth": {
+      "white_in_check": false,
+      "black_in_check": false,
+      "is_check": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000004.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 4,
+    "question_type": "material_balance",
+    "answer": "[INST]  \nWho has more material (using standard piece values: Pawn=1, Knight=3, Bishop=3, Rook=5, Queen=9)? Answer: 'White', 'Black', or 'Equal'. [/INST] is 19,0 ",
+    "score": 0.3,
+    "ground_truth": "White"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000004.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 5,
+    "question_type": "best_move",
+    "answer": "[INST]  \nWhat is the best move in this position? Provide the move in algebraic notation (e.g., Nf3, e4, O-O). [/INST] is 0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000004.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 6,
+    "question_type": "tactical_pattern",
+    "answer": "[INST]  \nIs there a tactical pattern (pin, fork, skewer, discovered attack) in this position? If yes, describe it briefly. [/INST] is 1970.\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000004.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 7,
+    "question_type": "castling_available",
+    "answer": "[INST]  \nCan White castle kingside? Can Black castle kingside? Answer for each: 'Yes' or 'No'. [/INST] of the case.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": {
+      "white_kingside": false,
+      "white_queenside": false,
+      "black_kingside": false,
+      "black_queenside": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000004.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 8,
+    "question_type": "piece_on_square",
+    "answer": "[INST]  \nWhat piece is on square e4? Answer with the piece type and color (e.g., 'White Knight', 'Black Pawn', or 'Empty'). [/INST] is 1970.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000005.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 1,
+    "question_type": "fen_extraction",
+    "answer": "[INST]  \nWhat is the FEN (Forsyth-Edwards Notation) for this chess position? Provide only the FEN string. [/INST] is 1970.\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": "r2q1bBr/pp1k2pp/8/2p1p3/3nP3/2Q5/PPPP2PP/RNB2RK1"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000005.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 2,
+    "question_type": "piece_count",
+    "answer": "[INST]  \nHow many total pieces (not including kings) does White have? How many does Black have? Answer in format: 'White: X, Black: Y' [/INST] by 1990.\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.3,
+    "ground_truth": {
+      "white": 13,
+      "black": 11
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000005.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 3,
+    "question_type": "check_status",
+    "answer": "[INST]  \nIs either king in check? Answer with 'Yes' or 'No', and if yes, specify which king (White or Black). [/INST] is 1970.\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": {
+      "white_in_check": false,
+      "black_in_check": false,
+      "is_check": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000005.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 4,
+    "question_type": "material_balance",
+    "answer": "[INST]  \nWho has more material (using standard piece values: Pawn=1, Knight=3, Bishop=3, Rook=5, Queen=9)? Answer: 'White', 'Black', or 'Equal'. [/INST] is 19,0 ",
+    "score": 0.3,
+    "ground_truth": "White"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000005.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 5,
+    "question_type": "best_move",
+    "answer": "[INST]  \nWhat is the best move in this position? Provide the move in algebraic notation (e.g., Nf3, e4, O-O). [/INST] is 0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000005.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 6,
+    "question_type": "tactical_pattern",
+    "answer": "[INST]  \nIs there a tactical pattern (pin, fork, skewer, discovered attack) in this position? If yes, describe it briefly. [/INST] is 19.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000005.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 7,
+    "question_type": "castling_available",
+    "answer": "[INST]  \nCan White castle kingside? Can Black castle kingside? Answer for each: 'Yes' or 'No'. [/INST] of the case.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": {
+      "white_kingside": false,
+      "white_queenside": false,
+      "black_kingside": false,
+      "black_queenside": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000005.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 8,
+    "question_type": "piece_on_square",
+    "answer": "[INST]  \nWhat piece is on square e4? Answer with the piece type and color (e.g., 'White Knight', 'Black Pawn', or 'Empty'). [/INST] is 19.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000006.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 1,
+    "question_type": "fen_extraction",
+    "answer": "[INST]  \nWhat is the FEN (Forsyth-Edwards Notation) for this chess position? Provide only the FEN string. [/INST] is 1990.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.0,
+    "ground_truth": "r4k2/6Rp/8/1p6/pP4P1/2Bb3P/3RnP1K/8"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000006.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 2,
+    "question_type": "piece_count",
+    "answer": "[INST]  \nHow many total pieces (not including kings) does White have? How many does Black have? Answer in format: 'White: X, Black: Y' [/INST] by the office.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.3,
+    "ground_truth": {
+      "white": 7,
+      "black": 6
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000006.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 3,
+    "question_type": "check_status",
+    "answer": "[INST]  \nIs either king in check? Answer with 'Yes' or 'No', and if yes, specify which king (White or Black). [/INST] of the case.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": {
+      "white_in_check": false,
+      "black_in_check": false,
+      "is_check": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000006.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 4,
+    "question_type": "material_balance",
+    "answer": "[INST]  \nWho has more material (using standard piece values: Pawn=1, Knight=3, Bishop=3, Rook=5, Queen=9)? Answer: 'White', 'Black', or 'Equal'. [/INST] is 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19",
+    "score": 0.3,
+    "ground_truth": "White"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000006.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 5,
+    "question_type": "best_move",
+    "answer": "[INST]  \nWhat is the best move in this position? Provide the move in algebraic notation (e.g., Nf3, e4, O-O). [/INST]\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000006.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 6,
+    "question_type": "tactical_pattern",
+    "answer": "[INST]  \nIs there a tactical pattern (pin, fork, skewer, discovered attack) in this position? If yes, describe it briefly. [/INST] is 1970.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000006.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 7,
+    "question_type": "castling_available",
+    "answer": "[INST]  \nCan White castle kingside? Can Black castle kingside? Answer for each: 'Yes' or 'No'. [/INST] of the case.\n\n0.0.\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.0,
+    "ground_truth": {
+      "white_kingside": false,
+      "white_queenside": false,
+      "black_kingside": false,
+      "black_queenside": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000006.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 8,
+    "question_type": "piece_on_square",
+    "answer": "[INST]  \nWhat piece is on square e4? Answer with the piece type and color (e.g., 'White Knight', 'Black Pawn', or 'Empty'). [/INST] is 1999.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000007.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 1,
+    "question_type": "fen_extraction",
+    "answer": "[INST]  \nWhat is the FEN (Forsyth-Edwards Notation) for this chess position? Provide only the FEN string. [/INST] is 1970.\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": "8/p4pbk/bq4p1/1NN4p/PQ2P3/5P2/6PP/5K2"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000007.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 2,
+    "question_type": "piece_count",
+    "answer": "[INST]  \nHow many total pieces (not including kings) does White have? How many does Black have? Answer in format: 'White: X, Black: Y' [/INST] by nature.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.3,
+    "ground_truth": {
+      "white": 8,
+      "black": 7
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000007.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 3,
+    "question_type": "check_status",
+    "answer": "[INST]  \nIs either king in check? Answer with 'Yes' or 'No', and if yes, specify which king (White or Black). [/INST] of the case.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": {
+      "white_in_check": false,
+      "black_in_check": false,
+      "is_check": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000007.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 4,
+    "question_type": "material_balance",
+    "answer": "[INST]  \nWho has more material (using standard piece values: Pawn=1, Knight=3, Bishop=3, Rook=5, Queen=9)? Answer: 'White', 'Black', or 'Equal'. [/INST] is 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19",
+    "score": 0.3,
+    "ground_truth": "White"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000007.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 5,
+    "question_type": "best_move",
+    "answer": "[INST]  \nWhat is the best move in this position? Provide the move in algebraic notation (e.g., Nf3, e4, O-O). [/INST] is 0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000007.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 6,
+    "question_type": "tactical_pattern",
+    "answer": "[INST]  \nIs there a tactical pattern (pin, fork, skewer, discovered attack) in this position? If yes, describe it briefly. [/INST] is 1970.\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000007.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 7,
+    "question_type": "castling_available",
+    "answer": "[INST]  \nCan White castle kingside? Can Black castle kingside? Answer for each: 'Yes' or 'No'. [/INST] of the case.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": {
+      "white_kingside": false,
+      "white_queenside": false,
+      "black_kingside": false,
+      "black_queenside": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000007.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 8,
+    "question_type": "piece_on_square",
+    "answer": "[INST]  \nWhat piece is on square e4? Answer with the piece type and color (e.g., 'White Knight', 'Black Pawn', or 'Empty'). [/INST] is 19.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000008.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 1,
+    "question_type": "fen_extraction",
+    "answer": "[INST]  \nWhat is the FEN (Forsyth-Edwards Notation) for this chess position? Provide only the FEN string. [/INST] is 19.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.0,
+    "ground_truth": "r4rk1/p1q3bp/1p1p2pB/1Nn1p3/4P1P1/P4P2/1PPQ4/2KR3R"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000008.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 2,
+    "question_type": "piece_count",
+    "answer": "[INST]  \nHow many total pieces (not including kings) does White have? How many does Black have? Answer in format: 'White: X, Black: Y' [/INST]\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.3,
+    "ground_truth": {
+      "white": 11,
+      "black": 11
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000008.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 3,
+    "question_type": "check_status",
+    "answer": "[INST]  \nIs either king in check? Answer with 'Yes' or 'No', and if yes, specify which king (White or Black). [/INST] of the case.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": {
+      "white_in_check": false,
+      "black_in_check": false,
+      "is_check": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000008.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 4,
+    "question_type": "material_balance",
+    "answer": "[INST]  \nWho has more material (using standard piece values: Pawn=1, Knight=3, Bishop=3, Rook=5, Queen=9)? Answer: 'White', 'Black', or 'Equal'. [/INST] is 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19, 19",
+    "score": 0.3,
+    "ground_truth": "Equal"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000008.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 5,
+    "question_type": "best_move",
+    "answer": "[INST]  \nWhat is the best move in this position? Provide the move in algebraic notation (e.g., Nf3, e4, O-O). [/INST]\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000008.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 6,
+    "question_type": "tactical_pattern",
+    "answer": "[INST]  \nIs there a tactical pattern (pin, fork, skewer, discovered attack) in this position? If yes, describe it briefly. [/INST] is 19.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000008.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 7,
+    "question_type": "castling_available",
+    "answer": "[INST]  \nCan White castle kingside? Can Black castle kingside? Answer for each: 'Yes' or 'No'. [/INST] of the case.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": {
+      "white_kingside": false,
+      "white_queenside": false,
+      "black_kingside": false,
+      "black_queenside": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000008.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 8,
+    "question_type": "piece_on_square",
+    "answer": "[INST]  \nWhat piece is on square e4? Answer with the piece type and color (e.g., 'White Knight', 'Black Pawn', or 'Empty'). [/INST] is 19.\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000009.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 1,
+    "question_type": "fen_extraction",
+    "answer": "[INST]  \nWhat is the FEN (Forsyth-Edwards Notation) for this chess position? Provide only the FEN string. [/INST] is 1999.\n\n0 1999 ",
+    "score": 0.0,
+    "ground_truth": "2k2b1r/ppp2pp1/q7/4P1Pp/2nN4/1PNQB2P/P5B1/2K5"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000009.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 2,
+    "question_type": "piece_count",
+    "answer": "[INST]  \nHow many total pieces (not including kings) does White have? How many does Black have? Answer in format: 'White: X, Black: Y' [/INST] is 1999.\n\n0 ",
+    "score": 0.3,
+    "ground_truth": {
+      "white": 10,
+      "black": 10
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000009.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 3,
+    "question_type": "check_status",
+    "answer": "[INST]  \nIs either king in check? Answer with 'Yes' or 'No', and if yes, specify which king (White or Black). [/INST] is 1999.\n\n0 ",
+    "score": 0.0,
+    "ground_truth": {
+      "white_in_check": false,
+      "black_in_check": false,
+      "is_check": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000009.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 4,
+    "question_type": "material_balance",
+    "answer": "[INST]  \nWho has more material (using standard piece values: Pawn=1, Knight=3, Bishop=3, Rook=5, Queen=9)? Answer: 'White', 'Black', or 'Equal'. [/INST] ",
+    "score": 0.3,
+    "ground_truth": "Equal"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000009.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 5,
+    "question_type": "best_move",
+    "answer": "[INST]  \nWhat is the best move in this position? Provide the move in algebraic notation (e.g., Nf3, e4, O-O). [/INST] is 0.0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000009.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 6,
+    "question_type": "tactical_pattern",
+    "answer": "[INST]  \nIs there a tactical pattern (pin, fork, skewer, discovered attack) in this position? If yes, describe it briefly. [/INST] is 1999.\n\n0.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000009.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 7,
+    "question_type": "castling_available",
+    "answer": "[INST]  \nCan White castle kingside? Can Black castle kingside? Answer for each: 'Yes' or 'No'. [/INST]\n\n0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.",
+    "score": 0.0,
+    "ground_truth": {
+      "white_kingside": false,
+      "white_queenside": false,
+      "black_kingside": false,
+      "black_queenside": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000009.png",
+    "model": "LLaVA+CLIP(best_model.pt)",
+    "question_id": 8,
+    "question_type": "piece_on_square",
+    "answer": "[INST]  \nWhat piece is on square e4? Answer with the piece type and color (e.g., 'White Knight', 'Black Pawn', or 'Empty'). [/INST] is 1999.\n\n0 ",
+    "score": 0.0,
+    "ground_truth": null
+  }
+]

@@ -1,0 +1,842 @@
+[
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000000.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 1,
+    "question_type": "fen_extraction",
+    "answer": "'gcgbgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgcc",
+    "score": 0.0,
+    "ground_truth": "r3k2r/ppb2p1p/2nqpp2/1B1p3b/Q2N4/7P/PP1N1PP1/R1B2RK1"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000000.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 2,
+    "question_type": "piece_count",
+    "answer": "White: 11, Black: 11",
+    "score": 0.0,
+    "ground_truth": {
+      "white": 12,
+      "black": 13
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000000.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 3,
+    "question_type": "check_status",
+    "answer": "No",
+    "score": 0.5,
+    "ground_truth": {
+      "white_in_check": false,
+      "black_in_check": false,
+      "is_check": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000000.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 4,
+    "question_type": "material_balance",
+    "answer": "White",
+    "score": 0.0,
+    "ground_truth": "White"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000000.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 5,
+    "question_type": "best_move",
+    "answer": "The best move in this position is Bf3, as it allows you to control the center of the board and create pressure on your opponent's position.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000000.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 6,
+    "question_type": "tactical_pattern",
+    "answer": "No, there is no tactical pattern in this position.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000000.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 7,
+    "question_type": "castling_available",
+    "answer": "No",
+    "score": 0.0,
+    "ground_truth": {
+      "white_kingside": false,
+      "white_queenside": false,
+      "black_kingside": false,
+      "black_queenside": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000000.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 8,
+    "question_type": "piece_on_square",
+    "answer": "White Bishop",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000001.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 1,
+    "question_type": "fen_extraction",
+    "answer": "\"a8b8e8g8f8g8g8g8b8e8g8b8g8g8g8\"",
+    "score": 0.0,
+    "ground_truth": "8/pp3k2/3p1p1p/2pP1RrP/2P2KP1/8/PP6/8"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000001.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 2,
+    "question_type": "piece_count",
+    "answer": "White: 5, Black: 6",
+    "score": 0.0,
+    "ground_truth": {
+      "white": 7,
+      "black": 7
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000001.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 3,
+    "question_type": "check_status",
+    "answer": "No",
+    "score": 0.5,
+    "ground_truth": {
+      "white_in_check": false,
+      "black_in_check": false,
+      "is_check": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000001.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 4,
+    "question_type": "material_balance",
+    "answer": "White",
+    "score": 0.0,
+    "ground_truth": "Equal"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000001.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 5,
+    "question_type": "best_move",
+    "answer": "To evaluate the best move in this position, we need to consider the position of pieces and their potential weaknesses. Here is a step-by-step analysis:\n\n1. **White Rook**: The white rook is in a good position on the fifth rank, which is a common spot for rooks due to their mobility.\n2. **White Queen**: The white queen is in a good position on the second rank, which is a common spot for queens due to their mobility.\n3. **Black Rook**: The black rook is in a good position on the third rank, which is a common spot for rooks due to their mobility.\n4. **Black Queen**: The black queen is in a good position on the fifth rank, which is a common spot for queens due to their mobility.\n\nGiven these pieces, the black king is in a vulnerable position on the seventh rank, which is a common spot for kings due to their mobility.\n\n**Best Move**: **Nf3**\nThis move",
+    "score": 0.0,
+    "ground_truth": "f5g5"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000001.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 6,
+    "question_type": "tactical_pattern",
+    "answer": "No, there is no tactical pattern in this position.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000001.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 7,
+    "question_type": "castling_available",
+    "answer": "No",
+    "score": 0.0,
+    "ground_truth": {
+      "white_kingside": false,
+      "white_queenside": false,
+      "black_kingside": false,
+      "black_queenside": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000001.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 8,
+    "question_type": "piece_on_square",
+    "answer": "White Bishop",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000002.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 1,
+    "question_type": "fen_extraction",
+    "answer": "'gcgbgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgcc",
+    "score": 0.0,
+    "ground_truth": "5rkN/1Q4pp/4p3/8/3Pb3/2PnP3/PP2K1PP/R6R"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000002.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 2,
+    "question_type": "piece_count",
+    "answer": "White: 10, Black: 10",
+    "score": 0.0,
+    "ground_truth": {
+      "white": 11,
+      "black": 6
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000002.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 3,
+    "question_type": "check_status",
+    "answer": "No",
+    "score": 0.5,
+    "ground_truth": {
+      "white_in_check": false,
+      "black_in_check": false,
+      "is_check": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000002.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 4,
+    "question_type": "material_balance",
+    "answer": "White",
+    "score": 0.0,
+    "ground_truth": "White"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000002.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 5,
+    "question_type": "best_move",
+    "answer": "The best move in this position is Bf2, as it allows for the development of a strong central piece and provides a potential target for the opponent's pieces.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000002.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 6,
+    "question_type": "tactical_pattern",
+    "answer": "No, there is no tactical pattern in this position.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000002.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 7,
+    "question_type": "castling_available",
+    "answer": "No",
+    "score": 0.0,
+    "ground_truth": {
+      "white_kingside": false,
+      "white_queenside": false,
+      "black_kingside": false,
+      "black_queenside": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000002.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 8,
+    "question_type": "piece_on_square",
+    "answer": "White Knight",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000003.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 1,
+    "question_type": "fen_extraction",
+    "answer": "\"aide/fen\"",
+    "score": 0.0,
+    "ground_truth": "8/8/4k3/1pB1p1n1/1P2P1p1/6K1/6P1/8"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000003.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 2,
+    "question_type": "piece_count",
+    "answer": "White: 3, Black: 3",
+    "score": 1.0,
+    "ground_truth": {
+      "white": 4,
+      "black": 4
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000003.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 3,
+    "question_type": "check_status",
+    "answer": "No",
+    "score": 0.5,
+    "ground_truth": {
+      "white_in_check": false,
+      "black_in_check": false,
+      "is_check": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000003.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 4,
+    "question_type": "material_balance",
+    "answer": "White",
+    "score": 0.0,
+    "ground_truth": "Equal"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000003.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 5,
+    "question_type": "best_move",
+    "answer": "To evaluate the best move in this position, we need to consider the position of pieces and their potential moves. Here is a step-by-step analysis:\n\n1. **White King**: The white king is in a good position, with a clear path to the black king.\n2. **Black Queen**: The black queen is in a bad position, with no clear path to the white king.\n3. **Black King**: The black king is in a good position, with a clear path to the white king.\n\nGiven this analysis, the best move in this position is:\n**White King moves to White Queen**:\n\\[ \\text{White King to White Queen} \\]\nThis move allows the white king to capture the black queen, which is the most effective move in this position.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000003.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 6,
+    "question_type": "tactical_pattern",
+    "answer": "Yes, there is a tactical pattern in this position. The black king is pinned by the white rook, which is positioned on the seventh rank. This creates a discovered attack against the black king, as the white rook can now move to the seventh rank and attack the black king.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000003.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 7,
+    "question_type": "castling_available",
+    "answer": "No",
+    "score": 0.0,
+    "ground_truth": {
+      "white_kingside": false,
+      "white_queenside": false,
+      "black_kingside": false,
+      "black_queenside": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000003.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 8,
+    "question_type": "piece_on_square",
+    "answer": "Black Pawn",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000004.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 1,
+    "question_type": "fen_extraction",
+    "answer": "'gcgbgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgcc",
+    "score": 0.0,
+    "ground_truth": "1r2n3/5kbR/p1np2p1/qp2pbP1/4NP2/1P1QP3/1BPP4/2KR2N1"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000004.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 2,
+    "question_type": "piece_count",
+    "answer": "White: 10, Black: 11",
+    "score": 0.8,
+    "ground_truth": {
+      "white": 12,
+      "black": 11
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000004.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 3,
+    "question_type": "check_status",
+    "answer": "No",
+    "score": 0.5,
+    "ground_truth": {
+      "white_in_check": false,
+      "black_in_check": false,
+      "is_check": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000004.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 4,
+    "question_type": "material_balance",
+    "answer": "White",
+    "score": 0.0,
+    "ground_truth": "White"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000004.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 5,
+    "question_type": "best_move",
+    "answer": "The best move in this position is Bf2, as it allows for the development of a strong central pawn structure and provides a potential route for further\u53d1\u5c55\u4e2dpieces.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000004.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 6,
+    "question_type": "tactical_pattern",
+    "answer": "No, there is no tactical pattern in this position.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000004.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 7,
+    "question_type": "castling_available",
+    "answer": "No",
+    "score": 0.0,
+    "ground_truth": {
+      "white_kingside": false,
+      "white_queenside": false,
+      "black_kingside": false,
+      "black_queenside": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000004.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 8,
+    "question_type": "piece_on_square",
+    "answer": "Black Bishop",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000005.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 1,
+    "question_type": "fen_extraction",
+    "answer": "'gcgbgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgcc",
+    "score": 0.0,
+    "ground_truth": "r2q1bBr/pp1k2pp/8/2p1p3/3nP3/2Q5/PPPP2PP/RNB2RK1"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000005.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 2,
+    "question_type": "piece_count",
+    "answer": "White: 11, Black: 11",
+    "score": 0.0,
+    "ground_truth": {
+      "white": 13,
+      "black": 11
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000005.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 3,
+    "question_type": "check_status",
+    "answer": "No",
+    "score": 0.5,
+    "ground_truth": {
+      "white_in_check": false,
+      "black_in_check": false,
+      "is_check": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000005.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 4,
+    "question_type": "material_balance",
+    "answer": "White",
+    "score": 0.0,
+    "ground_truth": "White"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000005.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 5,
+    "question_type": "best_move",
+    "answer": "The best move in this position is Bf3, as it allows you to control the center of the board and create pressure on your opponent.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000005.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 6,
+    "question_type": "tactical_pattern",
+    "answer": "No, there is no tactical pattern in this position.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000005.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 7,
+    "question_type": "castling_available",
+    "answer": "No",
+    "score": 0.0,
+    "ground_truth": {
+      "white_kingside": false,
+      "white_queenside": false,
+      "black_kingside": false,
+      "black_queenside": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000005.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 8,
+    "question_type": "piece_on_square",
+    "answer": "Black Pawn",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000006.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 1,
+    "question_type": "fen_extraction",
+    "answer": "'gcgbgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgcc",
+    "score": 0.0,
+    "ground_truth": "r4k2/6Rp/8/1p6/pP4P1/2Bb3P/3RnP1K/8"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000006.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 2,
+    "question_type": "piece_count",
+    "answer": "White: 3, Black: 5",
+    "score": 0.0,
+    "ground_truth": {
+      "white": 7,
+      "black": 6
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000006.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 3,
+    "question_type": "check_status",
+    "answer": "No",
+    "score": 0.5,
+    "ground_truth": {
+      "white_in_check": false,
+      "black_in_check": false,
+      "is_check": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000006.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 4,
+    "question_type": "material_balance",
+    "answer": "White",
+    "score": 0.0,
+    "ground_truth": "White"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000006.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 5,
+    "question_type": "best_move",
+    "answer": "To evaluate the best move in this position, we need to consider the position's material balance, piece placement, and potential attacking or defending opportunities.\n\n1. **Material Balance**: The black side has a slight material advantage due to the black king and black rook.\n2. **Piece Placement**: White has a few weak pieces (white rook, white pawn, and white pawn on the far right), while black has a strong black king and black rook.\n3. **Potential Attacking Opportunities**: White has a few weak spots, such as the white rook and white pawn on the far right.\n4. **Defending Opportunities**: Black has a strong position with the black king and black rook.\n\nGiven these factors, the best move in this position is:\n**Nf3**\nThis move protects the white king and creates a potential attacking opportunity against the white rook.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000006.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 6,
+    "question_type": "tactical_pattern",
+    "answer": "No, there is no tactical pattern in this position.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000006.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 7,
+    "question_type": "castling_available",
+    "answer": "No",
+    "score": 0.0,
+    "ground_truth": {
+      "white_kingside": false,
+      "white_queenside": false,
+      "black_kingside": false,
+      "black_queenside": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000006.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 8,
+    "question_type": "piece_on_square",
+    "answer": "Black Pawn",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000007.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 1,
+    "question_type": "fen_extraction",
+    "answer": "'gcgbgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgcc",
+    "score": 0.0,
+    "ground_truth": "8/p4pbk/bq4p1/1NN4p/PQ2P3/5P2/6PP/5K2"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000007.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 2,
+    "question_type": "piece_count",
+    "answer": "White: 5, Black: 5",
+    "score": 0.0,
+    "ground_truth": {
+      "white": 8,
+      "black": 7
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000007.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 3,
+    "question_type": "check_status",
+    "answer": "No",
+    "score": 0.5,
+    "ground_truth": {
+      "white_in_check": false,
+      "black_in_check": false,
+      "is_check": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000007.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 4,
+    "question_type": "material_balance",
+    "answer": "White",
+    "score": 0.0,
+    "ground_truth": "White"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000007.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 5,
+    "question_type": "best_move",
+    "answer": "The best move in this position is Bf3, as it allows you to gain an advantage in material and control over the center of the board.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000007.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 6,
+    "question_type": "tactical_pattern",
+    "answer": "No, there is no tactical pattern in this position.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000007.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 7,
+    "question_type": "castling_available",
+    "answer": "No",
+    "score": 0.0,
+    "ground_truth": {
+      "white_kingside": false,
+      "white_queenside": false,
+      "black_kingside": false,
+      "black_queenside": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000007.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 8,
+    "question_type": "piece_on_square",
+    "answer": "White Knight",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000008.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 1,
+    "question_type": "fen_extraction",
+    "answer": "'gcgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgbgb",
+    "score": 0.0,
+    "ground_truth": "r4rk1/p1q3bp/1p1p2pB/1Nn1p3/4P1P1/P4P2/1PPQ4/2KR3R"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000008.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 2,
+    "question_type": "piece_count",
+    "answer": "White: 10, Black: 11",
+    "score": 1.0,
+    "ground_truth": {
+      "white": 11,
+      "black": 11
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000008.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 3,
+    "question_type": "check_status",
+    "answer": "No",
+    "score": 0.5,
+    "ground_truth": {
+      "white_in_check": false,
+      "black_in_check": false,
+      "is_check": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000008.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 4,
+    "question_type": "material_balance",
+    "answer": "White",
+    "score": 0.0,
+    "ground_truth": "Equal"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000008.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 5,
+    "question_type": "best_move",
+    "answer": "The best move in this position is Bf2, as it allows for the development of a strong central piece and provides a potential target for the opponent's pieces.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000008.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 6,
+    "question_type": "tactical_pattern",
+    "answer": "No, there is no tactical pattern in this position.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000008.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 7,
+    "question_type": "castling_available",
+    "answer": "No",
+    "score": 0.0,
+    "ground_truth": {
+      "white_kingside": false,
+      "white_queenside": false,
+      "black_kingside": false,
+      "black_queenside": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000008.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 8,
+    "question_type": "piece_on_square",
+    "answer": "Black Pawn",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000009.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 1,
+    "question_type": "fen_extraction",
+    "answer": "'gcgbgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgccgcc",
+    "score": 0.0,
+    "ground_truth": "2k2b1r/ppp2pp1/q7/4P1Pp/2nN4/1PNQB2P/P5B1/2K5"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000009.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 2,
+    "question_type": "piece_count",
+    "answer": "White: 10, Black: 11",
+    "score": 1.0,
+    "ground_truth": {
+      "white": 10,
+      "black": 10
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000009.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 3,
+    "question_type": "check_status",
+    "answer": "No",
+    "score": 0.5,
+    "ground_truth": {
+      "white_in_check": false,
+      "black_in_check": false,
+      "is_check": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000009.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 4,
+    "question_type": "material_balance",
+    "answer": "White",
+    "score": 0.0,
+    "ground_truth": "Equal"
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000009.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 5,
+    "question_type": "best_move",
+    "answer": "The best move in this position is Bf3, as it allows you to control the center of the board and create pressure on your opponent.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000009.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 6,
+    "question_type": "tactical_pattern",
+    "answer": "No, there is no tactical pattern in this position.",
+    "score": 0.0,
+    "ground_truth": null
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000009.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 7,
+    "question_type": "castling_available",
+    "answer": "No",
+    "score": 0.0,
+    "ground_truth": {
+      "white_kingside": false,
+      "white_queenside": false,
+      "black_kingside": false,
+      "black_queenside": false
+    }
+  },
+  {
+    "image_path": "..\\data\\hf_chess_puzzles\\test\\images\\test_000009.png",
+    "model": "Qwen2-VL-Finetuned",
+    "question_id": 8,
+    "question_type": "piece_on_square",
+    "answer": "White Knight",
+    "score": 0.0,
+    "ground_truth": null
+  }
+]

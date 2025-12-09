@@ -1,0 +1,56 @@
+{
+  "overall": {
+    "total_tests": 80,
+    "avg_score": 0.11000000000000001,
+    "accuracy": 3.75
+  },
+  "by_model": {
+    "Qwen2-VL-Finetuned": {
+      "avg_score": 0.11000000000000001,
+      "accuracy": 3.75,
+      "total_tests": 80
+    }
+  },
+  "by_question_type": {
+    "fen_extraction": {
+      "avg_score": 0.0,
+      "accuracy": 0.0,
+      "total_tests": 10
+    },
+    "piece_count": {
+      "avg_score": 0.38,
+      "accuracy": 30.0,
+      "total_tests": 10
+    },
+    "check_status": {
+      "avg_score": 0.5,
+      "accuracy": 0.0,
+      "total_tests": 10
+    },
+    "material_balance": {
+      "avg_score": 0.0,
+      "accuracy": 0.0,
+      "total_tests": 10
+    },
+    "best_move": {
+      "avg_score": 0.0,
+      "accuracy": 0.0,
+      "total_tests": 10
+    },
+    "tactical_pattern": {
+      "avg_score": 0.0,
+      "accuracy": 0.0,
+      "total_tests": 10
+    },
+    "castling_available": {
+      "avg_score": 0.0,
+      "accuracy": 0.0,
+      "total_tests": 10
+    },
+    "piece_on_square": {
+      "avg_score": 0.0,
+      "accuracy": 0.0,
+      "total_tests": 10
+    }
+  }
+}
