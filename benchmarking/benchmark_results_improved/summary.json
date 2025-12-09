@@ -1,0 +1,56 @@
+{
+  "overall": {
+    "total_tests": 8,
+    "avg_score": 0.075,
+    "accuracy": 0.0
+  },
+  "by_model": {
+    "LLaVA+CLIP(best_model.pt)": {
+      "avg_score": 0.075,
+      "accuracy": 0.0,
+      "total_tests": 8
+    }
+  },
+  "by_question_type": {
+    "fen_extraction": {
+      "avg_score": 0.0,
+      "accuracy": 0.0,
+      "total_tests": 1
+    },
+    "piece_count": {
+      "avg_score": 0.3,
+      "accuracy": 0.0,
+      "total_tests": 1
+    },
+    "check_status": {
+      "avg_score": 0.0,
+      "accuracy": 0.0,
+      "total_tests": 1
+    },
+    "material_balance": {
+      "avg_score": 0.3,
+      "accuracy": 0.0,
+      "total_tests": 1
+    },
+    "best_move": {
+      "avg_score": 0.0,
+      "accuracy": 0.0,
+      "total_tests": 1
+    },
+    "tactical_pattern": {
+      "avg_score": 0.0,
+      "accuracy": 0.0,
+      "total_tests": 1
+    },
+    "castling_available": {
+      "avg_score": 0.0,
+      "accuracy": 0.0,
+      "total_tests": 1
+    },
+    "piece_on_square": {
+      "avg_score": 0.0,
+      "accuracy": 0.0,
+      "total_tests": 1
+    }
+  }
+}

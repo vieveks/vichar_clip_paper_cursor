@@ -139,7 +139,8 @@ class JSONDataset(Dataset):
             'grid_target': grid_target,
             'to_move': torch.tensor(to_move, dtype=torch.long),
             'castling': castling,
-            'fen': sample['fen']
+            'fen': sample['fen'],
+            'image_path': sample['image_path']  # Include for prediction export
         }
     
     def _json_to_grid_target(self, json_repr: Dict) -> torch.Tensor:
