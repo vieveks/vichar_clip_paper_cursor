@@ -1,0 +1,166 @@
+{
+  "experiment": "Experiment B: Symbolic Refinement",
+  "checkpoint": "../../Improved_representations/checkpoints/json_predictor/best_model.pt",
+  "test_data": "../../Improved_representations/data/json_dataset/test.jsonl",
+  "confidence_threshold": 0.5,
+  "before_refinement": {
+    "per_square_accuracy": 0.75625,
+    "exact_board_match": 0.0,
+    "fen_exact_match": 0.0,
+    "valid_json_rate": 0.0,
+    "to_move_accuracy": 1.0,
+    "castling_accuracy": 1.0,
+    "total_samples": 5,
+    "per_piece_type": {
+      "empty": {
+        "accuracy": 0.9730941704035875,
+        "total": 223,
+        "correct": 217
+      },
+      "white_pawn": {
+        "accuracy": 0.4074074074074074,
+        "total": 27,
+        "correct": 11
+      },
+      "white_knight": {
+        "accuracy": 0.2,
+        "total": 5,
+        "correct": 1
+      },
+      "white_bishop": {
+        "accuracy": 0.0,
+        "total": 4,
+        "correct": 0
+      },
+      "white_rook": {
+        "accuracy": 0.2857142857142857,
+        "total": 7,
+        "correct": 2
+      },
+      "white_queen": {
+        "accuracy": 0.0,
+        "total": 3,
+        "correct": 0
+      },
+      "white_king": {
+        "accuracy": 0.0,
+        "total": 5,
+        "correct": 0
+      },
+      "black_pawn": {
+        "accuracy": 0.3333333333333333,
+        "total": 24,
+        "correct": 8
+      },
+      "black_knight": {
+        "accuracy": 0.0,
+        "total": 5,
+        "correct": 0
+      },
+      "black_bishop": {
+        "accuracy": 0.2,
+        "total": 5,
+        "correct": 1
+      },
+      "black_rook": {
+        "accuracy": 0.2,
+        "total": 5,
+        "correct": 1
+      },
+      "black_queen": {
+        "accuracy": 0.5,
+        "total": 2,
+        "correct": 1
+      },
+      "black_king": {
+        "accuracy": 0.0,
+        "total": 5,
+        "correct": 0
+      }
+    }
+  },
+  "after_refinement": {
+    "per_square_accuracy": 0.75625,
+    "exact_board_match": 0.0,
+    "fen_exact_match": 0.0,
+    "valid_json_rate": 0.6,
+    "to_move_accuracy": 1.0,
+    "castling_accuracy": 1.0,
+    "total_samples": 5,
+    "per_piece_type": {
+      "empty": {
+        "accuracy": 0.9730941704035875,
+        "total": 223,
+        "correct": 217
+      },
+      "white_pawn": {
+        "accuracy": 0.4074074074074074,
+        "total": 27,
+        "correct": 11
+      },
+      "white_knight": {
+        "accuracy": 0.2,
+        "total": 5,
+        "correct": 1
+      },
+      "white_bishop": {
+        "accuracy": 0.0,
+        "total": 4,
+        "correct": 0
+      },
+      "white_rook": {
+        "accuracy": 0.2857142857142857,
+        "total": 7,
+        "correct": 2
+      },
+      "white_queen": {
+        "accuracy": 0.0,
+        "total": 3,
+        "correct": 0
+      },
+      "white_king": {
+        "accuracy": 0.0,
+        "total": 5,
+        "correct": 0
+      },
+      "black_pawn": {
+        "accuracy": 0.3333333333333333,
+        "total": 24,
+        "correct": 8
+      },
+      "black_knight": {
+        "accuracy": 0.0,
+        "total": 5,
+        "correct": 0
+      },
+      "black_bishop": {
+        "accuracy": 0.2,
+        "total": 5,
+        "correct": 1
+      },
+      "black_rook": {
+        "accuracy": 0.2,
+        "total": 5,
+        "correct": 1
+      },
+      "black_queen": {
+        "accuracy": 0.5,
+        "total": 2,
+        "correct": 1
+      },
+      "black_king": {
+        "accuracy": 0.0,
+        "total": 5,
+        "correct": 0
+      }
+    }
+  },
+  "improvements": {
+    "exact_match_improvement": 0.0,
+    "exact_match_improvement_x": Infinity,
+    "fen_exact_match_improvement": 0.0,
+    "fen_exact_match_improvement_x": Infinity,
+    "per_square_improvement": 0.0,
+    "valid_json_improvement": 0.6
+  }
+}

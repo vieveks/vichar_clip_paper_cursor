@@ -1,0 +1,18 @@
+{
+  "mean_cp_loss": 0.0,
+  "std_cp_loss": 0.0,
+  "median_cp_loss": 0.0,
+  "min_cp_loss": 0.0,
+  "max_cp_loss": 0.0,
+  "percentiles": {
+    "25th": 0.0,
+    "50th": 0.0,
+    "75th": 0.0,
+    "90th": 0.0,
+    "95th": 0.0,
+    "99th": 0.0
+  },
+  "total_samples": 10,
+  "successful_evaluations": 10,
+  "failed_evaluations": 0
+}

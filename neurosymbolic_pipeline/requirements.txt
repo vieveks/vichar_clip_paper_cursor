@@ -1,0 +1,20 @@
+# Requirements for Neurosymbolic Pipeline
+
+# Core dependencies (should already be in project)
+torch>=1.9.0
+numpy>=1.21.0
+python-chess>=1.999
+Pillow>=8.0.0
+tqdm>=4.60.0
+
+# Experiment A: Lichess API (via benchmarking/ground_truth.py)
+requests>=2.25.0  # For Lichess Cloud Evaluation API
+
+# Note: Lichess API is free and provides Stockfish evaluation
+# No need to install Stockfish binary separately
+# Or use python-chess built-in evaluation (less accurate but sufficient)
+
+# For VLM integration (Experiment C)
+# These should already be available if using existing benchmarking code
+# transformers>=4.20.0  # If needed for VLM calls
+
