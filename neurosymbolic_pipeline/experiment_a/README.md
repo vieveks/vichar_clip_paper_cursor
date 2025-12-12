@@ -38,9 +38,9 @@ python evaluate_cp_loss.py \
 ### Parameters
 
 - `--predictions`: Path to predictions JSONL file (from Exp 1B)
-- `--use_lichess_api`: Use Lichess Cloud Evaluation API (default: True, recommended)
-- `--no_lichess_api`: Disable Lichess API and use python-chess simple evaluation
-- `--depth`: Search depth for Stockfish evaluation (default: 15, used by Lichess API)
+- `--stockfish_path`: Path to Stockfish executable (optional, auto-detects from PATH)
+- `--use_lichess_api`: Try Lichess API as fallback (default: False, endpoint may be deprecated)
+- `--depth`: Search depth for Stockfish evaluation (default: 15)
 - `--max_samples`: Maximum samples to evaluate (default: all)
 - `--output`: Output path for results JSON (default: `../results/exp_a/cp_loss_results.json`)
 
@@ -60,8 +60,11 @@ Results are saved to `neurosymbolic_pipeline/results/exp_a/cp_loss_results.json`
 ## Notes
 
 - Uses read-only access to existing predictions
-- Uses Lichess Cloud Evaluation API (free, accurate Stockfish evaluation)
-- Falls back to python-chess simple evaluation if API unavailable
-- Rate limiting handled automatically by GroundTruthExtractor
+- **Priority 1**: Local Stockfish binary (most accurate, recommended)
+- **Priority 2**: Lichess Cloud Evaluation API (may be unavailable - endpoint deprecated)
+- **Priority 3**: Python-chess simple material evaluation (fallback, less accurate)
+
+**Note**: Lichess cloud-eval endpoint (`/api/cloud-eval`) appears to be deprecated/removed (returns 404).
+For accurate CP loss evaluation, install Stockfish locally: https://stockfishchess.org/download/
 - All results stored in isolated `results/` directory
 

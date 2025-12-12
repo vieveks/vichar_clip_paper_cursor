@@ -1,18 +1,25 @@
 """
 Stockfish evaluation module for Experiment A.
 
-Evaluates chess positions using Lichess Cloud Evaluation API (Stockfish engine) 
-and calculates CP (centipawn) loss.
+Evaluates chess positions using Stockfish engine and calculates CP (centipawn) loss.
 
-Uses the Lichess API implementation from benchmarking/ground_truth.py.
+Priority order:
+1. Local Stockfish binary (via python-chess) - Most accurate, recommended
+2. Lichess Cloud Evaluation API - May be unavailable (404 errors reported)
+3. Python-chess simple material evaluation - Fallback, less accurate
+
+Note: Lichess cloud-eval endpoint appears to be deprecated/removed (returns 404).
+For best results, install Stockfish binary locally.
 """
 
 import chess
+import chess.engine
 import sys
 from pathlib import Path
 from typing import Optional, Dict, Tuple
+import shutil
 
-# Import Lichess API evaluator from existing benchmarking code
+# Import Lichess API evaluator from existing benchmarking code (optional)
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "benchmarking"))
 try:
@@ -24,34 +31,53 @@ except ImportError:
 class StockfishEvaluator:
     """Evaluates chess positions using Lichess Cloud Evaluation API (Stockfish)."""
     
-    def __init__(self, use_lichess_api: bool = True, depth: int = 15):
+    def __init__(self, stockfish_path: Optional[str] = None, use_lichess_api: bool = False, depth: int = 15):
         """
         Initialize Stockfish evaluator.
         
         Args:
-            use_lichess_api: If True, use Lichess Cloud Evaluation API (recommended)
-                            If False, use python-chess simple evaluation (fallback)
-            depth: Search depth for evaluation (used by Lichess API)
+            stockfish_path: Path to Stockfish executable (None = auto-detect or use fallback)
+            use_lichess_api: If True, try Lichess API as fallback (may be unavailable)
+            depth: Search depth for evaluation
         """
         self.depth = depth
+        self.stockfish_path = stockfish_path
+        self.engine = None
         self.use_lichess_api = use_lichess_api
         self.lichess_extractor = None
         
-        # Try to initialize Lichess API evaluator
+        # Priority 1: Try to initialize local Stockfish engine
+        if stockfish_path and Path(stockfish_path).exists():
+            try:
+                self.engine = chess.engine.SimpleEngine.popen_uci(stockfish_path)
+                print(f"Using local Stockfish binary at {stockfish_path} (depth={depth})")
+                return
+            except Exception as e:
+                print(f"Warning: Could not initialize Stockfish at {stockfish_path}: {e}")
+        
+        # Auto-detect Stockfish in PATH
+        stockfish_cmd = shutil.which("stockfish")
+        if stockfish_cmd:
+            try:
+                self.engine = chess.engine.SimpleEngine.popen_uci(stockfish_cmd)
+                print(f"Using Stockfish from PATH: {stockfish_cmd} (depth={depth})")
+                return
+            except Exception as e:
+                print(f"Warning: Could not initialize Stockfish from PATH: {e}")
+        
+        # Priority 2: Try Lichess API (may be unavailable)
         if use_lichess_api and GroundTruthExtractor is not None:
             try:
                 self.lichess_extractor = GroundTruthExtractor()
                 print(f"Using Lichess Cloud Evaluation API (depth={depth})")
+                print("Note: Lichess API may return 404 errors - endpoint may be deprecated")
+                return
             except Exception as e:
                 print(f"Warning: Could not initialize Lichess API: {e}")
-                print("Falling back to python-chess simple evaluation")
-                self.use_lichess_api = False
-        else:
-            if not use_lichess_api:
-                print("Using python-chess built-in evaluation (simple material-based)")
-            else:
-                print("Lichess API not available, using python-chess built-in evaluation")
-                self.use_lichess_api = False
+        
+        # Priority 3: Fallback to simple evaluation
+        print("Using python-chess built-in evaluation (simple material-based)")
+        print("For accurate CP loss, install Stockfish: https://stockfishchess.org/download/")
     
     def evaluate_position(self, fen: str) -> Optional[float]:
         """
@@ -65,34 +91,43 @@ class StockfishEvaluator:
             None if evaluation fails
         """
         try:
+            board = chess.Board(fen)
+            
+            # Priority 1: Local Stockfish engine
+            if self.engine is not None:
+                try:
+                    info = self.engine.analyse(board, chess.engine.Limit(depth=self.depth))
+                    if 'score' in info:
+                        score = info['score']
+                        if score.is_mate():
+                            # Convert mate score to large CP value
+                            mate_ply = score.mate()
+                            return 10000 if mate_ply > 0 else -10000
+                        else:
+                            return score.score()  # Already in centipawns
+                except Exception as e:
+                    print(f"Error with Stockfish engine: {e}")
+                    # Fall through to next method
+            
+            # Priority 2: Lichess API (may be unavailable)
             if self.use_lichess_api and self.lichess_extractor is not None:
-                # Use Lichess Cloud Evaluation API (Stockfish engine)
                 try:
                     eval_result = self.lichess_extractor.get_position_evaluation(fen, depth=self.depth)
-                    if eval_result is None:
-                        # API returned None, fall back to simple evaluation
-                        board = chess.Board(fen)
-                        return self._simple_evaluation(board)
-                    
-                    # Handle mate scores
-                    if eval_result.get('mate') is not None:
-                        mate_ply = eval_result['mate']
-                        return 10000 if mate_ply > 0 else -10000
-                    
-                    # Return CP score (already in centipawns)
-                    return eval_result.get('score', 0)
-                except Exception as api_error:
-                    # If API fails, fall back to simple evaluation silently
-                    # (errors are already logged by GroundTruthExtractor)
-                    board = chess.Board(fen)
-                    return self._simple_evaluation(board)
-            else:
-                # Fallback: Use python-chess simple evaluation
-                board = chess.Board(fen)
-                return self._simple_evaluation(board)
+                    if eval_result is not None:
+                        # Handle mate scores
+                        if eval_result.get('mate') is not None:
+                            mate_ply = eval_result['mate']
+                            return 10000 if mate_ply > 0 else -10000
+                        # Return CP score (already in centipawns)
+                        return eval_result.get('score', 0)
+                except Exception:
+                    # API failed, fall through to simple evaluation
+                    pass
+            
+            # Priority 3: Simple material-based evaluation
+            return self._simple_evaluation(board)
         
         except Exception as e:
-            # Final fallback if even simple evaluation fails
             print(f"Error evaluating position {fen[:50]}...: {e}")
             return None
     
@@ -150,7 +185,10 @@ class StockfishEvaluator:
         return abs(pred_score - gt_score)
     
     def close(self):
-        """Close any connections (Lichess API doesn't need explicit closing)."""
-        # Lichess API uses HTTP requests, no persistent connection to close
-        pass
+        """Close the engine connection."""
+        if self.engine is not None:
+            try:
+                self.engine.quit()
+            except:
+                pass
 

@@ -147,12 +147,12 @@ def main():
                         help='Path to predictions JSONL file (e.g., Improved_representations/results/predictions_clip_exp1b.jsonl)')
     parser.add_argument('--output', type=str, default='neurosymbolic_pipeline/results/exp_a/cp_loss_results.json',
                         help='Output path for results')
-    parser.add_argument('--use_lichess_api', action='store_true', default=True,
-                        help='Use Lichess Cloud Evaluation API (default: True, recommended)')
-    parser.add_argument('--no_lichess_api', dest='use_lichess_api', action='store_false',
-                        help='Disable Lichess API and use python-chess simple evaluation')
+    parser.add_argument('--stockfish_path', type=str, default=None,
+                        help='Path to Stockfish executable (auto-detect from PATH if not provided)')
+    parser.add_argument('--use_lichess_api', action='store_true', default=False,
+                        help='Try Lichess API as fallback (may be unavailable, endpoint deprecated)')
     parser.add_argument('--depth', type=int, default=15,
-                        help='Search depth for Stockfish evaluation (Lichess API)')
+                        help='Search depth for Stockfish evaluation')
     parser.add_argument('--max_samples', type=int, default=None,
                         help='Maximum samples to evaluate (None = all)')
     
@@ -164,8 +164,12 @@ def main():
     print(f"Loaded {len(predictions)} predictions")
     
     # Initialize evaluator
-    print(f"Initializing Stockfish evaluator (depth={args.depth}, use_lichess_api={args.use_lichess_api})...")
-    evaluator = StockfishEvaluator(use_lichess_api=args.use_lichess_api, depth=args.depth)
+    print(f"Initializing Stockfish evaluator (depth={args.depth})...")
+    evaluator = StockfishEvaluator(
+        stockfish_path=args.stockfish_path,
+        use_lichess_api=args.use_lichess_api,
+        depth=args.depth
+    )
     
     try:
         # Evaluate CP loss
@@ -184,19 +188,16 @@ def main():
         print(f"\nSuccessful evaluations: {results['successful_evaluations']}/{results['total_samples']}")
         
         # Check target
-    if results['mean_cp_loss'] is not None:
-        target = 150
-        mean_loss = results['mean_cp_loss']
-        std_loss = results['std_cp_loss'] if results['std_cp_loss'] is not None else 0.0
-        print(f"\nMean CP Loss: {mean_loss:.2f} ± {std_loss:.2f}")
-        print(f"Median CP Loss: {mean_loss:.2f}")
-        print(f"Min/Max CP Loss: {results['min_cp_loss']:.2f} / {results['max_cp_loss']:.2f}")
-        if mean_loss < target:
-            print(f"\nSUCCESS: Mean CP loss ({mean_loss:.2f}) < target ({target})")
+        if results['mean_cp_loss'] is not None:
+            target = 150
+            mean_loss = results['mean_cp_loss']
+            std_loss = results['std_cp_loss'] if results['std_cp_loss'] is not None else 0.0
+            if mean_loss < target:
+                print(f"\nSUCCESS: Mean CP loss ({mean_loss:.2f}) < target ({target})")
+            else:
+                print(f"\nWARNING: Mean CP loss ({mean_loss:.2f}) >= target ({target})")
         else:
-            print(f"\nWARNING: Mean CP loss ({mean_loss:.2f}) >= target ({target})")
-    else:
-        print("\nWARNING: No valid CP loss calculations (all evaluations failed)")
+            print("\nWARNING: No valid CP loss calculations (all evaluations failed)")
         
         # Save results
         output_path = Path(args.output)
