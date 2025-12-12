@@ -3,6 +3,11 @@ Evaluation script for Experiment A: Stockfish CP Loss Validation
 
 Evaluates predicted FENs from Exp 1B and calculates CP loss vs ground truth.
 Target: Mean CP loss < 150 (expected ~127 ± 89).
+
+Uses:
+1. Local Stockfish binary (if available)
+2. Lichess Cloud Eval API (free, high depth 40-70)
+3. Simple material evaluation (fallback)
 """
 
 import argparse
@@ -28,26 +33,81 @@ sys.path.insert(0, str(Path(__file__).parent))
 from stockfish_evaluator import StockfishEvaluator
 
 
-def load_predictions(predictions_path: str) -> List[Dict]:
-    """Load predictions from JSONL file."""
+def load_predictions_with_ground_truth(predictions_path: str, test_data_path: Optional[str] = None) -> List[Dict]:
+    """
+    Load predictions from JSONL file and match with ground truth.
+    
+    Args:
+        predictions_path: Path to predictions JSONL file
+        test_data_path: Path to test dataset JSONL (for ground truth FEN)
+    
+    Returns:
+        List of dicts with 'predicted_fen' and 'ground_truth_fen'
+    """
+    # Load predictions
     predictions = []
     with open(predictions_path, 'r', encoding='utf-8') as f:
         for line in f:
             line = line.strip()
             if line:
-                pred = json.loads(line)
-                # Handle different JSONL formats
-                # Format 1: {"predicted_json": {...}, "predicted_fen": "..."}
-                # Format 2: {"pred_json": {...}, "true_fen": "..."}
-                # Format 3: {"json_pred": {...}, "fen": "..."}
-                if 'predicted_json' in pred:
-                    pred['pred_json'] = pred['predicted_json']
-                    pred['true_fen'] = pred.get('predicted_fen', '')
-                elif 'json_pred' in pred:
-                    pred['pred_json'] = pred['json_pred']
-                    pred['true_fen'] = pred.get('fen', '')
-                predictions.append(pred)
-    return predictions
+                predictions.append(json.loads(line))
+    
+    # Load ground truth if available
+    ground_truth = {}
+    if test_data_path and Path(test_data_path).exists():
+        with open(test_data_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if line:
+                    gt = json.loads(line)
+                    # Use image_path as key for matching
+                    image_path = gt.get('image_path', '')
+                    # Normalize path separators
+                    image_path = image_path.replace('\\', '/').replace('//', '/')
+                    ground_truth[image_path] = gt.get('fen', '')
+        print(f"Loaded {len(ground_truth)} ground truth FENs from {test_data_path}")
+    
+    # Match predictions with ground truth
+    results = []
+    matched = 0
+    for pred in predictions:
+        image_path = pred.get('image_path', '')
+        # Normalize path separators
+        image_path_normalized = image_path.replace('\\', '/').replace('//', '/')
+        
+        # Get predicted FEN
+        predicted_fen = pred.get('predicted_fen', '')
+        if not predicted_fen and 'predicted_json' in pred:
+            # Derive FEN from JSON if needed
+            try:
+                predicted_fen = json_to_fen(pred['predicted_json'])
+            except:
+                pass
+        
+        # Get ground truth FEN
+        gt_fen = ground_truth.get(image_path_normalized, '')
+        if not gt_fen:
+            # Try without 'data/' prefix
+            alt_path = image_path_normalized.lstrip('data/')
+            gt_fen = ground_truth.get(alt_path, '')
+        if not gt_fen:
+            # Try with 'data/' prefix
+            alt_path = 'data/' + image_path_normalized.lstrip('data/')
+            gt_fen = ground_truth.get(alt_path, '')
+        
+        if gt_fen:
+            matched += 1
+        
+        results.append({
+            'image_path': image_path,
+            'predicted_fen': predicted_fen,
+            'ground_truth_fen': gt_fen
+        })
+    
+    if ground_truth:
+        print(f"Matched {matched}/{len(predictions)} predictions with ground truth")
+    
+    return results
 
 
 def evaluate_cp_loss(
@@ -59,7 +119,7 @@ def evaluate_cp_loss(
     Evaluate CP loss for all predictions.
     
     Args:
-        predictions: List of prediction dicts with 'pred_json' and 'true_fen'
+        predictions: List of prediction dicts with 'predicted_fen' and 'ground_truth_fen'
         evaluator: StockfishEvaluator instance
         max_samples: Maximum samples to evaluate (None = all)
     
@@ -71,32 +131,26 @@ def evaluate_cp_loss(
     
     cp_losses = []
     failed_evaluations = 0
+    no_ground_truth = 0
     
     print(f"Evaluating {len(predictions)} positions...")
     
     for pred in tqdm(predictions, desc="Calculating CP loss"):
-        # Get predicted FEN from JSON
         try:
-            pred_json = pred.get('pred_json') or pred.get('json_pred') or pred.get('predicted_json')
-            if not pred_json:
-                # Skip if no JSON prediction available
+            predicted_fen = pred.get('predicted_fen', '')
+            ground_truth_fen = pred.get('ground_truth_fen', '')
+            
+            if not predicted_fen:
                 failed_evaluations += 1
                 continue
             
-            pred_fen = json_to_fen(pred_json)
-            true_fen = pred.get('true_fen') or pred.get('fen') or pred.get('predicted_fen')
-            
-            if not true_fen:
-                # Try to get from json_repr if available
-                if 'json_repr' in pred:
-                    # This is ground truth JSON, skip (we need predicted JSON)
-                    failed_evaluations += 1
-                    continue
+            if not ground_truth_fen:
+                no_ground_truth += 1
                 failed_evaluations += 1
                 continue
             
             # Calculate CP loss
-            cp_loss = evaluator.calculate_cp_loss(pred_fen, true_fen)
+            cp_loss = evaluator.calculate_cp_loss(predicted_fen, ground_truth_fen)
             
             if cp_loss is not None:
                 cp_losses.append(cp_loss)
@@ -145,29 +199,43 @@ def main():
     parser = argparse.ArgumentParser(description='Evaluate Stockfish CP Loss (Experiment A)')
     parser.add_argument('--predictions', type=str, required=True,
                         help='Path to predictions JSONL file (e.g., Improved_representations/results/predictions_clip_exp1b.jsonl)')
+    parser.add_argument('--test_data', type=str, default=None,
+                        help='Path to test dataset JSONL for ground truth FENs (e.g., Improved_representations/data/json_dataset/test.jsonl)')
     parser.add_argument('--output', type=str, default='neurosymbolic_pipeline/results/exp_a/cp_loss_results.json',
                         help='Output path for results')
     parser.add_argument('--stockfish_path', type=str, default=None,
                         help='Path to Stockfish executable (auto-detect from PATH if not provided)')
-    parser.add_argument('--use_lichess_api', action='store_true', default=False,
-                        help='Try Lichess API as fallback (may be unavailable, endpoint deprecated)')
     parser.add_argument('--depth', type=int, default=15,
-                        help='Search depth for Stockfish evaluation')
+                        help='Search depth for local Stockfish evaluation (Lichess API uses cloud depth)')
     parser.add_argument('--max_samples', type=int, default=None,
                         help='Maximum samples to evaluate (None = all)')
     
     args = parser.parse_args()
     
-    # Load predictions
+    # Auto-detect test data path if not provided
+    test_data_path = args.test_data
+    if not test_data_path:
+        # Try to auto-detect based on predictions path
+        predictions_dir = Path(args.predictions).parent.parent
+        possible_paths = [
+            predictions_dir / "data" / "json_dataset" / "test.jsonl",
+            PROJECT_ROOT / "Improved_representations" / "data" / "json_dataset" / "test.jsonl",
+        ]
+        for p in possible_paths:
+            if p.exists():
+                test_data_path = str(p)
+                print(f"Auto-detected test data path: {test_data_path}")
+                break
+    
+    # Load predictions with ground truth
     print(f"Loading predictions from {args.predictions}...")
-    predictions = load_predictions(args.predictions)
+    predictions = load_predictions_with_ground_truth(args.predictions, test_data_path)
     print(f"Loaded {len(predictions)} predictions")
     
     # Initialize evaluator
-    print(f"Initializing Stockfish evaluator (depth={args.depth})...")
+    print(f"\nInitializing evaluator (local depth={args.depth})...")
     evaluator = StockfishEvaluator(
         stockfish_path=args.stockfish_path,
-        use_lichess_api=args.use_lichess_api,
         depth=args.depth
     )
     
@@ -179,25 +247,27 @@ def main():
         print("\n" + "="*60)
         print("CP LOSS RESULTS")
         print("="*60)
-        print(f"\nMean CP Loss: {results['mean_cp_loss']:.2f} ± {results['std_cp_loss']:.2f}")
-        print(f"Median CP Loss: {results['median_cp_loss']:.2f}")
-        print(f"Min/Max CP Loss: {results['min_cp_loss']:.2f} / {results['max_cp_loss']:.2f}")
-        print(f"\nPercentiles:")
-        for percentile, value in results['percentiles'].items():
-            print(f"  {percentile}: {value:.2f}")
-        print(f"\nSuccessful evaluations: {results['successful_evaluations']}/{results['total_samples']}")
         
-        # Check target
         if results['mean_cp_loss'] is not None:
+            print(f"\nMean CP Loss: {results['mean_cp_loss']:.2f} +/- {results['std_cp_loss']:.2f}")
+            print(f"Median CP Loss: {results['median_cp_loss']:.2f}")
+            print(f"Min/Max CP Loss: {results['min_cp_loss']:.2f} / {results['max_cp_loss']:.2f}")
+            print(f"\nPercentiles:")
+            for percentile, value in results['percentiles'].items():
+                print(f"  {percentile}: {value:.2f}")
+            print(f"\nSuccessful evaluations: {results['successful_evaluations']}/{results['total_samples']}")
+            
+            # Check target
             target = 150
             mean_loss = results['mean_cp_loss']
-            std_loss = results['std_cp_loss'] if results['std_cp_loss'] is not None else 0.0
             if mean_loss < target:
-                print(f"\nSUCCESS: Mean CP loss ({mean_loss:.2f}) < target ({target})")
+                print(f"\n[SUCCESS] Mean CP loss ({mean_loss:.2f}) < target ({target})")
             else:
-                print(f"\nWARNING: Mean CP loss ({mean_loss:.2f}) >= target ({target})")
+                print(f"\n[WARNING] Mean CP loss ({mean_loss:.2f}) >= target ({target})")
         else:
-            print("\nWARNING: No valid CP loss calculations (all evaluations failed)")
+            print("\n[WARNING] No valid CP loss calculations (all evaluations failed)")
+            print(f"Total samples: {results['total_samples']}")
+            print(f"Failed evaluations: {results['failed_evaluations']}")
         
         # Save results
         output_path = Path(args.output)
@@ -216,4 +286,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

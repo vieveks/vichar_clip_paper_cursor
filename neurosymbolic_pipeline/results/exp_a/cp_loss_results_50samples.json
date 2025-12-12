@@ -1,0 +1,18 @@
+{
+  "mean_cp_loss": 517.06,
+  "std_cp_loss": 496.44803998001646,
+  "median_cp_loss": 375.0,
+  "min_cp_loss": 0.0,
+  "max_cp_loss": 2060.0,
+  "percentiles": {
+    "25th": 110.0,
+    "50th": 375.0,
+    "75th": 822.5,
+    "90th": 1216.0,
+    "95th": 1358.4999999999998,
+    "99th": 1942.3999999999996
+  },
+  "total_samples": 50,
+  "successful_evaluations": 50,
+  "failed_evaluations": 0
+}

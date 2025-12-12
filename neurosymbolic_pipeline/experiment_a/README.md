@@ -8,41 +8,58 @@ Validate that predicted FEN errors have minimal strategic impact by comparing St
 
 ## Implementation
 
-- `stockfish_evaluator.py` - Stockfish evaluation module
+- `stockfish_evaluator.py` - Stockfish evaluation module with Lichess API support
 - `evaluate_cp_loss.py` - Main evaluation script
+
+## Evaluation Priority
+
+1. **Local Stockfish binary** (most accurate, if available)
+2. **Lichess Cloud Eval API** (free, high depth 40-70, works great!)
+3. **Simple material evaluation** (fallback)
 
 ## Usage
 
-### Basic Evaluation
+### Default (Uses Lichess API)
+
+No installation required! The script uses Lichess Cloud Eval API by default:
 
 ```bash
 cd neurosymbolic_pipeline/experiment_a
 
 python evaluate_cp_loss.py \
     --predictions ../../Improved_representations/results/predictions_clip_exp1b.jsonl \
-    --stockfish_path /path/to/stockfish \
-    --depth 15 \
-    --max_samples 1000
+    --max_samples 100 \
+    --output ../results/exp_a/cp_loss_results.json
 ```
 
-### Without Stockfish Binary
+### With Local Stockfish (Most Accurate)
 
-If Stockfish binary is not available, the script will use python-chess built-in evaluation (less accurate but still useful):
+For best accuracy or offline use:
 
 ```bash
+# If Stockfish is in your PATH
 python evaluate_cp_loss.py \
     --predictions ../../Improved_representations/results/predictions_clip_exp1b.jsonl \
-    --max_samples 1000
+    --depth 15 \
+    --output ../results/exp_a/cp_loss_results.json
+
+# If Stockfish is at a specific path
+python evaluate_cp_loss.py \
+    --predictions ../../Improved_representations/results/predictions_clip_exp1b.jsonl \
+    --stockfish_path /path/to/stockfish \
+    --depth 15 \
+    --output ../results/exp_a/cp_loss_results.json
 ```
 
 ### Parameters
 
-- `--predictions`: Path to predictions JSONL file (from Exp 1B)
-- `--stockfish_path`: Path to Stockfish executable (optional, auto-detects from PATH)
-- `--use_lichess_api`: Try Lichess API as fallback (default: False, endpoint may be deprecated)
-- `--depth`: Search depth for Stockfish evaluation (default: 15)
-- `--max_samples`: Maximum samples to evaluate (default: all)
-- `--output`: Output path for results JSON (default: `../results/exp_a/cp_loss_results.json`)
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `--predictions` | Path to predictions JSONL file (from Exp 1B) | Required |
+| `--stockfish_path` | Path to Stockfish executable | Auto-detect |
+| `--depth` | Search depth for local Stockfish | 15 |
+| `--max_samples` | Maximum samples to evaluate | All |
+| `--output` | Output path for results JSON | `../results/exp_a/cp_loss_results.json` |
 
 ## Expected Results
 
@@ -60,11 +77,16 @@ Results are saved to `neurosymbolic_pipeline/results/exp_a/cp_loss_results.json`
 ## Notes
 
 - Uses read-only access to existing predictions
-- **Priority 1**: Local Stockfish binary (most accurate, recommended)
-- **Priority 2**: Lichess Cloud Evaluation API (may be unavailable - endpoint deprecated)
-- **Priority 3**: Python-chess simple material evaluation (fallback, less accurate)
-
-**Note**: Lichess cloud-eval endpoint (`/api/cloud-eval`) appears to be deprecated/removed (returns 404).
-For accurate CP loss evaluation, install Stockfish locally: https://stockfishchess.org/download/
+- Lichess API returns evaluations at depth 40-70 for common positions
+- Positions not in Lichess cloud database will use simple material evaluation
+- For best accuracy, install Stockfish locally: https://stockfishchess.org/download/
 - All results stored in isolated `results/` directory
 
+## API Details
+
+### Lichess Cloud Eval API
+
+- **Endpoint**: `https://lichess.org/api/cloud-eval?fen={encoded_fen}`
+- **Response format**: `{"pvs": [{"cp": 18, "moves": "e2e4 e7e5"}], "depth": 40}`
+- **Rate limit**: ~1 request/second recommended
+- **Coverage**: Common positions have cloud evaluations; rare positions may return 404

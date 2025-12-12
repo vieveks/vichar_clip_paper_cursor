@@ -1,18 +1,18 @@
 {
-  "mean_cp_loss": 0.0,
-  "std_cp_loss": 0.0,
-  "median_cp_loss": 0.0,
-  "min_cp_loss": 0.0,
-  "max_cp_loss": 0.0,
+  "mean_cp_loss": 661.1,
+  "std_cp_loss": 511.5631828034539,
+  "median_cp_loss": 675.0,
+  "min_cp_loss": 1.0,
+  "max_cp_loss": 1320.0,
   "percentiles": {
-    "25th": 0.0,
-    "50th": 0.0,
-    "75th": 0.0,
-    "90th": 0.0,
-    "95th": 0.0,
-    "99th": 0.0
+    "25th": 155.0,
+    "50th": 675.0,
+    "75th": 1150.0,
+    "90th": 1275.0,
+    "95th": 1297.5,
+    "99th": 1315.5
   },
-  "total_samples": 3,
-  "successful_evaluations": 3,
+  "total_samples": 10,
+  "successful_evaluations": 10,
   "failed_evaluations": 0
 }
