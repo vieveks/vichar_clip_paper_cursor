@@ -22,9 +22,9 @@ PROJECT_ROOT = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "benchmarking"))
 sys.path.insert(0, str(PROJECT_ROOT / "Improved_representations" / "data_processing"))
 
-# Import existing code (read-only)
-from questions import QUESTIONS
-from converters import json_to_fen
+# Import existing code (read-only) - we don't actually need these for check detection
+# from questions import QUESTIONS
+# from converters import json_to_fen
 
 # Import hybrid router
 sys.path.insert(0, str(Path(__file__).parent))
@@ -33,14 +33,23 @@ from symbolic_checker import SymbolicChecker
 
 
 def load_test_data(test_data_path: str, max_samples: Optional[int] = None) -> List[Dict]:
-    """Load test data (images and FENs)."""
-    # This would load from your test dataset
-    # For now, placeholder - adjust based on your data format
-    with open(test_data_path, 'r') as f:
-        data = json.load(f)
+    """
+    Load test data from JSONL file.
     
-    if max_samples:
-        data = data[:max_samples]
+    Expected format: Each line is a JSON object with:
+    - 'image_path': Path to image
+    - 'fen': FEN string
+    - 'json_repr': JSON representation (optional)
+    """
+    data = []
+    with open(test_data_path, 'r', encoding='utf-8') as f:
+        for line in f:
+            line = line.strip()
+            if line:
+                sample = json.loads(line)
+                data.append(sample)
+                if max_samples and len(data) >= max_samples:
+                    break
     
     return data
 
@@ -118,7 +127,7 @@ def evaluate_check_detection(
 def main():
     parser = argparse.ArgumentParser(description='Evaluate Hybrid Reasoning (Experiment C)')
     parser.add_argument('--test_data', type=str, required=True,
-                        help='Path to test data JSON file')
+                        help='Path to test data JSONL file (e.g., Improved_representations/data/json_dataset/test.jsonl)')
     parser.add_argument('--output', type=str, default='neurosymbolic_pipeline/results/exp_c/hybrid_reasoning_results.json',
                         help='Output path for results')
     parser.add_argument('--max_samples', type=int, default=None,
